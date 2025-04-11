@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import type { Job, SearchCriteria } from '@/types';
 import type { SupabaseJob } from '@/types/supabase';
@@ -63,17 +62,27 @@ export const importSampleJobs = async (sampleJobs: Job[]): Promise<void> => {
       is_new: job.isNew || true
     }));
     
-    const { error } = await supabase
-      .from('jobs')
-      .upsert(supabaseJobs, { onConflict: 'id' });
+    // Use the Edge Function to import jobs instead of direct database access
+    // This way we utilize the service_role permissions set in the Edge Function
+    const response = await fetch('https://bjubucmfgpcvcuqibofk.supabase.co/functions/v1/import-jobs', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${supabase.auth.getSession().then(res => res.data.session?.access_token)}`
+      },
+      body: JSON.stringify({ jobs: supabaseJobs })
+    });
     
-    if (error) {
-      throw error;
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to import jobs');
     }
+    
+    const result = await response.json();
     
     toast({
       title: 'Sample jobs imported',
-      description: `${sampleJobs.length} jobs have been added to the database`,
+      description: result.message || `${supabaseJobs.length} jobs have been added to the database`,
     });
   } catch (error) {
     console.error('Error importing sample jobs:', error);
@@ -143,5 +152,28 @@ export const fetchSearchCriteria = async (): Promise<SearchCriteria | null> => {
       variant: 'destructive',
     });
     return null;
+  }
+};
+
+// New function to check table status and count
+export const getJobStats = async (): Promise<{count: number}> => {
+  try {
+    const { count, error } = await supabase
+      .from('jobs')
+      .select('*', { count: 'exact', head: true });
+    
+    if (error) {
+      throw error;
+    }
+    
+    return { count: count || 0 };
+  } catch (error) {
+    console.error('Error getting job stats:', error);
+    toast({
+      title: 'Error checking job table',
+      description: (error as Error).message,
+      variant: 'destructive',
+    });
+    return { count: 0 };
   }
 };

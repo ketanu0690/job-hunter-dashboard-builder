@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import SearchForm from '@/components/SearchForm';
 import JobList from '@/components/JobList';
 import ZapierSetup from '@/components/ZapierSetup';
+import JobTableAdmin from '@/components/JobTableAdmin';
 import { sampleJobs } from '@/utils/jobData';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { SearchCriteria, Job } from '@/types';
@@ -58,6 +59,22 @@ const Index = () => {
     }
   };
 
+  const handleRefreshJobs = async () => {
+    setLoading(true);
+    try {
+      const updatedJobs = await fetchJobs();
+      setJobs(updatedJobs);
+      toast({
+        title: "Jobs Refreshed",
+        description: `${updatedJobs.length} jobs loaded from the database.`,
+      });
+    } catch (error) {
+      console.error('Error refreshing jobs:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const newJobsCount = jobs.filter(job => job.isNew).length;
 
   return (
@@ -84,6 +101,23 @@ const Index = () => {
             <TabsTrigger value="dev">Dev Tools</TabsTrigger>
           </TabsList>
           <TabsContent value="jobs" className="pt-4">
+            <div className="mb-4 flex justify-end">
+              <Button 
+                onClick={handleRefreshJobs}
+                variant="outline"
+                size="sm"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Refreshing...
+                  </>
+                ) : (
+                  'Refresh Jobs'
+                )}
+              </Button>
+            </div>
             {loading ? (
               <div className="flex justify-center items-center py-20">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -113,26 +147,40 @@ const Index = () => {
             </div>
           </TabsContent>
           <TabsContent value="dev" className="pt-4">
-            <div className="max-w-md mx-auto">
-              <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg mb-4">
-                <h3 className="font-medium mb-2">Developer Tools</h3>
-                <p className="text-sm mb-4">
-                  These tools are for development and testing purposes only.
-                </p>
-                <Button 
-                  onClick={handleImportSampleJobs} 
-                  disabled={importing}
-                  className="w-full"
-                >
-                  {importing ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Importing...
-                    </>
-                  ) : (
-                    'Import Sample Jobs'
-                  )}
-                </Button>
+            <div className="space-y-6">
+              <div className="max-w-md mx-auto">
+                <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg mb-4">
+                  <h3 className="font-medium mb-2">Developer Tools</h3>
+                  <p className="text-sm mb-4">
+                    These tools are for development and testing purposes only.
+                  </p>
+                  <Button 
+                    onClick={handleImportSampleJobs} 
+                    disabled={importing}
+                    className="w-full"
+                  >
+                    {importing ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Importing...
+                      </>
+                    ) : (
+                      'Import Sample Jobs'
+                    )}
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+                <div className="p-4 border-b">
+                  <h3 className="text-lg font-medium">Database Inspection</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    View and verify jobs stored in the database
+                  </p>
+                </div>
+                <div className="p-4">
+                  <JobTableAdmin />
+                </div>
               </div>
             </div>
           </TabsContent>

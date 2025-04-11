@@ -5,6 +5,14 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
+// CORS headers for browser requests
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Content-Type': 'application/json'
+};
+
 interface JobData {
   title: string;
   company: string;
@@ -19,19 +27,33 @@ interface JobData {
 }
 
 serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders
+    });
+  }
+  
   try {
     // Create a Supabase client with the Auth context of the function
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      { global: { headers: { Authorization: req.headers.get('Authorization')! } } }
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '', // Use service role key for admin privileges
+      { 
+        global: { 
+          headers: { 
+            Authorization: req.headers.get('Authorization')!,
+          } 
+        } 
+      }
     )
 
     // Only allow POST requests
     if (req.method !== 'POST') {
       return new Response(
         JSON.stringify({ error: 'Method not allowed' }),
-        { headers: { 'Content-Type': 'application/json' }, status: 405 }
+        { headers: { ...corsHeaders }, status: 405 }
       )
     }
 
@@ -41,9 +63,11 @@ serve(async (req) => {
     if (!Array.isArray(jobs) || jobs.length === 0) {
       return new Response(
         JSON.stringify({ error: 'Invalid job data' }),
-        { headers: { 'Content-Type': 'application/json' }, status: 400 }
+        { headers: { ...corsHeaders }, status: 400 }
       )
     }
+
+    console.log(`Attempting to import ${jobs.length} jobs with service role permissions`);
 
     // Format jobs for Supabase
     const formattedJobs = jobs.map(job => ({
@@ -72,7 +96,7 @@ serve(async (req) => {
       console.error('Error inserting jobs:', error)
       return new Response(
         JSON.stringify({ error: error.message }),
-        { headers: { 'Content-Type': 'application/json' }, status: 500 }
+        { headers: { ...corsHeaders }, status: 500 }
       )
     }
 
@@ -81,13 +105,13 @@ serve(async (req) => {
         message: `Successfully imported ${jobs.length} jobs`,
         jobsImported: jobs.length 
       }),
-      { headers: { 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders } }
     )
   } catch (error) {
     console.error('Server error:', error)
     return new Response(
       JSON.stringify({ error: 'Internal server error' }),
-      { headers: { 'Content-Type': 'application/json' }, status: 500 }
+      { headers: { ...corsHeaders }, status: 500 }
     )
   }
 })
