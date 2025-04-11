@@ -50,7 +50,7 @@ export const importSampleJobs = async (sampleJobs: Job[]): Promise<void> => {
   try {
     // Convert our Job format to Supabase format
     const supabaseJobs = sampleJobs.map(job => ({
-      id: job.id,
+      id: job.id, // Use UUIDs from sample data
       title: job.title,
       company: job.company,
       location: job.location,
@@ -60,7 +60,7 @@ export const importSampleJobs = async (sampleJobs: Job[]): Promise<void> => {
       salary: job.salary,
       skills: job.skills,
       source: job.source,
-      is_new: job.isNew
+      is_new: job.isNew || true
     }));
     
     const { error } = await supabase
@@ -82,6 +82,7 @@ export const importSampleJobs = async (sampleJobs: Job[]): Promise<void> => {
       description: (error as Error).message,
       variant: 'destructive',
     });
+    throw error; // Re-throw to be caught in the component
   }
 };
 

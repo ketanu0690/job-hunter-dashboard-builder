@@ -15,6 +15,7 @@ interface JobData {
   salary?: string;
   skills: string[];
   source: string;
+  id?: string; // Make id optional
 }
 
 serve(async (req) => {
@@ -46,6 +47,7 @@ serve(async (req) => {
 
     // Format jobs for Supabase
     const formattedJobs = jobs.map(job => ({
+      id: job.id, // Keep the UUID if provided
       title: job.title,
       company: job.company,
       location: job.location,
@@ -62,7 +64,7 @@ serve(async (req) => {
     const { data, error } = await supabase
       .from('jobs')
       .upsert(formattedJobs, { 
-        onConflict: 'url', // Assuming URL is unique per job
+        onConflict: 'id', // Conflict on id
         ignoreDuplicates: false 
       })
 

@@ -3,7 +3,7 @@ import { Job } from '@/types';
 
 export const sampleJobs: Job[] = [
   {
-    id: '1',
+    id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
     title: 'Frontend Developer',
     company: 'Google',
     location: 'Mountain View, CA (Remote)',
@@ -16,7 +16,7 @@ export const sampleJobs: Job[] = [
     isNew: true
   },
   {
-    id: '2',
+    id: '6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b',
     title: 'Full Stack Engineer',
     company: 'Amazon',
     location: 'Seattle, WA',
@@ -28,7 +28,7 @@ export const sampleJobs: Job[] = [
     source: 'Indeed'
   },
   {
-    id: '3',
+    id: '3e7c3f6d-bdf5-46ae-8d90-171300f27ae2',
     title: 'Backend Developer',
     company: 'Microsoft',
     location: 'Redmond, WA (Hybrid)',
@@ -40,7 +40,7 @@ export const sampleJobs: Job[] = [
     isNew: true
   },
   {
-    id: '4',
+    id: 'd4e8ca4b-fe4a-4a64-9fda-a1d5df2a68ef',
     title: 'DevOps Engineer',
     company: 'Netflix',
     location: 'Los Gatos, CA',
@@ -52,7 +52,7 @@ export const sampleJobs: Job[] = [
     source: 'LinkedIn'
   },
   {
-    id: '5',
+    id: 'b5c67fd9-24d4-448d-a31f-cab5eb2604dc',
     title: 'AI Engineer',
     company: 'Google',
     location: 'New York, NY',
@@ -63,7 +63,7 @@ export const sampleJobs: Job[] = [
     source: 'Indeed'
   },
   {
-    id: '6',
+    id: '8a1d5826-5e8f-44c3-9efe-53b5b36360ea',
     title: 'Mobile Developer',
     company: 'Apple',
     location: 'Cupertino, CA',
