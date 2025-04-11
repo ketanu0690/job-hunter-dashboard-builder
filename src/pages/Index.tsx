@@ -1,10 +1,10 @@
-
 import React, { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import SearchForm from '@/components/SearchForm';
 import JobList from '@/components/JobList';
 import ZapierSetup from '@/components/ZapierSetup';
 import JobTableAdmin from '@/components/JobTableAdmin';
+import ExcelImport from '@/components/ExcelImport';
 import { sampleJobs } from '@/utils/jobData';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { SearchCriteria, Job } from '@/types';
@@ -45,7 +45,6 @@ const Index = () => {
     setImporting(true);
     try {
       await importSampleJobs(sampleJobs);
-      // Refresh jobs after import
       const updatedJobs = await fetchJobs();
       setJobs(updatedJobs);
       toast({
@@ -148,26 +147,32 @@ const Index = () => {
           </TabsContent>
           <TabsContent value="dev" className="pt-4">
             <div className="space-y-6">
-              <div className="max-w-md mx-auto">
-                <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg mb-4">
-                  <h3 className="font-medium mb-2">Developer Tools</h3>
-                  <p className="text-sm mb-4">
-                    These tools are for development and testing purposes only.
-                  </p>
-                  <Button 
-                    onClick={handleImportSampleJobs} 
-                    disabled={importing}
-                    className="w-full"
-                  >
-                    {importing ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Importing...
-                      </>
-                    ) : (
-                      'Import Sample Jobs'
-                    )}
-                  </Button>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <ExcelImport />
+                </div>
+                
+                <div className="max-w-md mx-auto">
+                  <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg mb-4">
+                    <h3 className="font-medium mb-2">Developer Tools</h3>
+                    <p className="text-sm mb-4">
+                      These tools are for development and testing purposes only.
+                    </p>
+                    <Button 
+                      onClick={handleImportSampleJobs} 
+                      disabled={importing}
+                      className="w-full"
+                    >
+                      {importing ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Importing...
+                        </>
+                      ) : (
+                        'Import Sample Jobs'
+                      )}
+                    </Button>
+                  </div>
                 </div>
               </div>
               

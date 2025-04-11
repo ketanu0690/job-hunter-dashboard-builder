@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import type { Job, SearchCriteria } from '@/types';
 import type { SupabaseJob } from '@/types/supabase';
@@ -56,7 +55,7 @@ export const importSampleJobs = async (sampleJobs: Job[]): Promise<void> => {
   try {
     // Convert our Job format to Supabase format
     const supabaseJobs = sampleJobs.map(job => ({
-      id: job.id, // Use UUIDs from sample data
+      id: job.id,
       title: job.title,
       company: job.company,
       location: job.location,
@@ -100,7 +99,60 @@ export const importSampleJobs = async (sampleJobs: Job[]): Promise<void> => {
       description: (error as Error).message,
       variant: 'destructive',
     });
-    throw error; // Re-throw to be caught in the component
+    throw error;
+  }
+};
+
+// Import jobs from Excel file
+export const importJobsFromExcel = async (jobs: Job[]): Promise<void> => {
+  try {
+    // Convert our Job format to Supabase format
+    const supabaseJobs = jobs.map(job => ({
+      id: job.id,
+      title: job.title,
+      company: job.company,
+      location: job.location,
+      description: job.description,
+      url: job.url,
+      date: job.date,
+      salary: job.salary,
+      skills: job.skills,
+      source: job.source,
+      is_new: job.isNew || true
+    }));
+    
+    // Get auth token before making the request
+    const token = await getAuthToken();
+    
+    // Use the Edge Function to import jobs
+    const response = await fetch('https://bjubucmfgpcvcuqibofk.supabase.co/functions/v1/import-jobs', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ jobs: supabaseJobs })
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to import jobs');
+    }
+    
+    const result = await response.json();
+    
+    toast({
+      title: 'Jobs imported from Excel',
+      description: result.message || `${supabaseJobs.length} jobs have been added to the database`,
+    });
+  } catch (error) {
+    console.error('Error importing jobs from Excel:', error);
+    toast({
+      title: 'Error importing jobs',
+      description: (error as Error).message,
+      variant: 'destructive',
+    });
+    throw error;
   }
 };
 
