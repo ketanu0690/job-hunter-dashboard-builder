@@ -1,7 +1,14 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import type { Job, SearchCriteria } from '@/types';
 import type { SupabaseJob } from '@/types/supabase';
 import { toast } from '@/hooks/use-toast';
+
+// Get auth token (helper function)
+const getAuthToken = async (): Promise<string> => {
+  const { data } = await supabase.auth.getSession();
+  return data.session?.access_token || '';
+};
 
 // Convert Supabase job format to our application Job format
 export const mapSupabaseJobToJob = (job: SupabaseJob): Job => {
@@ -62,13 +69,15 @@ export const importSampleJobs = async (sampleJobs: Job[]): Promise<void> => {
       is_new: job.isNew || true
     }));
     
-    // Use the Edge Function to import jobs instead of direct database access
-    // This way we utilize the service_role permissions set in the Edge Function
+    // Get auth token before making the request
+    const token = await getAuthToken();
+    
+    // Use the Edge Function to import jobs
     const response = await fetch('https://bjubucmfgpcvcuqibofk.supabase.co/functions/v1/import-jobs', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${supabase.auth.getSession().then(res => res.data.session?.access_token)}`
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({ jobs: supabaseJobs })
     });

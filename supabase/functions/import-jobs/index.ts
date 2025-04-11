@@ -40,13 +40,7 @@ serve(async (req) => {
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '', // Use service role key for admin privileges
-      { 
-        global: { 
-          headers: { 
-            Authorization: req.headers.get('Authorization')!,
-          } 
-        } 
-      }
+      { global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } } }
     )
 
     // Only allow POST requests
