@@ -1,13 +1,17 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import SearchForm from '@/components/SearchForm';
 import JobList from '@/components/JobList';
 import ZapierSetup from '@/components/ZapierSetup';
 import { sampleJobs } from '@/utils/jobData';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { SearchCriteria } from '@/types';
+import { SearchCriteria, Job } from '@/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { fetchJobs, importSampleJobs } from '@/services/jobService';
+import { Button } from '@/components/ui/button';
+import { toast } from '@/hooks/use-toast';
+import { Loader2 } from 'lucide-react';
 
 const Index = () => {
   const [searchCriteria, setSearchCriteria] = useLocalStorage<SearchCriteria>('searchCriteria', {
@@ -16,8 +20,45 @@ const Index = () => {
   });
 
   const [zapierWebhook, setZapierWebhook] = useLocalStorage<string>('zapierWebhook', '');
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [importing, setImporting] = useState(false);
+  
+  useEffect(() => {
+    const loadJobs = async () => {
+      setLoading(true);
+      try {
+        const jobsData = await fetchJobs();
+        setJobs(jobsData);
+      } catch (error) {
+        console.error('Error loading jobs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadJobs();
+  }, []);
 
-  const newJobsCount = sampleJobs.filter(job => job.isNew).length;
+  const handleImportSampleJobs = async () => {
+    setImporting(true);
+    try {
+      await importSampleJobs(sampleJobs);
+      // Refresh jobs after import
+      const updatedJobs = await fetchJobs();
+      setJobs(updatedJobs);
+      toast({
+        title: "Success",
+        description: "Sample jobs have been imported successfully!",
+      });
+    } catch (error) {
+      console.error('Error importing sample jobs:', error);
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  const newJobsCount = jobs.filter(job => job.isNew).length;
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
@@ -40,9 +81,17 @@ const Index = () => {
           <TabsList>
             <TabsTrigger value="jobs">Job Listings</TabsTrigger>
             <TabsTrigger value="integrations">Integrations</TabsTrigger>
+            <TabsTrigger value="dev">Dev Tools</TabsTrigger>
           </TabsList>
           <TabsContent value="jobs" className="pt-4">
-            <JobList jobs={sampleJobs} searchCriteria={searchCriteria} />
+            {loading ? (
+              <div className="flex justify-center items-center py-20">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <span className="ml-2">Loading jobs...</span>
+              </div>
+            ) : (
+              <JobList jobs={jobs} searchCriteria={searchCriteria} />
+            )}
           </TabsContent>
           <TabsContent value="integrations" className="pt-4">
             <div className="max-w-md mx-auto">
@@ -60,6 +109,30 @@ const Index = () => {
                   <li>Set up an action in Zapier (email, Slack notification, etc.)</li>
                   <li>Test the connection using the button above</li>
                 </ol>
+              </div>
+            </div>
+          </TabsContent>
+          <TabsContent value="dev" className="pt-4">
+            <div className="max-w-md mx-auto">
+              <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg mb-4">
+                <h3 className="font-medium mb-2">Developer Tools</h3>
+                <p className="text-sm mb-4">
+                  These tools are for development and testing purposes only.
+                </p>
+                <Button 
+                  onClick={handleImportSampleJobs} 
+                  disabled={importing}
+                  className="w-full"
+                >
+                  {importing ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Importing...
+                    </>
+                  ) : (
+                    'Import Sample Jobs'
+                  )}
+                </Button>
               </div>
             </div>
           </TabsContent>
