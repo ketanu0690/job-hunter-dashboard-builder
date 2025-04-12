@@ -344,7 +344,7 @@ class LinkedinEasyApply {
       }
       
       if (retries === 0) {
-        console.error(error);
+        console.error("Maximum retries reached");
         const dismissButton = await this.page.$('.artdeco-modal__dismiss');
         if (dismissButton) {
           await dismissButton.click();
