@@ -14,10 +14,10 @@ const app = express();
 
 
 app.use(cors({
-  origin: true,
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'User-Agent', 'Referer'],
-  credentials: true
+  credentials: false
 }));
 
 // Security headers for added protection
