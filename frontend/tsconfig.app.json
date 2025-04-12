@@ -23,8 +23,8 @@
 
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["frontend/src/*"]
     }
   },
-  "include": ["src", "backend/features/linkedin-automation/linkdinEasy.ts"]
+  "include": ["frontend/src", "backend/features/linkedin-automation/linkdinEasy.ts"]
 }
