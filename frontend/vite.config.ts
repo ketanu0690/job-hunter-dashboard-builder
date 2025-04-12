@@ -11,13 +11,13 @@ export default defineConfig(({ mode }) => {
     server: {
       host: "0.0.0.0",
       port: 8080,
+      strictPort: true,
       proxy: {
-        // Proxy API calls during development to the backend
         "/api": {
-          target: "http://localhost:3000", // Backend server
+          target: "http://0.0.0.0:3000",
           changeOrigin: true,
           secure: false,
-          rewrite: (path) => path.replace(/^\/api/, "/api"), // optional rewrite
+          rewrite: (path) => path.replace(/^\/api/, "/api"),
         },
       },
     },

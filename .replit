@@ -51,11 +51,11 @@ mode = "parallel"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd backend && npm i && npm start"
+args = "cd backend && npm i && PORT=3000 npm start"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd frontend && npm i && npm run dev"
+args = "cd frontend && npm i && PORT=8080 npm run dev"
 
 [[ports]]
 localPort = 3000
