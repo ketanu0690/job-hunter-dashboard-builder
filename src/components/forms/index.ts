@@ -1,11 +1,15 @@
+
 const fs = require('fs');
 const yaml = require('yaml');
 const { Builder, Options } = require('selenium-webdriver/chrome');
 const { validate } = require('email-validator');
 
-// Placeholder: You’ll need to implement this or port logic from Python
+// Define proper types for the class
 class LinkedinEasyApply {
-  constructor(params, driver) {
+  private params: any;
+  private driver: any;
+
+  constructor(params: any, driver: any) {
     this.params = params;
     this.driver = driver;
   }
@@ -68,13 +72,13 @@ function validateYaml() {
   if (typeof parameters.disableAntiLock !== 'boolean') throw new Error('disableAntiLock must be boolean');
   if (typeof parameters.remote !== 'boolean') throw new Error('remote must be boolean');
 
-  const hasExperience = Object.values(parameters.experienceLevel).some(val => val);
+  const hasExperience = Object.values(parameters.experienceLevel).some(val => Boolean(val));
   if (!hasExperience) throw new Error('No experience level selected');
 
-  const hasJobType = Object.values(parameters.jobTypes).some(val => val);
+  const hasJobType = Object.values(parameters.jobTypes).some(val => Boolean(val));
   if (!hasJobType) throw new Error('No job type selected');
 
-  const hasDate = Object.values(parameters.date).some(val => val);
+  const hasDate = Object.values(parameters.date).some(val => Boolean(val));
   if (!hasDate) throw new Error('No date selected');
 
   const approvedDistances = [0, 5, 10, 25, 50, 100];
@@ -101,12 +105,13 @@ function validateYaml() {
 
   const languageLevels = new Set(['none', 'conversational', 'professional', 'native or bilingual']);
   for (const [lang, level] of Object.entries(parameters.languages)) {
-    if (!languageLevels.has(level.toLowerCase())) {
+    const levelStr = String(level).toLowerCase();
+    if (!languageLevels.has(levelStr)) {
       throw new Error(`Invalid language level for ${lang}`);
     }
   }
 
-  const validateSkillMap = (map, name) => {
+  const validateSkillMap = (map: Record<string, any>, name: string) => {
     for (const [skill, value] of Object.entries(map)) {
       if (typeof value !== 'number') throw new Error(`${name} value for ${skill} must be a number`);
     }
@@ -137,6 +142,6 @@ function validateYaml() {
     await bot.securityCheck();
     await bot.startApplying();
   } catch (err) {
-    console.error('Error:', err.message);
+    console.error('Error:', err instanceof Error ? err.message : String(err));
   }
 })();
