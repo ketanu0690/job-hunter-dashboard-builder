@@ -12,7 +12,7 @@ import EasyApplyForm from "@/components/forms/EasyApplyForm";
 
 interface HeaderProps { newJobsCount: number }
 const Header: React.FC<HeaderProps> = ({ newJobsCount }) => {
-  const [selectedPlatform, setSelectedPlatform] = useState<"LinkedIn" | "Naukri" | null>("LinkedIn");
+  const [selectedPlatform, setSelectedPlatform] = useState<"LinkedIn" | "Naukri" | null>(null);
 
   const handlePlatformSelect = (platform: "LinkedIn" | "Naukri") => {
     setSelectedPlatform(platform);

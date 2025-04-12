@@ -5,11 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 interface PersonalInfoCardProps {
-  personalInfo: {
-    'First Name': string;
-    'Last Name': string;
-    'Mobile Phone Number': string;
-  };
+  personalInfo: Record<string, string>
   onPersonalInfoChange: (field: string, value: string) => void;
 }
 
