@@ -2,6 +2,9 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://0.0.0.0:3000';
 
+// Configure axios defaults
+axios.defaults.withCredentials = true;
+
 export interface LinkedinConfig {
   platform?: string;
   email: string;
