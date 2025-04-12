@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import SearchForm from '@/components/SearchForm';
 import JobList from '@/components/JobList';
@@ -9,10 +10,10 @@ import { sampleJobs } from '@/utils/jobData';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { SearchCriteria, Job } from '@/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { fetchJobs, importSampleJobs } from '@/services/jobService';
 import { Button } from '@/components/ui/button';
+import { fetchJobs, importSampleJobs } from '@/services/jobService';
 import { toast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Briefcase, Linkedin } from 'lucide-react';
 
 const Index = () => {
   const [searchCriteria, setSearchCriteria] = useLocalStorage<SearchCriteria>('searchCriteria', {
@@ -86,6 +87,15 @@ const Index = () => {
           <p className="text-gray-600 dark:text-gray-400">
             Track tech job postings matching your preferred companies and skills
           </p>
+        </div>
+        
+        <div className="mb-6">
+          <Link to="/linkedin-automation">
+            <Button variant="outline" className="flex items-center gap-2">
+              <Linkedin className="h-4 w-4" />
+              <span>LinkedIn Easy Apply Automation</span>
+            </Button>
+          </Link>
         </div>
         
         <SearchForm 

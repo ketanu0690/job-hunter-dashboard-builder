@@ -5,27 +5,11 @@ import { saveAs } from 'file-saver';
 import { Button } from '@/components/ui/button';
 import yaml from 'js-yaml';
 import { toast } from 'sonner';
+import { runLinkedinAutomation, LinkedinConfig } from '@/services/linkedinService';
 
 interface EasyApplyFormProps {
   platform: 'LinkedIn' | 'Naukri' | null;
   onClose: () => void;
-}
-
-interface ConfigData {
-  platform?: string;
-  email: string;
-  password: string;
-  positions: string[];
-  locations: string[];
-  personalInfo: {
-    'First Name': string;
-    'Last Name': string;
-    'Mobile Phone Number': string;
-    Linkedin: string;
-  };
-  uploads: {
-    resume: string;
-  };
 }
 
 const EasyApplyForm: React.FC<EasyApplyFormProps> = ({ platform, onClose }) => {
@@ -33,28 +17,54 @@ const EasyApplyForm: React.FC<EasyApplyFormProps> = ({ platform, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [automationLogs, setAutomationLogs] = useState<string[]>([]);
-  const [configData, setConfigData] = useState<ConfigData>({
+  const [configData, setConfigData] = useState<LinkedinConfig>({
     platform: platform || undefined,
     email: '',
     password: '',
+    disableAntiLock: false,
+    remote: false,
+    experienceLevel: {},
+    jobTypes: {},
+    date: {},
     positions: [],
     locations: [],
+    distance: 25,
+    checkboxes: {
+      driversLicence: false,
+      requireVisa: false,
+      legallyAuthorized: true,
+      urgentFill: false,
+      commute: false,
+      backgroundCheck: true,
+      degreeCompleted: true,
+    },
+    universityGpa: 3.0,
+    languages: {},
+    industry: {},
+    technology: {},
     personalInfo: {
       'First Name': '',
       'Last Name': '',
       'Mobile Phone Number': '',
-      Linkedin: '',
+      'Linkedin': '',
+      'Phone Country Code': '+1',
+      'City': '',
+      'State': '',
+      'Zip': '',
+      'Street address': '',
+      'Website': '',
     },
+    eeo: {},
     uploads: {
       resume: '',
     },
   });
 
-  const handleFieldChange = (field: keyof ConfigData, value: any) => {
+  const handleFieldChange = (field: keyof LinkedinConfig, value: any) => {
     setConfigData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handlePersonalInfoChange = (field: keyof ConfigData['personalInfo'], value: string) => {
+  const handlePersonalInfoChange = (field: keyof LinkedinConfig['personalInfo'], value: string) => {
     setConfigData((prev) => ({
       ...prev,
       personalInfo: { ...prev.personalInfo, [field]: value },
@@ -69,7 +79,7 @@ const EasyApplyForm: React.FC<EasyApplyFormProps> = ({ platform, onClose }) => {
 
     setLoading(true);
     try {
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/parse-resume`, formData);
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'}/api/parse-resume`, formData);
 
       setConfigData((prev) => ({
         ...prev,
@@ -99,24 +109,25 @@ const EasyApplyForm: React.FC<EasyApplyFormProps> = ({ platform, onClose }) => {
     setMessage('');
     setAutomationLogs([]);
     try {
-      // Send the JSON data directly without converting to YAML
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/apply-config`, 
-        configData
-      );
+      // Use our new service to run LinkedIn automation
+      const response = await runLinkedinAutomation(configData);
       
-      setMessage('✅ Configuration saved and automation triggered!');
-      
-      // Display automation logs if available
-      if (response.data.logs && Array.isArray(response.data.logs)) {
-        setAutomationLogs(response.data.logs);
+      if (response.success) {
+        setMessage('✅ Automation triggered successfully!');
+        toast.success('LinkedIn automation started!');
+      } else {
+        setMessage(`❌ Automation failed: ${response.message}`);
+        toast.error('LinkedIn automation failed');
       }
       
-      toast.success('Configuration applied successfully!');
+      // Display automation logs if available
+      if (response.logs && Array.isArray(response.logs)) {
+        setAutomationLogs(response.logs);
+      }
     } catch (err: any) {
       console.error(err);
-      setMessage('❌ Failed to save configuration');
-      toast.error('Failed to apply configuration');
+      setMessage('❌ Failed to run automation');
+      toast.error('Failed to run LinkedIn automation');
     } finally {
       setLoading(false);
     }
