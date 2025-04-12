@@ -1,13 +1,25 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { BriefcaseBusiness, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import EasyApplyForm from "@/components/forms/EasyApplyForm";
 
-interface HeaderProps {
-  newJobsCount: number;
-}
-
+interface HeaderProps { newJobsCount: number }
 const Header: React.FC<HeaderProps> = ({ newJobsCount }) => {
+  const [selectedPlatform, setSelectedPlatform] = useState<"LinkedIn" | "Naukri" | null>("LinkedIn");
+
+  const handlePlatformSelect = (platform: "LinkedIn" | "Naukri") => {
+    setSelectedPlatform(platform);
+  };
+
+  console.log("Selected Platform:", selectedPlatform);
+
   return (
     <header className="border-b bg-white dark:bg-gray-900">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -25,6 +37,25 @@ const Header: React.FC<HeaderProps> = ({ newJobsCount }) => {
               </span>
             )}
           </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary">Easy Apply</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => handlePlatformSelect("LinkedIn")}>
+                LinkedIn
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handlePlatformSelect("Naukri")}>
+                Naukri
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          {selectedPlatform && (
+            <EasyApplyForm 
+            platform={selectedPlatform} 
+            onClose={()=>{setSelectedPlatform(null)}} />
+          )}
+
         </div>
       </div>
     </header>
