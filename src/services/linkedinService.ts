@@ -1,9 +1,10 @@
 
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 export interface LinkedinConfig {
+  platform?: string;
   email: string;
   password: string;
   disableAntiLock: boolean;
