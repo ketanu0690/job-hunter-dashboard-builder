@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://0.0.0.0:3000';
 
 export interface LinkedinConfig {
   platform?: string;
