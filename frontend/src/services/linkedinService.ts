@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://0.0.0.0:3000';
@@ -55,7 +54,7 @@ export async function runLinkedinAutomation(config: LinkedinConfig): Promise<Lin
       // Return the error response from the server
       return error.response.data as LinkedinResponse;
     }
-    
+
     // Handle network or other errors
     return {
       success: false,

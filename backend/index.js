@@ -12,26 +12,11 @@ dotenv.config();
 // Create Express app
 const app = express();
 
-// Set port from environment or fallback to default
-const port = process.env.PORT || 3000;
 
-// Allowed frontend origins
-const allowedOrigins = [
-  'http://localhost:8080',
-  'https://8081-idx-job-hunter-dashboard-buildergit-1744396589226.cluster-73qgvk7hjjadkrjeyexca5ivva.cloudworkstations.dev',
-];
-
-// CORS setup to allow only specific origins
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true,
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Security headers for added protection
@@ -76,6 +61,9 @@ app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
   customSiteTitle: 'Job Hunter API Docs',
   customfavIcon: 'https://cdn-icons-png.flaticon.com/512/942/942748.png',
 }));
+
+// Set port from environment or fallback to default
+const port = process.env.PORT || 3000;
 
 // Start the server
 app.listen(port, '0.0.0.0', () => {
