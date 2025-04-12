@@ -1,3 +1,4 @@
+
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const csv = require('csv-writer').createObjectCsvWriter;
@@ -579,7 +580,7 @@ class LinkedinEasyApply {
                             const options = await dropdownField.$$('option');
                             const optionTexts = await Promise.all(options.map(o => 
                                 this.page.evaluate(el => el.textContent, o)
-                            );
+                            ));
                             
                             let choice = "";
                             
