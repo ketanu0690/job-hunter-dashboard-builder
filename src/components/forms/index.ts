@@ -1,53 +1,7 @@
 
 const fs = require('fs');
 const yaml = require('yaml');
-const { Builder, Options } = require('selenium-webdriver/chrome');
 const { validate } = require('email-validator');
-
-// Define proper types for the class
-class LinkedinEasyApply {
-  private params: any;
-  private driver: any;
-
-  constructor(params: any, driver: any) {
-    this.params = params;
-    this.driver = driver;
-  }
-
-  async login() {
-    console.log('Logging in...');
-    // Implement login logic
-  }
-
-  async securityCheck() {
-    console.log('Security check...');
-    // Implement security check
-  }
-
-  async startApplying() {
-    console.log('Starting job applications...');
-    // Implement application logic
-  }
-}
-
-async function initBrowser() {
-  const options = new Options()
-    .addArguments(
-      '--disable-blink-features',
-      '--no-sandbox',
-      '--start-maximized',
-      '--disable-extensions',
-      '--ignore-certificate-errors',
-      '--disable-blink-features=AutomationControlled'
-    );
-
-  const driver = await new Builder()
-    .forBrowser('chrome')
-    .setChromeOptions(options)
-    .build();
-
-  return driver;
-}
 
 function validateYaml() {
   const file = fs.readFileSync('config.yaml', 'utf8');
@@ -132,16 +86,27 @@ function validateYaml() {
   return parameters;
 }
 
-(async function main() {
+// Simplified function to run the automation through the backend API
+async function runLinkedinAutomation() {
   try {
     const parameters = validateYaml();
-    const browser = await initBrowser();
-
-    const bot = new LinkedinEasyApply(parameters, browser);
-    await bot.login();
-    await bot.securityCheck();
-    await bot.startApplying();
+    console.log('Automation parameters validated, calling backend API...');
+    
+    // In a real implementation, this would make an API call to the backend
+    // For demonstration purposes, we're just logging a message
+    console.log('Backend API would be called here with parameters.');
+    
+    return {
+      success: true,
+      message: 'Parameters validated. Use the backend API to run the automation.'
+    };
   } catch (err) {
     console.error('Error:', err instanceof Error ? err.message : String(err));
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : String(err)
+    };
   }
-})();
+}
+
+module.exports = { validateYaml, runLinkedinAutomation };

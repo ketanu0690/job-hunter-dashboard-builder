@@ -7,6 +7,7 @@ const swaggerUi = require('swagger-ui-express');
 const parseResumeRoute = require('./features/parse-resume/route');
 const saveConfigRoute = require('./features/save-config/route');
 const applyConfigRoute = require('./features/apply-config/route');
+const linkedinRoute = require('./features/linkedin-automation/route');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(parseResumeRoute);
 app.use(saveConfigRoute);
 app.use(applyConfigRoute);
+app.use(linkedinRoute);
 
 // Add security headers
 app.use((req, res, next) => {
