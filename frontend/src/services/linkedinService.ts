@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const API_URL = 'http://0.0.0.0:3000';
+import axios from "axios";
 
 // Configure axios defaults
 axios.defaults.withCredentials = false;
@@ -48,20 +46,33 @@ export interface LinkedinResponse {
   error?: string;
 }
 
-export async function runLinkedinAutomation(config: LinkedinConfig): Promise<LinkedinResponse> {
+export async function runLinkedinAutomation(
+  config: LinkedinConfig
+): Promise<LinkedinResponse> {
+  const baseUrl = import.meta.env.VITE_BACKEND_URL;
   try {
-    const response = await axios.post(`${API_URL}/api/linkedin/apply`, config);
+    const response = await axios.post(
+      `${baseUrl}/linkedin-automation`,
+      config,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true, // optional: only if you send cookies/session data
+      }
+    );
+    debugger;
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      // Return the error response from the server
       return error.response.data as LinkedinResponse;
     }
 
-    // Handle network or other errors
     return {
       success: false,
-      message: `Error running LinkedIn automation: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      message: `Error running LinkedIn automation: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`,
     };
   }
 }

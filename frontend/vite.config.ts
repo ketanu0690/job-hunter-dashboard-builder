@@ -14,17 +14,14 @@ export default defineConfig(({ mode }) => {
       strictPort: true,
       proxy: {
         "/api": {
-          target: "http://0.0.0.0:3000",
+          target: "http://localhost:3000",
           changeOrigin: true,
           secure: false,
           rewrite: (path) => path.replace(/^\/api/, "/api"),
         },
       },
     },
-    plugins: [
-      react(),
-      ...(isDev ? [componentTagger()] : []),
-    ],
+    plugins: [react(), ...(isDev ? [componentTagger()] : [])],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "src"),
