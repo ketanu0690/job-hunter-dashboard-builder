@@ -1,0 +1,96 @@
+email: "ketanupadhyay40@gmail.com"
+password: "ketan0690"
+
+disableAntiLock: false
+remote: false
+distance: 25
+outputFileDirectory: "C:\\Users\\myDirectory\\"
+
+experienceLevel:
+  internship: false
+  entry: true
+  associate: false
+  mid-senior_level: true
+  director: false
+  executive: false
+
+jobTypes:
+  full-time: true
+  contract: false
+  part-time: true
+  temporary: false
+  internship: false
+  other: false
+  volunteer: false
+
+datePosted:
+  all_time: true
+  month: false
+  week: false
+  24_hours: true
+
+positions:
+  - Full Stack Developer
+  - .NET React Developer
+  - React Developer
+  - Cloud AWS
+
+locations:
+  - Gurugram
+  - Bangalore
+  - Delhi
+  - Pune
+  - Chennai
+  - Kolkata
+
+uploads:
+  Resume: "C:\\Users\\myDirectory\\Resume.pdf"
+  CoverLetter: "C:\\Users\\myDirectory\\CoverLetter.pdf"
+
+personalInfo:
+  firstName: "Ketan"
+  lastName: "Upadhyay"
+  phone: "+919340015842"
+  city: "Bangalore"
+  state: "MP"
+  zip: "474001"
+
+eeo:
+  gender: "male"
+  race: "asian"
+  disability: "no"
+
+universityGpa: 3.7
+
+checkboxes:
+  driversLicence: true
+  requireVisa: false
+  legallyAuthorized: true
+  urgentFill: false
+  commute: true
+  backgroundCheck: true
+  degreeCompleted: true
+
+industry:
+  default: 5
+  software: 4
+  education: 2
+
+technology:
+  default: 5
+  react: 5
+  dotnet: 5
+  csharp: 4
+  aws: 3
+
+languages:
+  english: "native or bilingual"
+  hindi: "professional"
+  french: "none"
+
+headlessMode: false
+userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+pageLoadTimeout: 30
+
+resumePath: "C:\\Users\\myDirectory\\Resume.pdf"
+coverLetterPath: "C:\\Users\\myDirectory\\CoverLetter.pdf"
