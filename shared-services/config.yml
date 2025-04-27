@@ -51,7 +51,7 @@ personalInfo:
   firstName: "Ketan"
   lastName: "Upadhyay"
   phone: "+919340015842"
-  city: "Bangalore"
+  city: "Gwalior"
   state: "MP"
   zip: "474001"
 
@@ -75,6 +75,8 @@ industry:
   default: 5
   software: 4
   education: 2
+  InformationTechnology: 5
+  Software: 4
 
 technology:
   default: 5
@@ -82,13 +84,18 @@ technology:
   dotnet: 5
   csharp: 4
   aws: 3
+  .NET: 5
+  React: 5
+  TypeScript: 4
+  AWS: 3
 
 languages:
   english: "native or bilingual"
   hindi: "professional"
   french: "none"
 
-headlessMode: false
+outputFileDirectory: "./output"
+headlessMode: true
 userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
 pageLoadTimeout: 30
 
