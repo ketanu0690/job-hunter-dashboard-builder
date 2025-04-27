@@ -6,89 +6,94 @@ namespace Job_worker.Models
     {
         // Authentication
         [YamlMember(Alias = "email")]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         [YamlMember(Alias = "password")]
-        public string Password { get; set; }
-
-        [YamlMember(Alias = "date")]
-        public Dictionary<string, bool> Date { get; set; }
+        public string Password { get; set; } = string.Empty;
 
         // Job Search Parameters
         [YamlMember(Alias = "positions")]
-        public List<string> Positions { get; set; }
+        public List<string> Positions { get; set; } = new();
 
         [YamlMember(Alias = "locations")]
-        public List<string> Locations { get; set; }
+        public List<string> Locations { get; set; } = new();
 
         [YamlMember(Alias = "distance")]
-        public int Distance { get; set; }
+        public int Distance { get; set; } = 25;
 
         [YamlMember(Alias = "remote")]
-        public bool Remote { get; set; }
+        public bool Remote { get; set; } = false;
 
         // Filters
         [YamlMember(Alias = "experienceLevel")]
-        public Dictionary<string, bool> ExperienceLevel { get; set; }
+        public Dictionary<string, bool> ExperienceLevel { get; set; } = new();
 
         [YamlMember(Alias = "jobTypes")]
-        public Dictionary<string, bool> JobTypes { get; set; }
+        public Dictionary<string, bool> JobTypes { get; set; } = new();
 
         [YamlMember(Alias = "datePosted")]
-        public Dictionary<string, bool> DatePosted { get; set; }
+        public Dictionary<string, bool> DatePosted { get; set; } = new();
 
         // Application Behavior
         [YamlMember(Alias = "disableAntiLock")]
-        public bool DisableAntiLock { get; set; }
+        public bool DisableAntiLock { get; set; } = false;
 
         [YamlMember(Alias = "maxApplicationsPerDay")]
-        public int MaxApplicationsPerDay { get; set; }
+        public int MaxApplicationsPerDay { get; set; } = 30;
 
         [YamlMember(Alias = "minDelaySeconds")]
-        public int MinDelaySeconds { get; set; }
+        public int MinDelaySeconds { get; set; } = 5;
 
         [YamlMember(Alias = "maxDelaySeconds")]
-        public int MaxDelaySeconds { get; set; }
+        public int MaxDelaySeconds { get; set; } = 15;
 
         // Application Content
         [YamlMember(Alias = "personalInfo")]
-        public Dictionary<string, string> PersonalInfo { get; set; }
+        public Dictionary<string, string> PersonalInfo { get; set; } = new()
+        {
+            ["First name"] = string.Empty,
+            ["Last name"] = string.Empty,
+            ["Phone country code"] = string.Empty,
+            ["Mobile number"] = string.Empty,
+            ["Email"] = string.Empty,
+            ["Location"] = string.Empty
+        };
 
         [YamlMember(Alias = "eeo")]
-        public Dictionary<string, string> Eeo { get; set; }
+        public Dictionary<string, string> Eeo { get; set; } = new();
 
         [YamlMember(Alias = "uploads")]
-        public Dictionary<string, string> Uploads { get; set; }
+        public Dictionary<string, string> Uploads { get; set; } = new();
 
         [YamlMember(Alias = "universityGpa")]
-        public double UniversityGpa { get; set; }
+        public double UniversityGpa { get; set; } = 3.5;
 
         // Technical Preferences
         [YamlMember(Alias = "checkboxes")]
-        public Dictionary<string, bool> Checkboxes { get; set; }
+        public Dictionary<string, bool> Checkboxes { get; set; } = new();
 
         [YamlMember(Alias = "industry")]
-        public Dictionary<string, int> Industry { get; set; }
+        public Dictionary<string, int> Industry { get; set; } = new();
 
         [YamlMember(Alias = "technology")]
-        public Dictionary<string, int> Technology { get; set; }
+        public Dictionary<string, int> Technology { get; set; } = new();
 
         [YamlMember(Alias = "languages")]
-        public Dictionary<string, string> Languages { get; set; }
+        public Dictionary<string, string> Languages { get; set; } = new();
 
         // Output Configuration
         [YamlMember(Alias = "outputFileDirectory")]
-        public string OutputFileDirectory { get; set; }
+        public string OutputFileDirectory { get; set; } = "./output";
 
         // Browser Configuration
         [YamlMember(Alias = "headlessMode")]
-        public bool HeadlessMode { get; set; }
+        public bool HeadlessMode { get; set; } = false;
 
         [YamlMember(Alias = "userAgent")]
-        public string UserAgent { get; set; }
+        public string UserAgent { get; set; } = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)";
 
         [YamlMember(Alias = "pageLoadTimeout")]
-        public int PageLoadTimeout { get; set; }
+        public int PageLoadTimeout { get; set; } = 30;
 
         [YamlMember(Alias = "resumePath")]
         public string? ResumePath { get; set; }
@@ -96,71 +101,14 @@ namespace Job_worker.Models
         [YamlMember(Alias = "coverLetterPath")]
         public string? CoverLetterPath { get; set; }
 
-        public LinkedinConfig()
+        public void Validate()
         {
-        }
-
-        public LinkedinConfig(
-            string? email = null,
-            string password = null,
-            List<string> positions = null,
-            List<string> locations = null,
-            int distance = 25,
-            bool remote = false,
-            Dictionary<string, bool> experienceLevel = null,
-            Dictionary<string, bool> jobTypes = null,
-            Dictionary<string, bool> datePosted = null,
-            bool disableAntiLock = false,
-            int maxApplicationsPerDay = 30,
-            int minDelaySeconds = 5,
-            int maxDelaySeconds = 15,
-            Dictionary<string, string> personalInfo = null,
-            Dictionary<string, string> eeo = null,
-            Dictionary<string, string> uploads = null,
-            double universityGpa = 3.5,
-            Dictionary<string, bool> checkboxes = null,
-            Dictionary<string, int> industry = null,
-            Dictionary<string, int> technology = null,
-            Dictionary<string, string> languages = null,
-            string outputFileDirectory = "./output",
-            bool headlessMode = false,
-            string userAgent = null,
-            int pageLoadTimeout = 30)
-        {
-            // Required fields
-            Email = email;
-            Password = password;
-            Positions = positions ?? new List<string>();
-            Locations = locations ?? new List<string>();
-
-            // Optional fields with defaults
-            Distance = distance;
-            Remote = remote;
-            ExperienceLevel = experienceLevel ?? new Dictionary<string, bool>();
-            JobTypes = jobTypes ?? new Dictionary<string, bool>();
-            DatePosted = datePosted ?? new Dictionary<string, bool>();
-            DisableAntiLock = disableAntiLock;
-            MaxApplicationsPerDay = maxApplicationsPerDay;
-            MinDelaySeconds = minDelaySeconds;
-            MaxDelaySeconds = maxDelaySeconds;
-            PersonalInfo = personalInfo ?? new Dictionary<string, string>();
-            Eeo = eeo ?? new Dictionary<string, string>();
-            Uploads = uploads ?? new Dictionary<string, string>();
-            UniversityGpa = universityGpa;
-            Checkboxes = checkboxes ?? new Dictionary<string, bool>();
-            Industry = industry ?? new Dictionary<string, int>();
-            Technology = technology ?? new Dictionary<string, int>();
-            Languages = languages ?? new Dictionary<string, string>();
-            OutputFileDirectory = outputFileDirectory;
-            HeadlessMode = headlessMode;
-            UserAgent = userAgent ?? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36";
-            PageLoadTimeout = pageLoadTimeout;
-
-            // Ensure required uploads
+            if (string.IsNullOrWhiteSpace(Email))
+                throw new ArgumentException("Email must be provided.");
+            if (string.IsNullOrWhiteSpace(Password))
+                throw new ArgumentException("Password must be provided.");
             if (!Uploads.ContainsKey("Resume"))
-            {
-                throw new ArgumentException("Uploads must contain at least a 'Resume' entry");
-            }
+                throw new ArgumentException("Uploads must contain a 'Resume' entry.");
         }
     }
 }
