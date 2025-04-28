@@ -1,5 +1,4 @@
-
-import { Database } from '@/integrations/supabase/types';
+import { Database } from '../integrations/supabase/types';
 
 // Define a type for Supabase jobs table
 export type SupabaseJob = Database['public']['Tables']['jobs']['Row'];

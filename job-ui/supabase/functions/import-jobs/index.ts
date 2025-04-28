@@ -1,8 +1,7 @@
-
+// @ts-nocheck
 // Follow this setup guide to integrate the Supabase client in Edge Functions:
 // https://supabase.com/docs/guides/functions/connect-to-supabase
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 // CORS headers for browser requests
@@ -26,7 +25,7 @@ interface JobData {
   id?: string; // Make id optional
 }
 
-serve(async (req) => {
+export async function serve(req: Request): Promise<Response> {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, {
@@ -108,4 +107,4 @@ serve(async (req) => {
       { headers: { ...corsHeaders }, status: 500 }
     )
   }
-})
+}

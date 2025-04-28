@@ -1,11 +1,23 @@
-
-import React, { useState, useEffect } from 'react';
-import { Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { getJobStats, fetchJobs } from '@/services/jobService';
-import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table';
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
-import { type Job } from '@/types';
+import React, { useState, useEffect } from "react";
+import { Loader2 } from "lucide-react";
+import { getJobStats, fetchJobs } from "../services/jobService";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+} from "./ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "./ui/pagination";
+import { type Job } from "../types";
 
 const JobTableAdmin = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -20,7 +32,7 @@ const JobTableAdmin = () => {
       try {
         const stats = await getJobStats();
         setJobCount(stats.count);
-        
+
         const jobsData = await fetchJobs();
         setJobs(jobsData);
       } catch (error) {
@@ -29,7 +41,7 @@ const JobTableAdmin = () => {
         setIsLoading(false);
       }
     };
-    
+
     loadJobStats();
   }, []);
 
@@ -43,10 +55,10 @@ const JobTableAdmin = () => {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', { 
-      month: 'short', 
-      day: 'numeric', 
-      year: 'numeric' 
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     }).format(date);
   };
 
@@ -64,7 +76,9 @@ const JobTableAdmin = () => {
       <div className="mb-4">
         <h3 className="text-lg font-medium">Database Status</h3>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          There {jobCount === 1 ? 'is' : 'are'} currently <span className="font-bold">{jobCount}</span> job{jobCount !== 1 ? 's' : ''} in the database.
+          There {jobCount === 1 ? "is" : "are"} currently{" "}
+          <span className="font-bold">{jobCount}</span> job
+          {jobCount !== 1 ? "s" : ""} in the database.
         </p>
       </div>
 
@@ -107,27 +121,40 @@ const JobTableAdmin = () => {
             <Pagination className="mt-4">
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious 
+                  <PaginationPrevious
                     onClick={() => paginate(Math.max(1, currentPage - 1))}
-                    className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                    className={
+                      currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                    }
+                    size={undefined}
                   />
                 </PaginationItem>
-                
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <PaginationItem key={page}>
-                    <PaginationLink 
-                      onClick={() => paginate(page)}
-                      isActive={page === currentPage}
-                    >
-                      {page}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-                
+
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (page) => (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        onClick={() => paginate(page)}
+                        isActive={page === currentPage}
+                        size={undefined}
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )
+                )}
+
                 <PaginationItem>
-                  <PaginationNext 
-                    onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
-                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                  <PaginationNext
+                    onClick={() =>
+                      paginate(Math.min(totalPages, currentPage + 1))
+                    }
+                    className={
+                      currentPage === totalPages
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }
+                    size={undefined}
                   />
                 </PaginationItem>
               </PaginationContent>
@@ -136,8 +163,12 @@ const JobTableAdmin = () => {
         </>
       ) : (
         <div className="text-center py-8">
-          <p className="text-gray-500 dark:text-gray-400 mb-4">No jobs found in the database</p>
-          <p className="text-sm text-gray-400 dark:text-gray-500">Try importing sample jobs using the button below</p>
+          <p className="text-gray-500 dark:text-gray-400 mb-4">
+            No jobs found in the database
+          </p>
+          <p className="text-sm text-gray-400 dark:text-gray-500">
+            Try importing sample jobs using the button below
+          </p>
         </div>
       )}
     </div>

@@ -6,12 +6,9 @@
   ],
   "compilerOptions": {
     "baseUrl": ".",
-    // "paths": {
-    //   "@/*": ["frontend/src/*"]
-    // },
     "paths": {
-        "@/*": ["src/*"]
-      },
+      "@/*": ["src/*"]
+    },
     "noImplicitAny": false,
     "noUnusedParameters": false,
     "skipLibCheck": true,

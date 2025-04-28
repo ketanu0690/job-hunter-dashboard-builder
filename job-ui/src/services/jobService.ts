@@ -1,16 +1,49 @@
-import { supabase } from '@/integrations/supabase/client';
-import type { Job, SearchCriteria } from '@/types';
-import type { SupabaseJob } from '@/types/supabase';
-import { toast } from '@/hooks/use-toast';
+import { supabase } from '../integrations/supabase/client';
+import type { Job, SearchCriteria } from '../types';
+import type { SupabaseJob } from '../types/supabase';
+import { toast } from '../hooks/use-toast';
+import { useAuth } from '../components/forms/AuthForm';
 
-// Get auth token (helper function)
+// Helper function to get the JWT token
 const getAuthToken = async (): Promise<string> => {
-  const { data } = await supabase.auth.getSession();
-  return data.session?.access_token || '';
+  const { data, error } = await supabase.auth.getSession();
+  
+  if (error || !data.session) {
+    throw new Error('Session not found or error fetching session');
+  }
+  
+  return data.session.access_token;
+};
+
+// Function to login the user (you can customize it as per your needs)
+export const loginUser = async (email: string, password: string): Promise<boolean> => {
+  try {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      throw new Error('Login failed: ' + error.message);
+    }
+
+    // Successfully logged in, get the token
+    const token = await getAuthToken();
+    console.log('User logged in with token:', token);
+    return true;
+  } catch (error) {
+    console.error('Error logging in:', error);
+    toast({
+      title: 'Login failed',
+      description: (error as Error).message,
+      variant: 'destructive',
+    });
+    return false;
+  }
 };
 
 // Convert Supabase job format to our application Job format
-export const mapSupabaseJobToJob = (job: SupabaseJob): Job => {
+const mapSupabaseJobToJob = (job: SupabaseJob): Job => {
   return {
     id: job.id,
     title: job.title,
@@ -51,9 +84,8 @@ export const fetchJobs = async (): Promise<Job[]> => {
 };
 
 // Import sample jobs to Supabase
-export const importSampleJobs = async (sampleJobs: Job[]): Promise<void> => {
+export const importSampleJobs = async (sampleJobs: Job[], token: string): Promise<void> => {
   try {
-    // Convert our Job format to Supabase format
     const supabaseJobs = sampleJobs.map(job => ({
       id: job.id,
       title: job.title,
@@ -65,29 +97,25 @@ export const importSampleJobs = async (sampleJobs: Job[]): Promise<void> => {
       salary: job.salary,
       skills: job.skills,
       source: job.source,
-      is_new: job.isNew || true
+      is_new: job.isNew || true,
     }));
-    
-    // Get auth token before making the request
-    const token = await getAuthToken();
-    
-    // Use the Edge Function to import jobs
+
     const response = await fetch('https://bjubucmfgpcvcuqibofk.supabase.co/functions/v1/import-jobs', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify({ jobs: supabaseJobs })
+      body: JSON.stringify({ jobs: supabaseJobs }),
     });
-    
+
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.error || 'Failed to import jobs');
     }
-    
+
     const result = await response.json();
-    
+
     toast({
       title: 'Sample jobs imported',
       description: result.message || `${supabaseJobs.length} jobs have been added to the database`,
@@ -104,9 +132,8 @@ export const importSampleJobs = async (sampleJobs: Job[]): Promise<void> => {
 };
 
 // Import jobs from Excel file
-export const importJobsFromExcel = async (jobs: Job[]): Promise<void> => {
+export const importJobsFromExcel = async (jobs: Job[], token: string): Promise<void> => {
   try {
-    // Convert our Job format to Supabase format
     const supabaseJobs = jobs.map(job => ({
       id: job.id,
       title: job.title,
@@ -118,29 +145,25 @@ export const importJobsFromExcel = async (jobs: Job[]): Promise<void> => {
       salary: job.salary,
       skills: job.skills,
       source: job.source,
-      is_new: job.isNew || true
+      is_new: job.isNew || true,
     }));
-    
-    // Get auth token before making the request
-    const token = await getAuthToken();
-    
-    // Use the Edge Function to import jobs
+
     const response = await fetch('https://bjubucmfgpcvcuqibofk.supabase.co/functions/v1/import-jobs', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify({ jobs: supabaseJobs })
+      body: JSON.stringify({ jobs: supabaseJobs }),
     });
-    
+
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.error || 'Failed to import jobs');
     }
-    
+
     const result = await response.json();
-    
+
     toast({
       title: 'Jobs imported from Excel',
       description: result.message || `${supabaseJobs.length} jobs have been added to the database`,
@@ -159,21 +182,25 @@ export const importJobsFromExcel = async (jobs: Job[]): Promise<void> => {
 // Save search criteria to Supabase
 export const saveSearchCriteria = async (criteria: SearchCriteria): Promise<void> => {
   try {
+    if (!criteria.companies && !criteria.skills) {
+      throw new Error('No criteria to save');
+    }
+
     const { error } = await supabase
       .from('search_criteria')
       .upsert({
         companies: criteria.companies,
         skills: criteria.skills,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       });
-    
+
     if (error) {
       throw error;
     }
-    
+
     toast({
       title: 'Search criteria saved',
-      description: 'Your search preferences have been saved'
+      description: 'Your search preferences have been saved',
     });
   } catch (error) {
     console.error('Error saving search criteria:', error);
@@ -185,53 +212,18 @@ export const saveSearchCriteria = async (criteria: SearchCriteria): Promise<void
   }
 };
 
-// Fetch search criteria from Supabase
-export const fetchSearchCriteria = async (): Promise<SearchCriteria | null> => {
-  try {
-    const { data, error } = await supabase
-      .from('search_criteria')
-      .select('*')
-      .single();
-    
-    if (error) {
-      if (error.code === 'PGRST116') {
-        // No search criteria found
-        return null;
-      }
-      throw error;
-    }
-    
-    return {
-      companies: data.companies,
-      skills: data.skills
-    };
-  } catch (error) {
-    console.error('Error fetching search criteria:', error);
-    toast({
-      title: 'Error fetching search criteria',
-      description: (error as Error).message,
-      variant: 'destructive',
-    });
-    return null;
-  }
-};
-
-// New function to check table status and count
-export const getJobStats = async (): Promise<{count: number}> => {
+// Get job stats (count)
+export const getJobStats = async (): Promise<{ count: number }> => {
   try {
     const { count, error } = await supabase
       .from('jobs')
       .select('*', { count: 'exact', head: true });
-    
-    if (error) {
-      throw error;
-    }
-    
-    return { count: count || 0 };
+    if (error) throw error;
+    return { count: count ?? 0 };
   } catch (error) {
     console.error('Error getting job stats:', error);
     toast({
-      title: 'Error checking job table',
+      title: 'Error getting job stats',
       description: (error as Error).message,
       variant: 'destructive',
     });

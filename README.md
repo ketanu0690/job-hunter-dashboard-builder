@@ -71,7 +71,28 @@ npm run dev
 
 ## Running the Project
 
-### 🖥️ Frontend: `job-ui`
+### 🚀 Recommended: Run Everything with Docker Compose
+
+This project is set up to run all core services (frontend, Supabase, Studio, etc.) using Docker Compose. This is the easiest way to get started locally.
+
+```sh
+cd job-ui
+# Start all services (frontend, Supabase, Studio, etc.)
+docker-compose up --build
+```
+
+- The frontend will be available at [http://localhost:3000](http://localhost:3000)
+- Supabase Studio will be available at [http://localhost:54323](http://localhost:54323)
+
+To stop all services:
+
+```sh
+docker-compose down
+```
+
+---
+
+### 🖥️ (Alternative) Frontend: `job-ui` (standalone, not recommended for full stack)
 
 ```sh
 cd job-ui

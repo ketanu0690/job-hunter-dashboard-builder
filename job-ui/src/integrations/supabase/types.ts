@@ -81,6 +81,24 @@ export type Database = {
         }
         Relationships: []
       }
+      blogs: {
+        Row: {
+          id: number;
+          author: string;
+          content: Json;
+        };
+        Insert: {
+          id?: number;
+          author: string;
+          content: Json;
+        };
+        Update: {
+          id?: number;
+          author?: string;
+          content?: Json;
+        };
+        Relationships: [];
+      }
     }
     Views: {
       [_ in never]: never

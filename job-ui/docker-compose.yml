@@ -1,0 +1,122 @@
+version: '3.8'
+
+services:
+  # Frontend Vite React application
+  app:
+    image: node:20-alpine
+    container_name: job-ui
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
+      - VITE_SUPABASE_DEV_URL=${VITE_SUPABASE_DEV_URL}
+      - VITE_SUPABASE_PROD_URL=${VITE_SUPABASE_PROD_URL}
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 3000"
+    networks:
+      - job-hunter-network
+    depends_on:
+      - supabase-db
+      - supabase-rest
+
+  # Supabase database
+  supabase-db:
+    image: supabase/postgres:14.1.0
+    container_name: supabase-db
+    restart: unless-stopped
+    ports:
+      - "54322:5432"
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./supabase/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - job-hunter-network
+
+  # Supabase REST API
+  supabase-rest:
+    image: postgrest/postgrest:v10.1.2
+    container_name: supabase-rest
+    restart: unless-stopped
+    depends_on:
+      - supabase-db
+    ports:
+      - "8000:3000"
+    environment:
+      PGRST_DB_URI: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@supabase-db:5432/${POSTGRES_DB}
+      PGRST_DB_SCHEMA: public,storage
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+      PGRST_JWT_SECRET: ${SUPABASE_JWT_SECRET}
+    networks:
+      - job-hunter-network
+
+  # Supabase Studio
+  studio:
+    image: supabase/studio:latest
+    container_name: supabase-studio
+    restart: unless-stopped
+    ports:
+      - "54323:3000"
+    environment:
+      SUPABASE_URL: ${VITE_SUPABASE_DEV_URL}
+      STUDIO_PG_META_URL: http://meta:8080
+      SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+      SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+    networks:
+      - job-hunter-network
+    depends_on:
+      - supabase-rest
+
+  # Supabase Metadata
+  meta:
+    image: supabase/postgres-meta:v0.62.0
+    container_name: supabase-meta
+    restart: unless-stopped
+    environment:
+      PG_META_PORT: 8080
+      PG_META_DB_HOST: supabase-db
+      PG_META_DB_PORT: 5432
+      PG_META_DB_NAME: ${POSTGRES_DB}
+      PG_META_DB_USER: ${POSTGRES_USER}
+      PG_META_DB_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - job-hunter-network
+    depends_on:
+      - supabase-db
+
+  # Edge Functions Runtime
+  edge-runtime:
+    image: denoland/deno:latest
+    container_name: supabase-edge-runtime
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    command: >
+      run --allow-net --allow-env --allow-read --watch /app/server.ts
+    environment:
+      SUPABASE_URL: ${VITE_SUPABASE_DEV_URL}
+      SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      FUNCTIONS_PATH: /home/deno/functions
+    volumes:
+      - ./supabase/functions:/home/deno/functions
+      - ./supabase/server.ts:/app/server.ts
+    networks:
+      - job-hunter-network
+    depends_on:
+      - supabase-db
+      - supabase-rest
+
+networks:
+  job-hunter-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
