@@ -1,40 +1,49 @@
-import { Toaster } from "sonner";
-import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+// src/App.tsx
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
+import { Toaster } from "sonner";
+
+import { AuthProvider } from "./components/forms/AuthForm";
+
 import Index from "./pages/Index";
+import Login from "./pages/Login";
+import AdminDashboard from "./pages/AdminDashboard";
 import LinkedInAutomation from "./pages/LinkedInAutomation";
-import NotFound from "./pages/NotFound";
 import BlogListPage from "./pages/BlogListPage";
 import BlogCreatePage from "./pages/BlogCreatePage";
 import BlogEditPage from "./pages/BlogEditPage";
-import React from "react";
-import { AuthProvider } from "./components/forms/AuthForm";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <AuthProvider>
+const App: React.FC = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route
-              path="/linkedin-automation"
-              element={<LinkedInAutomation />}
-            />
-            <Route path="/blogs" element={<BlogListPage />} />
-            <Route path="/blogs/create" element={<BlogCreatePage />} />
-            <Route path="/blogs/edit/:id" element={<BlogEditPage />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route
+                path="/linkedin-automation"
+                element={<LinkedInAutomation />}
+              />
+              <Route path="/blogs" element={<BlogListPage />} />
+              <Route path="/blogs/create" element={<BlogCreatePage />} />
+              <Route path="/blogs/edit/:id" element={<BlogEditPage />} />
+              {/* 404 Catch All */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AuthProvider>
         </BrowserRouter>
-      </AuthProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

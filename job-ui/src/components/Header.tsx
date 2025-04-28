@@ -1,83 +1,70 @@
-import React, { useState } from "react";
-import { BriefcaseBusiness, Bell } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import EasyApplyForm from "@/components/forms/EasyApplyForm";
-import { Link, useLocation } from "react-router-dom";
+import React from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "./forms/AuthForm";
 
-interface HeaderProps {
-  newJobsCount: number;
-}
-const Header: React.FC<HeaderProps> = ({ newJobsCount }) => {
-  const [selectedPlatform, setSelectedPlatform] = useState<
-    "LinkedIn" | "Naukri" | null
-  >(null);
+const Header: React.FC = () => {
+  const { session, setSession } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handlePlatformSelect = (platform: "LinkedIn" | "Naukri") => {
-    setSelectedPlatform(platform);
+  const handleLogout = async () => {
+    await import("../integrations/supabase/client").then(
+      async ({ supabase }) => {
+        await supabase.auth.signOut();
+        setSession(null);
+        navigate("/login");
+      }
+    );
   };
 
-  console.log("Selected Platform:", selectedPlatform);
-
   return (
-    <header className="border-b bg-white dark:bg-gray-900">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          <BriefcaseBusiness className="h-6 w-6 text-primary" />
-          <h1 className="text-xl font-bold">TechJobTracker</h1>
-        </div>
-        <div className="flex items-center space-x-6">
+    <header className="w-full py-6 bg-white dark:bg-gray-900 shadow">
+      <div className="container mx-auto px-4 flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-blue-700 dark:text-blue-300">
+          <Link to="/">TechJobTracker</Link>
+        </h1>
+        <nav className="flex items-center gap-6">
+          <Link
+            to="/"
+            className={`text-base font-medium hover:text-blue-700 dark:hover:text-blue-300 transition-colors ${
+              location.pathname === "/"
+                ? "text-blue-700 dark:text-blue-300 underline"
+                : "text-gray-700 dark:text-gray-200"
+            }`}
+          >
+            Home
+          </Link>
           <Link
             to="/blogs"
-            className={`text-base font-medium hover:text-primary transition-colors ${
-              useLocation().pathname.startsWith("/blogs")
-                ? "text-primary underline"
-                : ""
+            className={`text-base font-medium hover:text-blue-700 dark:hover:text-blue-300 transition-colors ${
+              location.pathname.startsWith("/blogs")
+                ? "text-blue-700 dark:text-blue-300 underline"
+                : "text-gray-700 dark:text-gray-200"
             }`}
           >
             Blogs
           </Link>
-          <div className="flex items-center space-x-3">
-            <Button variant="outline" size="sm" className="relative">
-              <Bell className="h-5 w-5" />
-              {newJobsCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                  {newJobsCount}
-                </span>
-              )}
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="secondary">Easy Apply</Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem
-                  onClick={() => handlePlatformSelect("LinkedIn")}
-                >
-                  LinkedIn
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handlePlatformSelect("Naukri")}
-                >
-                  Naukri
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            {selectedPlatform && (
-              <EasyApplyForm
-                platform={selectedPlatform}
-                onClose={() => {
-                  setSelectedPlatform(null);
-                }}
-              />
-            )}
-          </div>
-        </div>
+          {session && (
+            <Link
+              to="/admin"
+              className={`text-base font-medium hover:text-blue-700 dark:hover:text-blue-300 transition-colors ${
+                location.pathname === "/admin"
+                  ? "text-blue-700 dark:text-blue-300 underline"
+                  : "text-gray-700 dark:text-gray-200"
+              }`}
+            >
+              Dashboard
+            </Link>
+          )}
+          {session && (
+            <button
+              onClick={handleLogout}
+              className="ml-4 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition-all"
+            >
+              Logout
+            </button>
+          )}
+        </nav>
       </div>
     </header>
   );

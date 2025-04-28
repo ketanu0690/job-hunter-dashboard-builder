@@ -71,34 +71,16 @@ npm run dev
 
 ## Running the Project
 
-### 🚀 Recommended: Run Everything with Docker Compose
-
-This project is set up to run all core services (frontend, Supabase, Studio, etc.) using Docker Compose. This is the easiest way to get started locally.
-
-```sh
-cd job-ui
-# Start all services (frontend, Supabase, Studio, etc.)
-docker-compose up --build
-```
-
-- The frontend will be available at [http://localhost:3000](http://localhost:3000)
-- Supabase Studio will be available at [http://localhost:54323](http://localhost:54323)
-
-To stop all services:
-
-```sh
-docker-compose down
-```
-
----
-
-### 🖥️ (Alternative) Frontend: `job-ui` (standalone, not recommended for full stack)
+### 🖥️ Frontend: `job-ui`
 
 ```sh
 cd job-ui
 npm install
 npm run dev
 ```
+
+- The frontend will be available at [http://localhost:3000](http://localhost:3000)
+- The app connects directly to your hosted Supabase instance (see your `.env` for keys)
 
 ### ⚙️ Backend: `job-core-services`
 
@@ -142,11 +124,11 @@ Docs: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-d
 
 ## Additional Notes
 
-- This project also integrates with **Supabase** for database management.
+- This project integrates with **Supabase** for authentication and database management (hosted, not local).
 - Includes UI components, forms, and LinkedIn automation features.
 
 To set up the project completely, make sure to:
 
-- Configure environment variables if needed
+- Configure environment variables for your hosted Supabase instance
 - Review `README.md` or `/docs` for architectural and API details
 - Explore Firebase and Supabase configurations as applicable

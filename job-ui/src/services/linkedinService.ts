@@ -61,7 +61,6 @@ export async function runLinkedinAutomation(
         withCredentials: true, // optional: only if you send cookies/session data
       }
     );
-    debugger;
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
