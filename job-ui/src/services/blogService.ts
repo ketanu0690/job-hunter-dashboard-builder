@@ -1,26 +1,14 @@
 import { supabase } from '../integrations/supabase/client';
-import type { Blog, BlogContent } from '../types';
-import type { Database } from '../integrations/supabase/types';
+import type { Blog } from '../types';
 
-// Helper to get current date in xx/xx/xxxx format
-const getCurrentDate = (): string => {
-  const now = new Date();
-  return now.toLocaleDateString('en-GB');
-};
 
 // Create a new blog
-export const createBlog = async (author: string, content: Omit<BlogContent, 'created_at'> & { created_at?: string }): Promise<Blog | null> => {
-  const blogContent: BlogContent = {
-    ...content,
-    created_at: content.created_at || getCurrentDate(),
-  };
+export const createBlog = async (blog: Partial<Blog>): Promise<Blog | null> => {
+
   const { data, error } = await supabase
     .from('blogs')
     .insert([
-      {
-        author,
-        content: blogContent as any,
-      },
+        blog,
     ])
     .select()
     .single();
@@ -28,11 +16,8 @@ export const createBlog = async (author: string, content: Omit<BlogContent, 'cre
     console.error('Error creating blog:', error);
     return null;
   }
-  return {
-    id: data.id,
-    author: data.author,
-    content: data.content as unknown as BlogContent,
-  };
+    return data as Blog;
+
 };
 
 // Get all blogs
@@ -45,36 +30,21 @@ export const getBlogs = async (): Promise<Blog[]> => {
     console.error('Error fetching blogs:', error);
     return [];
   }
-  return (data || []).map((row) => ({
-    id: row.id,
-    author: row.author,
-    content: row.content as unknown as BlogContent,
-  }));
-};
-
-// Get a single blog by ID
-export const getBlogById = async (id: number): Promise<Blog | null> => {
-  const { data, error } = await supabase
-    .from('blogs')
-    .select('*')
-    .eq('id', id)
-    .single();
-  if (error) {
-    console.error('Error fetching blog:', error);
-    return null;
-  }
-  return {
-    id: data.id,
-    author: data.author,
-    content: data.content as unknown as BlogContent,
-  };
+    return data as Blog[];
 };
 
 // Update a blog
-export const updateBlog = async (id: number, content: Partial<BlogContent>): Promise<Blog | null> => {
-  if (content.created_at === undefined) {
-    content.created_at = getCurrentDate();
-  }
+export const updateBlog = async (blog: Blog): Promise<Blog | null> => {
+    if (!blog.id) {
+        console.error('Error updating blog: ID is missing');
+        return null;
+    }
+    const id = blog.id;
+    const content = {
+        title: blog.title,
+        content: blog.content
+    }
+
   const { data, error } = await supabase
     .from('blogs')
     .update({ content: content as any })
@@ -85,15 +55,11 @@ export const updateBlog = async (id: number, content: Partial<BlogContent>): Pro
     console.error('Error updating blog:', error);
     return null;
   }
-  return {
-    id: data.id,
-    author: data.author,
-    content: data.content as unknown as BlogContent,
-  };
+    return data as Blog;
 };
 
 // Delete a blog
-export const deleteBlog = async (id: number): Promise<boolean> => {
+export const deleteBlog = async (id: string): Promise<boolean> => {
   const { error } = await supabase
     .from('blogs')
     .delete()

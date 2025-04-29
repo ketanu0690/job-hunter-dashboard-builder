@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "./forms/AuthForm";
+import ThemeToggle from "./ui/theme-toggle";
 
 const Header: React.FC = () => {
   const { session, setSession } = useAuth();
@@ -56,6 +57,7 @@ const Header: React.FC = () => {
               Dashboard
             </Link>
           )}
+          <ThemeToggle />
           {session && (
             <button
               onClick={handleLogout}

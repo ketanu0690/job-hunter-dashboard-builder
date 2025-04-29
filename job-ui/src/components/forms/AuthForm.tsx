@@ -1,15 +1,9 @@
-import React, {
-  useState,
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-} from "react";
+import React, { useState, createContext, useContext, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { toast } from "../../hooks/use-toast";
 import { supabase } from "../../integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { toast } from "../../hooks/use-toast";
 
 // AuthContext and hook
 interface AuthContextType {
@@ -21,32 +15,37 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
-}) => {
+}) => {  
   const [session, setSession] = useState<any>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [loadingSession, setLoadingSession] = useState<boolean>(true);
   const inactivityTimeout = useRef<NodeJS.Timeout | null>(null);
+  const navigate = useNavigate();
 
+  
   // Restore session on mount and listen for changes
   useEffect(() => {
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {      
         setSession(session);
         setToken(session?.access_token || null);
-        console.log("[AuthProvider] Session changed:", session);
       }
     );
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       setToken(data.session?.access_token || null);
-      console.log(
-        "[AuthProvider] Session restored from localStorage:",
-        data.session
-      );
+      setLoadingSession(false);
     });
     return () => {
       listener.subscription.unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    if (!session && !loadingSession) {
+      navigate("/login");
+    }
+  }, [session, loadingSession]);
 
   // Auto-logout after inactivity (15 minutes)
   useEffect(() => {
@@ -54,7 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       await supabase.auth.signOut();
       setSession(null);
-      setToken(null);
+      setToken(null)
       window.location.href = "/login";
     };
     const resetTimer = () => {
@@ -77,11 +76,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, [session]);
 
-  return (
-    <AuthContext.Provider value={{ session, token, setSession }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return loadingSession ? null : (
+      <AuthContext.Provider value={{ session, token, setSession }}>
+        {children}
+      </AuthContext.Provider>
+    );
 };
 
 export const useAuth = () => {
@@ -112,7 +111,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ redirectToHome }) => {
           password,
         });
         if (error) throw error;
-        setSession(data.session);
+         setSession(data.session);
         toast({ title: "Signed in!", description: "You are now logged in." });
         // Redirect after login
         if (redirectToHome) {

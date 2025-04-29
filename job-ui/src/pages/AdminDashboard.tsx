@@ -1,10 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { sampleJobs } from "../utils/jobData";
-import { useLocalStorage } from "../hooks/useLocalStorage";
-import { SearchCriteria, Job } from "../types";
-import { fetchJobs, importSampleJobs } from "../services/jobService";
-import { toast } from "../hooks/use-toast";
 import {
   Award,
   Send,
@@ -14,86 +7,12 @@ import {
   LinkedinIcon,
   BookOpen,
 } from "lucide-react";
-import { useAuth } from "../components/forms/AuthForm";
-
 import DashboardLayout from "../layouts/DashboardLayout";
 import MetricsCard from "../components/dashboard/MetricsCard";
 import ChartCard from "../components/dashboard/ChartCard";
 import AutomationCard from "../components/dashboard/AutomationCard";
 import RecommendationCard from "../components/dashboard/RecommendationCard";
-import Header from "../components/Header";
 
-const AdminDashboard = () => {
-  const [searchCriteria, setSearchCriteria] = useLocalStorage<SearchCriteria>(
-    "searchCriteria",
-    {
-      companies: [],
-      skills: [],
-    }
-  );
-  const [zapierWebhook, setZapierWebhook] = useLocalStorage<string>(
-    "zapierWebhook",
-    ""
-  );
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [importing, setImporting] = useState(false);
-  const { session } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const loadJobs = async () => {
-      setLoading(true);
-      try {
-        const jobsData = await fetchJobs();
-        setJobs(jobsData);
-      } catch (error) {
-        console.error("Error loading jobs:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadJobs();
-  }, []);
-
-  const handleImportSampleJobs = async () => {
-    setImporting(true);
-    try {
-      await importSampleJobs(sampleJobs, session?.access_token);
-      const updatedJobs = await fetchJobs();
-      setJobs(updatedJobs);
-      toast({
-        title: "Success",
-        description: "Sample jobs have been imported successfully!",
-      });
-    } catch (error) {
-      console.error("Error importing sample jobs:", error);
-    } finally {
-      setImporting(false);
-    }
-  };
-
-  const handleRefreshJobs = async () => {
-    setLoading(true);
-    try {
-      const updatedJobs = await fetchJobs();
-      setJobs(updatedJobs);
-      toast({
-        title: "Jobs Refreshed",
-        description: `${updatedJobs.length} jobs loaded from the database.`,
-      });
-    } catch (error) {
-      console.error("Error refreshing jobs:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const newJobsCount = jobs.filter((job) => job.isNew).length;
-
-  if (!session || session.user?.role !== "authenticated") {
-    return null; // Show nothing while redirecting
-  }
   // Sample data for charts
   const applicationData = [
     { name: "Mon", value: 12 },
@@ -152,6 +71,8 @@ const AdminDashboard = () => {
       description: "Mentioned in 72% of job descriptions",
     },
   ];
+const AdminDashboard = () => {
+
 
   // Get current date
   const today = new Date().toLocaleDateString("en-US", {
@@ -163,7 +84,6 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-transparent">
-      <Header />
       <DashboardLayout>
         <div className="mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 bg-primary/10 border border-primary/20 rounded-xl p-6">

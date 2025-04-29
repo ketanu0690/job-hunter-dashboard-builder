@@ -26,5 +26,5 @@
       "@/*": ["frontend/src/*"]
     }
   },
-  "include": ["frontend/src", "backend/features/linkedin-automation/linkdinEasy.ts"]
+  "include": ["src"]
 }

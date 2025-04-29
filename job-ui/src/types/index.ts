@@ -29,5 +29,3 @@ export interface Blog {
   author: string; // user ID
   content: BlogContent;
 }
-
-export type { Blog, BlogContent };

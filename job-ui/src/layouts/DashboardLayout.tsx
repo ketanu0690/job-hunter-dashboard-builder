@@ -1,5 +1,5 @@
 import React from "react";
-import Sidebar from "../components/dashboard/sidebar";
+import Sidebar from "../components/dashboard/Sidebar";
 import FloatingActionButton from "../components/dashboard/FloatingActionButton";
 
 interface DashboardLayoutProps {

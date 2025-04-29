@@ -1,13 +1,26 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import useTheme from "./use-theme";
 
 const ThemeToggle: React.FC = () => {
-  // For now just a UI placeholder since we're using dark mode by default
+  const [theme, setTheme] = useTheme();
+
   return (
-    <Button variant="ghost" size="icon" className="text-sidebar-foreground hover:bg-white/10 hover:text-white">
-      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
+    <Button
+      variant="ghost"
+      size="icon"
+      className="text-sidebar-foreground hover:bg-white/10 hover:text-white"
+      onClick={() => {
+        setTheme(theme === "light" ? "dark" : "light");
+      }}
+    >
+      {theme === "dark" ? (
+        <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
+      ) : (
+        <Moon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
+      )}
       <span className="sr-only">Toggle theme</span>
     </Button>
   );
