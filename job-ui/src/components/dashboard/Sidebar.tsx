@@ -188,7 +188,6 @@ const Sidebar: React.FC = () => {
         </ul>
       </nav>
 
-      {/* Footer */}
       <div className="p-4 border-t border-primary/20">
         <div className="flex items-center justify-between">
           <button className="p-2 rounded-lg hover:bg-accent/20 transition-colors">

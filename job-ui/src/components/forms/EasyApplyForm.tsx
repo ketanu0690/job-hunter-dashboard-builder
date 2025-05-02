@@ -154,7 +154,7 @@ const EasyApplyForm: React.FC<EasyApplyFormProps> = ({ platform, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-900 rounded-lg p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto space-y-4">
+      <div className="bg-background dark:bg-gray-900 rounded-lg p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto space-y-4">
         <h2 className="text-xl font-bold">Easy Apply - {platform}</h2>
 
         <div className="flex gap-4">

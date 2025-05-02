@@ -1,7 +1,6 @@
-
 import React, { useEffect } from "react";
 import { Moon, Sun } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../ui/button";
 import useTheme from "./use-theme";
 
 const ThemeToggle: React.FC = () => {
@@ -11,7 +10,7 @@ const ThemeToggle: React.FC = () => {
     <Button
       variant="ghost"
       size="icon"
-      className="text-sidebar-foreground hover:bg-white/10 hover:text-white"
+      className="text-sidebar-foreground hover:bg-background/10 hover:text-white"
       onClick={() => {
         setTheme(theme === "light" ? "dark" : "light");
       }}

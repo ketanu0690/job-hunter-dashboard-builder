@@ -29,7 +29,7 @@ const ChartCard: React.FC<ChartCardProps> = ({
   return (
     <div
       className={cn(
-        "rounded-xl p-5 shadow-md bg-white/90 dark:bg-gray-900/80 h-full",
+        "rounded-xl p-5 shadow-md bg-background/90 dark:bg-gray-900/80 h-full",
         className
       )}
     >
@@ -85,7 +85,7 @@ const ChartCard: React.FC<ChartCardProps> = ({
                 if (active && payload && payload.length) {
                   return (
                     <div className="bg-futuristic-darker p-2 border border-white/10 rounded-md text-xs">
-                      <p className="text-neon-blue font-medium">{`${payload[0].value}`}</p>
+                      <p className="text-green-600 font-medium">{`${payload[0].value}`}</p>
                     </div>
                   );
                 }

@@ -13,67 +13,65 @@ import ChartCard from "../components/dashboard/ChartCard";
 import AutomationCard from "../components/dashboard/AutomationCard";
 import RecommendationCard from "../components/dashboard/RecommendationCard";
 
-  // Sample data for charts
-  const applicationData = [
-    { name: "Mon", value: 12 },
-    { name: "Tue", value: 18 },
-    { name: "Wed", value: 15 },
-    { name: "Thu", value: 25 },
-    { name: "Fri", value: 32 },
-    { name: "Sat", value: 14 },
-    { name: "Sun", value: 7 },
-  ];
+// Sample data for charts
+const applicationData = [
+  { name: "Mon", value: 12 },
+  { name: "Tue", value: 18 },
+  { name: "Wed", value: 15 },
+  { name: "Thu", value: 25 },
+  { name: "Fri", value: 32 },
+  { name: "Sat", value: 14 },
+  { name: "Sun", value: 7 },
+];
 
-  const connectionData = [
-    { name: "Week 1", value: 25 },
-    { name: "Week 2", value: 40 },
-    { name: "Week 3", value: 30 },
-    { name: "Week 4", value: 58 },
-    { name: "Week 5", value: 65 },
-    { name: "Week 6", value: 72 },
-  ];
+const connectionData = [
+  { name: "Week 1", value: 25 },
+  { name: "Week 2", value: 40 },
+  { name: "Week 3", value: 30 },
+  { name: "Week 4", value: 58 },
+  { name: "Week 5", value: 65 },
+  { name: "Week 6", value: 72 },
+];
 
-  const jobRecommendations = [
-    {
-      id: "1",
-      title: "Senior Frontend Developer",
-      description: "React, TypeScript, UI/UX",
-      score: 94,
-    },
-    {
-      id: "2",
-      title: "Full Stack Engineer",
-      description: "Node.js, React, MongoDB",
-      score: 87,
-    },
-    {
-      id: "3",
-      title: "UI/UX Designer",
-      description: "Figma, Adobe XD, Prototyping",
-      score: 82,
-    },
-  ];
+const jobRecommendations = [
+  {
+    id: "1",
+    title: "Senior Frontend Developer",
+    description: "React, TypeScript, UI/UX",
+    score: 94,
+  },
+  {
+    id: "2",
+    title: "Full Stack Engineer",
+    description: "Node.js, React, MongoDB",
+    score: 87,
+  },
+  {
+    id: "3",
+    title: "UI/UX Designer",
+    description: "Figma, Adobe XD, Prototyping",
+    score: 82,
+  },
+];
 
-  const skillRecommendations = [
-    {
-      id: "1",
-      title: "GraphQL",
-      description: "Growing demand in job listings +24%",
-    },
-    {
-      id: "2",
-      title: "System Design",
-      description: "Required in 68% of senior roles",
-    },
-    {
-      id: "3",
-      title: "AWS Cloud",
-      description: "Mentioned in 72% of job descriptions",
-    },
-  ];
+const skillRecommendations = [
+  {
+    id: "1",
+    title: "GraphQL",
+    description: "Growing demand in job listings +24%",
+  },
+  {
+    id: "2",
+    title: "System Design",
+    description: "Required in 68% of senior roles",
+  },
+  {
+    id: "3",
+    title: "AWS Cloud",
+    description: "Mentioned in 72% of job descriptions",
+  },
+];
 const AdminDashboard = () => {
-
-
   // Get current date
   const today = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -210,8 +208,8 @@ const AdminDashboard = () => {
               />
 
               {/* Gamification Badge */}
-              <div className="p-5 relative overflow-hidden rounded-xl bg-white/70 dark:bg-gray-800/70 backdrop-blur shadow-md">
-                <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-gradient-to-br from-purple-400 to-blue-400 opacity-20 blur-xl"></div>
+              <div className="p-5 relative overflow-hidden rounded-xl bg-background/70 dark:bg-gray-800/70 backdrop-blur shadow-md">
+                <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-gradient-to-br from-purple-400 to-green-400 opacity-20 blur-xl"></div>
                 <div className="relative z-10">
                   <h3 className="font-medium text-gray-900 dark:text-gray-100 flex items-center">
                     <Award size={16} className="text-purple-400 mr-2" />
@@ -236,7 +234,7 @@ const AdminDashboard = () => {
                     </div>
                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                       <div
-                        className="bg-gradient-to-r from-purple-400 to-blue-400 h-2 rounded-full"
+                        className="bg-gradient-to-r from-purple-400 to-green-400 h-2 rounded-full"
                         style={{ width: "75%" }}
                       ></div>
                     </div>

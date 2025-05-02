@@ -1,4 +1,10 @@
-import React, { useState, createContext, useContext, useEffect, useRef } from "react";
+import React, {
+  useState,
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -15,18 +21,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
-}) => {  
+}) => {
   const [session, setSession] = useState<any>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loadingSession, setLoadingSession] = useState<boolean>(true);
   const inactivityTimeout = useRef<NodeJS.Timeout | null>(null);
   const navigate = useNavigate();
 
-  
   // Restore session on mount and listen for changes
   useEffect(() => {
     const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {      
+      (_event, session) => {
         setSession(session);
         setToken(session?.access_token || null);
       }
@@ -50,10 +55,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // Auto-logout after inactivity (15 minutes)
   useEffect(() => {
     const logout = async () => {
-
       await supabase.auth.signOut();
       setSession(null);
-      setToken(null)
+      setToken(null);
       window.location.href = "/login";
     };
     const resetTimer = () => {
@@ -77,10 +81,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [session]);
 
   return loadingSession ? null : (
-      <AuthContext.Provider value={{ session, token, setSession }}>
-        {children}
-      </AuthContext.Provider>
-    );
+    <AuthContext.Provider value={{ session, token, setSession }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {
@@ -111,7 +115,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ redirectToHome }) => {
           password,
         });
         if (error) throw error;
-         setSession(data.session);
+        setSession(data.session);
         toast({ title: "Signed in!", description: "You are now logged in." });
         // Redirect after login
         if (redirectToHome) {
@@ -151,7 +155,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ redirectToHome }) => {
   };
 
   return (
-    <div className="max-w-sm mx-auto p-6 bg-white dark:bg-gray-900 rounded shadow">
+    <div className="max-w-sm mx-auto p-6 bg-background dark:bg-gray-900 rounded shadow">
       <div className="flex justify-center mb-4">
         <Button
           variant={mode === "signIn" ? "default" : "outline"}

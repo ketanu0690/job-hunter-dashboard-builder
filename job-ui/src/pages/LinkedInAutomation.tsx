@@ -1,18 +1,22 @@
-import React, { useState } from "react";
-import Header from "@/components/Header";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toast } from "sonner";
+import { useState } from "react";
 import {
-  runLinkedinAutomation,
-  LinkedinConfig,
-} from "@/services/linkedinService";
-import LinkedInAccountCard from "@/components/linkedin/LinkedInAccountCard";
-import JobSearchCard from "@/components/linkedin/JobSearchCard";
-import PersonalInfoCard from "@/components/linkedin/PersonalInfoCard";
-import RunAutomationCard from "@/components/linkedin/RunAutomationCard";
-import AutomationLogs from "@/components/linkedin/AutomationLogs";
-import HelpContent from "@/components/linkedin/HelpContent";
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../components/ui/tabs";
+import { toast } from "sonner";
 import AuthForm, { AuthProvider, useAuth } from "../components/forms/AuthForm";
+import {
+  LinkedinConfig,
+  runLinkedinAutomation,
+} from "../services/linkedinService";
+import LinkedInAccountCard from "../components/linkedin/LinkedInAccountCard";
+import JobSearchCard from "../components/linkedin/JobSearchCard";
+import PersonalInfoCard from "../components/linkedin/PersonalInfoCard";
+import AutomationLogs from "../components/linkedin/AutomationLogs";
+import RunAutomationCard from "../components/linkedin/RunAutomationCard";
+import HelpContent from "../components/linkedin/HelpContent";
 
 const LinkedInAutomation = () => {
   const { session } = useAuth();
@@ -125,8 +129,6 @@ const LinkedInAutomation = () => {
   return (
     <AuthProvider>
       <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
-        <Header newJobsCount={0} />
-
         <main className="flex-1 container mx-auto px-4 py-6 max-w-screen-xl">
           <div className="mb-6">
             <h2 className="text-2xl font-bold mb-2">
@@ -187,7 +189,7 @@ const LinkedInAutomation = () => {
           </Tabs>
         </main>
 
-        <footer className="border-t bg-white dark:bg-gray-900 py-4">
+        <footer className="border-t bg-background dark:bg-gray-900 py-4">
           <div className="container mx-auto px-4 text-center text-sm text-gray-600 dark:text-gray-400">
             © 2025 TechJobTracker - Your personal job search aggregator
           </div>

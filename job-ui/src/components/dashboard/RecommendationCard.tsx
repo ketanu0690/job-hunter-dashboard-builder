@@ -34,7 +34,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
   };
 
   return (
-    <div className="rounded-xl p-5 h-full shadow-md bg-white/90 dark:bg-gray-900/80">
+    <div className="rounded-xl p-5 h-full shadow-md bg-background/90 dark:bg-gray-900/80">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
           {typeStyles[type].icon}

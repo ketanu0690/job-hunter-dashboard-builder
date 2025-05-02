@@ -25,7 +25,24 @@ export interface BlogContent {
 }
 
 export interface Blog {
-  id: number;
-  author: string; // user ID
-  content: BlogContent;
+  id: string;
+  contentId: string;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt?: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  status: 'published' | 'draft' | 'scheduled';
+  categories?: string[];
+  tags?: string[];
+  coverImage?: string;
+  authorId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string | null;
+  scheduledFor: string | null;
+  viewCount?: number;
+  versions?: Blog[];
+  versionId?: string;
 }

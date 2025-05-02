@@ -42,7 +42,8 @@ export default {
 				},
 				accent: {
 					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
+					foreground: 'hsl(var(--accent-foreground))',
+					secondary: 'hsl(var(--accent-secondary))',
 				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
@@ -61,7 +62,13 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				neonBlue: '#00e6ff',
+				futuristicDark: '#18181b',
+				futuristicDarker: '#101014',
+				futuristicBorder: '#23232a',
+				neonPurple: '#a21caf',
+				'neon-purple': '#a21caf',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
