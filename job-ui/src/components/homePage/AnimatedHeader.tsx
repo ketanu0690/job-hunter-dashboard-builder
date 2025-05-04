@@ -76,7 +76,7 @@ const AnimatedHeader = () => {
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-sm",
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ",
           scrolled
             ? "py-2 bg-futuristicDark/80 shadow-lg"
             : "py-6 bg-transparent"
@@ -92,9 +92,16 @@ const AnimatedHeader = () => {
               transition={{ duration: 0.5 }}
             >
               <Briefcase className="text-accent mr-2" size={24} />
-              <span className="text-gray-900 dark:text-gray-100 font-bold text-xl">
+              <span
+                className={cn(
+                  "font-medium hover:text-accent transition-colors",
+                  scrolled
+                    ? "text-accent dark:text-foreground"
+                    : "text-foreground"
+                )}
+              >
                 Career
-                <span className="text-accent">Flow</span>
+                <span className="text-base">Flow</span>
               </span>
             </motion.div>
           </Link>
@@ -103,18 +110,24 @@ const AnimatedHeader = () => {
           <nav className="hidden md:flex items-center gap-6 flex-1 justify-center">
             <Link
               to="/blogs"
-              className={`text-base font-medium hover:text-accent transition-colors text-foreground `}
+              className={cn(
+                "font-medium hover:text-accent transition-colors text-foreground ",
+                scrolled
+                  ? "text-accent dark:text-foreground"
+                  : "text-foreground"
+              )}
             >
               Blogs
             </Link>
             {session && (
               <Link
                 to="/admin"
-                className={`text-base font-medium hover:text-accent transition-colors ${
-                  location.pathname === "/admin"
-                    ? "text-accent underline"
+                className={cn(
+                  "font-medium hover:text-accent transition-colors text-foreground ",
+                  scrolled
+                    ? "text-accent dark:text-foreground"
                     : "text-foreground"
-                }`}
+                )}
               >
                 Dashboard
               </Link>
@@ -204,7 +217,11 @@ const AnimatedHeader = () => {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            className="fixed inset-0 z-40 bg-gradient-to-b from-futuristicDark to-black flex items-center justify-center"
+            className="fixed inset-0 z-40 flex items-center justify-center"
+            style={{
+              background:
+                "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--primary)) 60%, hsl(var(--accent)) 100%)",
+            }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -241,7 +258,7 @@ const AnimatedHeader = () => {
                         >
                           <Link
                             to={item.to}
-                            className="flex items-center group py-3 text-3xl font-bold text-foreground hover:text-accent transition-colors"
+                            className="flex items-center group py-3 text-3xl font-bold text-[var(--foreground)] hover:text-accent transition-colors"
                           >
                             <span className="bg-background/10 w-10 h-10 flex items-center justify-center rounded-full mr-4 group-hover:bg-accent/20 transition-colors">
                               {i + 1}
@@ -276,35 +293,13 @@ const AnimatedHeader = () => {
                           initial="hidden"
                           animate="visible"
                           exit="exit"
-                          className="py-2 text-foreground/80 hover:text-accent transition-colors text-sm flex items-center"
+                          className="py-2 text-[var(--foreground)]/80 hover:text-accent transition-colors text-sm flex items-center"
                         >
                           <span className="w-1 h-1 bg-accent rounded-full mr-2"></span>
                           {item}
                         </motion.a>
                       ))}
                     </nav>
-                  </div>
-
-                  <div>
-                    <h2 className="text-accent text-lg font-medium mb-4">
-                      Connect With Us
-                    </h2>
-                    <div className="flex space-x-3">
-                      {[1, 2, 3, 4].map((_, i) => (
-                        <motion.a
-                          key={i}
-                          href="#"
-                          custom={i}
-                          variants={menuItemVariants}
-                          initial="hidden"
-                          animate="visible"
-                          exit="exit"
-                          className="w-10 h-10 rounded-full bg-background/10 flex items-center justify-center text-foreground hover:bg-accent hover:text-black transition-all"
-                        >
-                          {i + 1}
-                        </motion.a>
-                      ))}
-                    </div>
                   </div>
 
                   <div className="flex flex-col gap-4 mt-8">

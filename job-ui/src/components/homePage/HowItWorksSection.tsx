@@ -132,7 +132,10 @@ const HowItWorksSection = () => {
   ];
 
   return (
-    <section ref={sectionRef} className="mb-24 md:mb-32 lg:mb-40">
+    <section
+      ref={sectionRef}
+      className="mb-24 md:mb-32 lg:mb-40 hidden sm:block"
+    >
       <div>
         <motion.div
           initial={{ opacity: 0, y: 30 }}

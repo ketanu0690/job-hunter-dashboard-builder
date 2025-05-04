@@ -17,6 +17,8 @@ import {
 } from "../ui/dialog";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { APIHelper } from "../../utils/axios";
 
 const HeroSection = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -32,6 +34,12 @@ const HeroSection = () => {
       content: "Hello! I'm your career assistant. How can I help you today?",
     },
   ]);
+
+  // Use localStorage for Unsplash image
+  const [bgUrl, setBgUrl] = useLocalStorage<string | null>(
+    "unsplash_image",
+    null
+  );
 
   useEffect(() => {
     // Handle scroll for parallax effect
@@ -55,6 +63,29 @@ const HeroSection = () => {
       setBriefcaseReachedBottom(true);
       setTimeout(() => setBriefcaseOpen(true), 500);
     }, 2000);
+
+    // Fetch Unsplash image only if not cached
+    if (!bgUrl) {
+      const fetchBg = async () => {
+        try {
+          const accessKey = import.meta.env.VITE_UNSPLASH_API_KEY;
+          const data = await APIHelper.get<any>(
+            `https://api.unsplash.com/photos/random?query=tech,office,workspace&orientation=landscape&client_id=${accessKey}`
+          );
+          // Handle both object and array response
+          let url = null;
+          if (Array.isArray(data) && data.length > 0 && data[0].urls) {
+            url = data[0].urls.regular || data[0].urls.full || null;
+          } else if (data && data.urls) {
+            url = data.urls.regular || data.urls.full || null;
+          }
+          if (url) setBgUrl(url);
+        } catch (err) {
+          setBgUrl(null);
+        }
+      };
+      fetchBg();
+    }
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -186,14 +217,24 @@ const HeroSection = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Parallax background */}
+      {/* Parallax background with gradient overlay */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 w-full h-full z-0"
         style={{
-          backgroundImage:
-            'url("https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80")',
+          backgroundImage: bgUrl
+            ? `url('${bgUrl}')`
+            : `linear-gradient(
+                to bottom,
+                hsl(var(--background)) 0%,
+                hsl(var(--primary)) 60%,
+                hsl(var(--accent)) 100%
+              )`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
           transform: `translateY(${scrollY * 0.2}px)`,
-          filter: "brightness(0.4)",
+          filter: bgUrl ? "brightness(0.5)" : undefined,
+          transition: "background 0.3s",
         }}
       />
 

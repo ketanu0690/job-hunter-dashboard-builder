@@ -1,7 +1,4 @@
-import axios from "axios";
-
-// Configure axios defaults
-axios.defaults.withCredentials = false;
+import { APIHelper } from "../utils/axios";
 
 export interface LinkedinConfig {
   platform?: string;
@@ -51,7 +48,7 @@ export async function runLinkedinAutomation(
 ): Promise<LinkedinResponse> {
   const baseUrl = import.meta.env.VITE_BACKEND_URL;
   try {
-    const response = await axios.post(
+    return await APIHelper.post<LinkedinResponse, LinkedinConfig>(
       `${baseUrl}/linkedin-automation`,
       config,
       {
@@ -61,9 +58,8 @@ export async function runLinkedinAutomation(
         withCredentials: true, // optional: only if you send cookies/session data
       }
     );
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error) && error.response) {
+  } catch (error: any) {
+    if (error?.response?.data) {
       return error.response.data as LinkedinResponse;
     }
 

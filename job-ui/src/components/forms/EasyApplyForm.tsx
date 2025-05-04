@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { APIHelper } from "../../utils/axios";
 import yaml from "js-yaml";
 import { toast } from "sonner";
 import { saveAs } from "file-saver";
@@ -75,7 +75,7 @@ const EasyApplyForm: React.FC<EasyApplyFormProps> = ({ platform, onClose }) => {
 
     setLoading(true);
     try {
-      const res = await axios.post(
+      const res = await APIHelper.post<any, FormData>(
         `${
           import.meta?.env?.VITE_BACKEND_URL || "http://localhost:3000"
         }/api/parse-resume`,

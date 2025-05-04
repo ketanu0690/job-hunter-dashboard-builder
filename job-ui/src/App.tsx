@@ -16,7 +16,8 @@ import NotFound from "./pages/NotFound";
 
 import { BlogProvider } from "./hooks/BlogProvider";
 import AnimatedHeader from "./components/homePage/AnimatedHeader";
-
+import MediumFeed from "./components/blog/MediumFeed";
+import MainLayout from "./layouts/MainLayout";
 const queryClient = new QueryClient();
 
 const App: React.FC = () => {
@@ -26,21 +27,23 @@ const App: React.FC = () => {
         <Toaster />
         <BrowserRouter>
           <AuthProvider>
-            <AnimatedHeader />
-            <BlogProvider>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/admin/blogs" element={<BlogManagement />} />
-                <Route
-                  path="/admin/linkedin-automation"
-                  element={<LinkedInAutomation />}
-                />
-                {/* 404 Catch All */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BlogProvider>
+            <MainLayout>
+              <BlogProvider>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/admin" element={<AdminDashboard />} />
+                  <Route path="/admin/blogs" element={<BlogManagement />} />
+                  <Route
+                    path="/admin/linkedin-automation"
+                    element={<LinkedInAutomation />}
+                  />
+                  <Route path="/blogs" element={<MediumFeed />} />
+                  {/* 404 Catch All */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </BlogProvider>
+            </MainLayout>
           </AuthProvider>
         </BrowserRouter>
       </TooltipProvider>

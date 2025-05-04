@@ -48,6 +48,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     if (!session && !loadingSession) {
+      // Remove Unsplash image from localStorage on logout
+      localStorage.removeItem("unsplash_image");
       navigate("/login");
     }
   }, [session, loadingSession]);

@@ -3,6 +3,7 @@ import type { Job, SearchCriteria } from '../types';
 import type { SupabaseJob } from '../types/supabase';
 import { toast } from '../hooks/use-toast';
 import { useAuth } from '../components/forms/AuthForm';
+import { APIHelper } from "../utils/axios";
 
 // Helper function to get the JWT token
 const getAuthToken = async (): Promise<string> => {
@@ -100,25 +101,23 @@ export const importSampleJobs = async (sampleJobs: Job[], token: string): Promis
       is_new: job.isNew || true,
     }));
 
-    const response = await fetch('https://bjubucmfgpcvcuqibofk.supabase.co/functions/v1/import-jobs', {
-      method: 'POST',
+    const result = await APIHelper.post<any, any>('https://bjubucmfgpcvcuqibofk.supabase.co/functions/v1/import-jobs', { jobs: supabaseJobs }, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify({ jobs: supabaseJobs }),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
+    if (!result.ok) {
+      const errorData = await result.json();
       throw new Error(errorData.error || 'Failed to import jobs');
     }
 
-    const result = await response.json();
+    const resultData = await result.json();
 
     toast({
       title: 'Sample jobs imported',
-      description: result.message || `${supabaseJobs.length} jobs have been added to the database`,
+      description: resultData.message || `${supabaseJobs.length} jobs have been added to the database`,
     });
   } catch (error) {
     console.error('Error importing sample jobs:', error);
@@ -148,25 +147,23 @@ export const importJobsFromExcel = async (jobs: Job[], token: string): Promise<v
       is_new: job.isNew || true,
     }));
 
-    const response = await fetch('https://bjubucmfgpcvcuqibofk.supabase.co/functions/v1/import-jobs', {
-      method: 'POST',
+    const result = await APIHelper.post<any, any>('https://bjubucmfgpcvcuqibofk.supabase.co/functions/v1/import-jobs', { jobs: supabaseJobs }, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify({ jobs: supabaseJobs }),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
+    if (!result.ok) {
+      const errorData = await result.json();
       throw new Error(errorData.error || 'Failed to import jobs');
     }
 
-    const result = await response.json();
+    const resultData = await result.json();
 
     toast({
       title: 'Jobs imported from Excel',
-      description: result.message || `${supabaseJobs.length} jobs have been added to the database`,
+      description: resultData.message || `${supabaseJobs.length} jobs have been added to the database`,
     });
   } catch (error) {
     console.error('Error importing jobs from Excel:', error);

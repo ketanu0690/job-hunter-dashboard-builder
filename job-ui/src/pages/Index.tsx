@@ -9,18 +9,20 @@ import HowItWorksSection from "../../src/components/homePage/HowItWorksSection";
 import OpenSourceBanner from "../../src/components/homePage/OpenSourceBanner";
 import ServicesSection from "../../src/components/homePage/ServicesSection";
 import TestimonialsSection from "../../src/components/homePage/TestimonialsSection";
+import OurDevelopment from "../../src/components/homePage/Ourdevelopment";
 const Index = () => {
   return (
     <div className="bg-background text-foreground">
-      <AnimatedHeader />
       <HeroSection />
       <FeaturesSection />
       <ServicesSection />
+      <OurDevelopment/>
       <HowItWorksSection />
       <TestimonialsSection />
       <FeaturedJobsSection />
       <OpenSourceBanner />
       <ContactSection />
+
       <Footer />
       <FloatingActionButton />
     </div>
