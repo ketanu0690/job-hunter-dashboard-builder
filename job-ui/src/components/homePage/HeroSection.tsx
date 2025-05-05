@@ -19,21 +19,19 @@ import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { APIHelper } from "../../utils/axios";
+import ChatBot from "./ChatBot";
+
+declare global {
+  interface Window {
+    puter?: any;
+  }
+}
 
 const HeroSection = () => {
   const [scrollY, setScrollY] = useState(0);
   const [briefcaseReachedBottom, setBriefcaseReachedBottom] = useState(false);
   const [briefcaseOpen, setBriefcaseOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
-  const [chatMessage, setChatMessage] = useState("");
-  const [chatHistory, setChatHistory] = useState<
-    Array<{ role: string; content: string }>
-  >([
-    {
-      role: "assistant",
-      content: "Hello! I'm your career assistant. How can I help you today?",
-    },
-  ]);
 
   // Use localStorage for Unsplash image
   const [bgUrl, setBgUrl] = useLocalStorage<string | null>(
@@ -95,40 +93,6 @@ const HeroSection = () => {
     };
   }, []);
 
-  const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!chatMessage.trim()) return;
-
-    // Add user message to chat
-    const newHistory = [...chatHistory, { role: "user", content: chatMessage }];
-
-    setChatHistory(newHistory);
-
-    // Simulate AI response
-    setTimeout(() => {
-      let response = "";
-
-      if (chatMessage.toLowerCase().includes("job")) {
-        response =
-          "I can help you find job opportunities that match your skills and preferences. What kind of position are you looking for?";
-      } else if (chatMessage.toLowerCase().includes("resume")) {
-        response =
-          "Your resume is crucial in job hunting! Would you like tips on how to optimize it for ATS systems or tailor it for specific roles?";
-      } else if (chatMessage.toLowerCase().includes("interview")) {
-        response =
-          "Preparing for interviews is important. I can share common questions and strategies for different roles. What type of interview are you preparing for?";
-      } else {
-        response =
-          "I'm here to assist with your job search journey. I can help with finding job opportunities, resume optimization, interview preparation, and career advice. What would you like to know more about?";
-      }
-
-      setChatHistory([...newHistory, { role: "assistant", content: response }]);
-    }, 800);
-
-    setChatMessage("");
-  };
-
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Animated Briefcase Introduction - Now on the right side with heartbeat animation */}
@@ -170,52 +134,8 @@ const HeroSection = () => {
         </motion.div>
       </motion.div>
 
-      {/* Job AI Chat Dialog */}
-      <Dialog open={chatOpen} onOpenChange={setChatOpen}>
-        <DialogContent className="sm:max-w-[500px] max-h-[80vh] overflow-hidden flex flex-col bg-futuristic-dark border border-white/20">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Bot size={18} className="text-accent" />
-              <span className="text-foreground">Career Assistant AI</span>
-            </DialogTitle>
-            <DialogDescription className="text-foreground/70">
-              Your AI-powered career and job search companion
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="flex-1 overflow-y-auto py-4 px-1 space-y-4 mb-4 max-h-[50vh]">
-            {chatHistory.map((msg, i) => (
-              <div
-                key={i}
-                className={cn(
-                  "p-3 rounded-lg max-w-[85%]",
-                  msg.role === "assistant"
-                    ? "bg-background/10 text-foreground self-start"
-                    : "bg-accent/20 text-foreground ml-auto self-end"
-                )}
-              >
-                {msg.content}
-              </div>
-            ))}
-          </div>
-
-          <form onSubmit={handleSendMessage} className="flex gap-2 mt-auto">
-            <input
-              type="text"
-              value={chatMessage}
-              onChange={(e) => setChatMessage(e.target.value)}
-              placeholder="Ask about jobs, interviews, resumes..."
-              className="flex-1 bg-futuristic-card border border-white/10 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-1 focus:ring-accent"
-            />
-            <Button
-              type="submit"
-              className="bg-accent hover:bg-accent/80 text-accent-foreground"
-            >
-              Send
-            </Button>
-          </form>
-        </DialogContent>
-      </Dialog>
+      {/* ChatBot Dialog */}
+      <ChatBot open={chatOpen} onOpenChange={setChatOpen} />
 
       {/* Parallax background with gradient overlay */}
       <div

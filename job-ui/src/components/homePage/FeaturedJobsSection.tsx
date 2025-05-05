@@ -3,6 +3,11 @@ import { useInView } from "react-intersection-observer";
 import { ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
 import { Job } from "../../types";
+import { useEffect, useState } from "react";
+import {
+  fetchTheirStackJobs,
+  TheirStackJob,
+} from "../../services/theirStackJobService";
 
 const JobCard = ({ job, index }: { job: Job; index: number }) => {
   const [ref, inView] = useInView({
@@ -68,7 +73,11 @@ const JobCard = ({ job, index }: { job: Job; index: number }) => {
   );
 };
 
-const FeaturedJobsSection = () => {
+const FeaturedJobsSection = ({
+  onViewAllJobs,
+}: {
+  onViewAllJobs?: (jobs: Job[]) => void;
+}) => {
   const [sectionRef, sectionInView] = useInView({
     triggerOnce: false,
     threshold: 0.1,
@@ -79,69 +88,41 @@ const FeaturedJobsSection = () => {
     threshold: 0.1,
   });
 
-  const featuredJobs: Job[] = [
-    {
-      id: "1",
-      title: "Senior Frontend Developer",
-      company: "TechVision",
-      location: "Remote",
-      description:
-        "Lead the frontend team in building modern web applications.",
-      url: "https://techvision.com/jobs/1",
-      date: "2024-06-01",
-      salary: "$120K - $150K",
-      skills: ["React", "TypeScript", "UI/UX", "Next.js"],
-      source: "TechVision Careers",
-      isNew: true,
-    },
-    {
-      id: "2",
-      title: "Backend Engineer",
-      company: "DataStream",
-      location: "New York, NY",
-      description: "Work on scalable backend systems and APIs.",
-      url: "https://datastream.com/jobs/2",
-      date: "2024-05-28",
-      salary: "$130K - $160K",
-      skills: ["Node.js", "Python", "AWS", "Microservices"],
-      source: "DataStream Careers",
-    },
-    {
-      id: "3",
-      title: "Product Designer",
-      company: "CreativeEdge",
-      location: "San Francisco, CA",
-      description: "Design intuitive products and user experiences.",
-      url: "https://creativeedge.com/jobs/3",
-      date: "2024-05-25",
-      skills: ["Figma", "UI Design", "User Research"],
-      source: "CreativeEdge Careers",
-    },
-    {
-      id: "4",
-      title: "DevOps Specialist",
-      company: "CloudWorks",
-      location: "Remote",
-      description: "Automate and optimize cloud infrastructure.",
-      url: "https://cloudworks.com/jobs/4",
-      date: "2024-05-20",
-      salary: "$110K - $140K",
-      skills: ["Kubernetes", "Docker", "CI/CD", "Infrastructure"],
-      source: "CloudWorks Careers",
-    },
-    {
-      id: "5",
-      title: "Mobile Developer",
-      company: "AppNest",
-      location: "Austin, TX",
-      description: "Develop cross-platform mobile applications.",
-      url: "https://appnest.com/jobs/5",
-      date: "2024-05-18",
-      salary: "$100K - $130K",
-      skills: ["Swift", "Kotlin", "React Native", "Flutter"],
-      source: "AppNest Careers",
-    },
-  ];
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetchTheirStackJobs();
+        // Defensive: fallback to empty array if jobs is missing or not an array
+        const jobsArray = Array.isArray(response.jobs) ? response.jobs : [];
+        // Map TheirStackJob to Job type
+        const mappedJobs: Job[] = jobsArray.map((job: TheirStackJob) => ({
+          id: job.id,
+          title: job.title,
+          company: job.company,
+          location: job.location || "",
+          description: job.description || "",
+          url: job.url || "#",
+          date: job.posted_at || "",
+          salary: job.salary || "",
+          skills: job.skills || [],
+          source: job.source || "TheirStack",
+          isNew: true,
+        }));
+        setJobs(mappedJobs);
+      } catch (err: any) {
+        setError(err.message || "Failed to fetch jobs");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchJobs();
+  }, []);
 
   return (
     <section
@@ -170,16 +151,27 @@ const FeaturedJobsSection = () => {
             transition={{ duration: 0.8 }}
             className="flex gap-6 min-w-max sm:min-w-0 sm:grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
-            {featuredJobs.map((job, index) => (
-              <div key={job.id} className="w-80 sm:w-auto">
-                <JobCard job={job} index={index} />
-              </div>
-            ))}
+            {loading ? (
+              <div className="text-center w-full">Loading featured jobs...</div>
+            ) : error ? (
+              <div className="text-center w-full text-red-500">{error}</div>
+            ) : jobs.length === 0 ? (
+              <div className="text-center w-full">No featured jobs found.</div>
+            ) : (
+              jobs.slice(0, 8).map((job, index) => (
+                <div key={job.id} className="w-80 sm:w-auto">
+                  <JobCard job={job} index={index} />
+                </div>
+              ))
+            )}
           </motion.div>
         </div>
 
         <div className="flex justify-center mt-12">
-          <Button className="px-8">
+          <Button
+            className="px-8"
+            onClick={() => onViewAllJobs && onViewAllJobs(jobs)}
+          >
             View All Jobs <ArrowRight size={16} className="ml-2" />
           </Button>
         </div>
