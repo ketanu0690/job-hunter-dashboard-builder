@@ -18,6 +18,7 @@ import { BlogProvider } from "./hooks/BlogProvider";
 import AnimatedHeader from "./components/homePage/AnimatedHeader";
 import MediumFeed from "./components/blog/MediumFeed";
 import MainLayout from "./layouts/MainLayout";
+import BlogShowcase from "./components/blog/BlogShowcase";
 const queryClient = new QueryClient();
 
 const App: React.FC = () => {
@@ -38,7 +39,7 @@ const App: React.FC = () => {
                     path="/admin/linkedin-automation"
                     element={<LinkedInAutomation />}
                   />
-                  <Route path="/blogs" element={<MediumFeed />} />
+                  <Route path="/blogs" element={<BlogShowcase />} />
                   {/* 404 Catch All */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>

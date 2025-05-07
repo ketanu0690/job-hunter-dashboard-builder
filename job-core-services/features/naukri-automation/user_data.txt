@@ -1,0 +1,2 @@
+ hard_user_name= 'oumupadhyay@gmail.com'
+ hard_pass_word= 'ketan0690'

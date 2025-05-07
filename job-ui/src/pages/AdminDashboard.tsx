@@ -71,6 +71,7 @@ const skillRecommendations = [
     description: "Mentioned in 72% of job descriptions",
   },
 ];
+
 const AdminDashboard = () => {
   // Get current date
   const today = new Date().toLocaleDateString("en-US", {
