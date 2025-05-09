@@ -28,10 +28,10 @@ const OpenSourceBanner = () => {
       initial={{ opacity: 0 }}
       animate={inView ? { opacity: 1 } : { opacity: 0 }}
       transition={{ duration: 0.8 }}
-      className="py-20 bg-gradient-to-r from-futuristic-darker to-futuristic-accent"
+      className="py-20 bg-gradient-to-r from-background to-accent"
     >
       <div className="container mx-auto px-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8 bg-background/90 dark:bg-background/60 rounded-xl shadow-2xl p-8">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8 bg-card/90 rounded-xl shadow-2xl p-8">
           <div className="max-w-xl">
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
@@ -57,13 +57,13 @@ const OpenSourceBanner = () => {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="flex gap-4"
             >
-              <Button className="bg-background text-foreground hover:bg-background/90 gap-2">
+              <Button className="bg-background text-foreground hover:bg-background/90 gap-2 border border-accent yellow-hover yellow-focus">
                 <Github size={18} />
                 View on GitHub
               </Button>
               <Button
                 variant="outline"
-                className="border-border/50 text-foreground hover:bg-background/10 gap-2"
+                className="border-accent text-foreground hover:bg-background/10 gap-2 yellow-hover yellow-focus"
               >
                 <Star size={18} />
                 Star the Project
@@ -77,8 +77,8 @@ const OpenSourceBanner = () => {
             animate={inView ? "visible" : "hidden"}
             className="relative"
           >
-            <div className="w-40 h-40 rounded-full bg-background/10 backdrop-blur-md flex items-center justify-center">
-              <Star size={64} className="text-foreground animate-glow" />
+            <div className="w-40 h-40 rounded-full bg-background/10 backdrop-blur-md flex items-center justify-center border-2 border-accent">
+              <Star size={64} className="text-accent animate-glow" />
               <motion.div
                 animate={{
                   scale: [1, 1.2, 1],
@@ -89,10 +89,10 @@ const OpenSourceBanner = () => {
                   repeat: Infinity,
                   repeatType: "loop",
                 }}
-                className="absolute inset-0 rounded-full border border-black/20 dark:border-white/20"
+                className="absolute inset-0 rounded-full border border-accent/20"
               />
             </div>
-            <div className="absolute top-0 left-0 w-full h-full blur-2xl bg-accent/20 dark:bg-accent/10 rounded-full -z-10" />
+            <div className="absolute top-0 left-0 w-full h-full blur-2xl bg-accent/20 rounded-full -z-10" />
           </motion.div>
         </div>
       </div>

@@ -166,7 +166,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ open, onOpenChange }) => {
       <DialogContent className="sm:max-w-[420px] max-h-[80vh] flex flex-col bg-background border border-border p-0 shadow-xl rounded-2xl overflow-hidden">
         <DialogHeader className="bg-accent/90 px-6 py-4">
           <DialogTitle className="flex items-center gap-2 text-accent-foreground">
-            <Bot size={20} className="text-white" />
+            <Bot size={20} className="text-accent" />
             <span>Career Assistant AI</span>
           </DialogTitle>
           <DialogDescription className="text-accent-foreground/80">

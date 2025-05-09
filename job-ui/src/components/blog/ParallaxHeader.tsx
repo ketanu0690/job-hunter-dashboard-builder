@@ -21,7 +21,7 @@ const ParallaxHeader = ({ title }: { title: string }) => {
       className="relative h-64 md:h-80 overflow-hidden mb-12 rounded-xl"
     >
       <div
-        className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600"
+        className="absolute inset-0 bg-gradient-to-r from-[#FFD500] to-[#FFF3B0]"
         style={{ transform: `translateY(${offset * 0.5}px)` }}
       >
         <div className="absolute inset-0 bg-[url('/api/placeholder/1200/400')] opacity-20 mix-blend-overlay"></div>
@@ -45,7 +45,7 @@ const ParallaxHeader = ({ title }: { title: string }) => {
         </div>
       </div>
       <div
-        className="absolute inset-0 flex items-center justify-center text-white z-10"
+        className="absolute inset-0 flex items-center justify-center text-foreground z-10"
         style={{ transform: `translateY(${offset * 0.2}px)` }}
       >
         <h1 className="text-4xl md:text-5xl font-bold text-center px-4">

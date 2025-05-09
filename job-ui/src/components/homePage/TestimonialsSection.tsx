@@ -28,7 +28,7 @@ const TestimonialCard = ({
       initial={{ opacity: 0, y: 50 }}
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       transition={{ duration: 0.8, delay: index * 0.2 }}
-      className="bg-futuristic-card border border-white/10 rounded-xl p-8 backdrop-blur-sm shadow-lg"
+      className="bg-card border border-accent rounded-xl p-8 backdrop-blur-sm shadow-lg"
     >
       <div className="flex items-center gap-4 mb-6">
         <div className="relative w-12 h-12 rounded-full overflow-hidden">
@@ -90,7 +90,7 @@ const TestimonialsSection = () => {
   ];
 
   return (
-    <section ref={sectionRef} className="py-24 bg-futuristic-dark">
+    <section ref={sectionRef} className="py-24 bg-background">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

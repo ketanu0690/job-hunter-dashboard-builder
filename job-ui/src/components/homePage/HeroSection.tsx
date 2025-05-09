@@ -142,7 +142,7 @@ const HeroSection = () => {
         className="absolute inset-0 w-full h-full z-0"
         style={{
           backgroundImage: bgUrl
-            ? `url('${bgUrl}')`
+            ? `linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(255,214,0,0.5) 60%, rgba(255,255,255,0.1) 100%), url('${bgUrl}')`
             : `linear-gradient(
                 to bottom,
                 hsl(var(--background)) 0%,
@@ -167,8 +167,10 @@ const HeroSection = () => {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="inline-flex items-center gap-2 bg-background/10 backdrop-blur-sm px-4 py-1 rounded-full text-sm mb-6"
           >
-            <Github size={14} className="text-white" />
-            <span className="text-white font-medium">Open Source Project</span>
+            <Github size={14} className="text-foreground" />
+            <span className="text-foreground font-medium">
+              Open Source Project
+            </span>
           </motion.div>
 
           {/* Headline */}
@@ -176,10 +178,10 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight"
+            className="text-5xl md:text-7xl font-bold text-accent mb-6 tracking-tight"
           >
             Find your next <br className="hidden md:block" />
-            <span className="text-accent">tech career</span> opportunity
+            <span className="text-primary">tech career</span> opportunity
           </motion.h1>
 
           {/* Subtitle */}
@@ -187,7 +189,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="text-white/80 text-xl mb-8"
+            className="text-muted-foreground text-xl mb-8"
           >
             An open-source platform connecting developers with their dream jobs.
             Apply with ease, track applications, and grow your career.
@@ -202,14 +204,14 @@ const HeroSection = () => {
           >
             <Button
               size="lg"
-              className="bg-accent text-accent-foreground hover:bg-accent/80 text-lg px-8"
+              className="bg-primary text-primary-foreground yellow-border yellow-focus yellow-hover yellow-glow text-lg px-8 border-2 border-accent"
             >
               Get Started
             </Button>
             <Button
               variant="outline"
               size="lg"
-              className="border-accent text-accent-foreground hover:bg-accent/10 text-lg px-8"
+              className="border-2 border-accent text-accent yellow-hover yellow-focus text-lg px-8"
             >
               View Jobs
             </Button>
@@ -236,8 +238,10 @@ const HeroSection = () => {
             repeatType: "loop",
           }}
         >
-          <span className="text-white/60 text-sm mb-2">Scroll to explore</span>
-          <ArrowDown className="text-white/60" size={20} />
+          <span className="text-muted-foreground text-sm mb-2">
+            Scroll to explore
+          </span>
+          <ArrowDown className="text-muted-foreground" size={20} />
         </motion.div>
       </motion.div>
     </section>

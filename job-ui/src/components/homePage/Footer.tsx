@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="bg-futuristic-darker py-16 border-t border-white/10">
+    <footer className="bg-background py-16 border-t border-accent">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="md:col-span-1">
             <Link to="/" className="inline-block mb-6">
-              <h3 className="text-2xl font-bold text-foreground">
+              <h3 className="text-2xl font-bold text-accent border-b-2 border-accent inline-block pb-1">
                 JobPlatform
               </h3>
             </Link>
@@ -79,7 +79,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground hover:text-link transition-colors"
                 >
                   Browse Jobs
                 </a>
@@ -87,7 +87,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground hover:text-link transition-colors"
                 >
                   Companies
                 </a>
@@ -95,7 +95,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground hover:text-link transition-colors"
                 >
                   Mentorship
                 </a>
@@ -103,7 +103,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground hover:text-link transition-colors"
                 >
                   Resources
                 </a>
@@ -117,7 +117,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground hover:text-link transition-colors"
                 >
                   About
                 </a>
@@ -125,7 +125,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground hover:text-link transition-colors"
                 >
                   Blog
                 </a>
@@ -133,7 +133,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground hover:text-link transition-colors"
                 >
                   Careers
                 </a>
@@ -141,7 +141,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground hover:text-link transition-colors"
                 >
                   Contact
                 </a>
@@ -155,7 +155,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground hover:text-link transition-colors"
                 >
                   Privacy Policy
                 </a>
@@ -163,7 +163,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground hover:text-link transition-colors"
                 >
                   Terms of Service
                 </a>
@@ -171,7 +171,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground hover:text-link transition-colors"
                 >
                   Cookie Policy
                 </a>
@@ -180,7 +180,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center">
+        <div className="mt-16 pt-8 border-t border-accent flex flex-col md:flex-row justify-between items-center">
           <p className="text-muted-foreground text-sm mb-4 md:mb-0">
             &copy; {new Date().getFullYear()} JobPlatform. All rights reserved.
           </p>

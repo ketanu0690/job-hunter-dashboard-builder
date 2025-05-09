@@ -17,7 +17,6 @@ The frontend application built using:
 - Vite
 - TypeScript
 - React
-- shadcn-ui
 - Tailwind CSS
 
 ### 2. `job-worker`

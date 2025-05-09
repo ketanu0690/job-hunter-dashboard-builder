@@ -78,7 +78,7 @@ const AnimatedHeader = () => {
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ",
           scrolled
-            ? "py-2 bg-futuristicDark/80 shadow-lg"
+            ? "py-2 bg-black/80 shadow-lg border-b border-accent"
             : "py-6 bg-transparent"
         )}
       >
@@ -95,13 +95,11 @@ const AnimatedHeader = () => {
               <span
                 className={cn(
                   "font-medium hover:text-accent transition-colors",
-                  scrolled
-                    ? "text-accent dark:text-foreground"
-                    : "text-foreground"
+                  scrolled ? "text-accent dark:text-primary" : "text-accent"
                 )}
               >
                 Career
-                <span className="text-base">Flow</span>
+                <span className="text-base text-primary">Flow</span>
               </span>
             </motion.div>
           </Link>
@@ -111,10 +109,8 @@ const AnimatedHeader = () => {
             <Link
               to="/blogs"
               className={cn(
-                "font-medium hover:text-accent transition-colors text-foreground ",
-                scrolled
-                  ? "text-accent dark:text-foreground"
-                  : "text-foreground"
+                "font-medium hover:text-primary transition-colors text-accent ",
+                scrolled ? "text-primary dark:text-accent" : "text-accent"
               )}
             >
               Blogs
@@ -172,14 +168,14 @@ const AnimatedHeader = () => {
             </motion.button>
             {!session && (
               <Link to="/login">
-                <Button className="ml-2 bg-accent text-accent-foreground font-semibold px-4 py-2 rounded-lg hover:bg-accent/80 transition-all">
+                <Button className="ml-2 bg-primary text-primary-foreground yellow-border yellow-focus yellow-hover yellow-glow font-semibold px-4 py-2 rounded-lg border-2 border-accent">
                   Sign In
                 </Button>
               </Link>
             )}
             {!session && (
               <Link to="/signup">
-                <Button className="ml-2 bg-accent text-accent-foreground font-semibold px-4 py-2 rounded-lg hover:bg-accent/80 transition-all">
+                <Button className="ml-2 bg-primary text-primary-foreground yellow-border yellow-focus yellow-hover yellow-glow font-semibold px-4 py-2 rounded-lg">
                   Sign Up
                 </Button>
               </Link>
@@ -187,7 +183,7 @@ const AnimatedHeader = () => {
             {session && (
               <button
                 onClick={handleLogout}
-                className="ml-2 bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg transition-all"
+                className="ml-2 bg-error text-foreground font-semibold px-4 py-2 rounded-lg transition-all yellow-focus yellow-hover"
               >
                 Logout
               </button>

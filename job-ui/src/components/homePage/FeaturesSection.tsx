@@ -26,7 +26,7 @@ const FeatureItem = ({
       transition={{ duration: 0.8, delay: index * 0.2 }}
       className="flex flex-col md:flex-row items-start md:items-center gap-6 mb-24"
     >
-      <div className="bg-background dark:bg-futuristic-card p-4 rounded-xl shadow border border-border">
+      <div className="bg-card p-4 rounded-xl shadow border border-accent">
         {icon}
       </div>
       <div>
@@ -67,7 +67,7 @@ const FeaturesSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="py-24 bg-gradient-to-b from-futuristic-dark to-futuristic-darker"
+      className="py-24 bg-gradient-to-b from-background to-card"
     >
       <div className="container mx-auto px-6">
         <motion.div

@@ -8,7 +8,6 @@ import {
 import { Job } from "../components/types";
 import Footer from "../../src/components/homePage/Footer";
 import FloatingActionButton from "../../src/components/dashboard/FloatingActionButton";
-import AnimatedHeader from "../../src/components/homePage/AnimatedHeader";
 import ContactSection from "../../src/components/homePage/ContactSection";
 import FeaturedJobsSection from "../../src/components/homePage/FeaturedJobsSection";
 import FeaturesSection from "../../src/components/homePage/FeaturesSection";
@@ -59,7 +58,7 @@ const Index = () => {
                     href={job.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-500 underline text-sm"
+                    className="text-link underline text-sm"
                   >
                     View Job
                   </a>

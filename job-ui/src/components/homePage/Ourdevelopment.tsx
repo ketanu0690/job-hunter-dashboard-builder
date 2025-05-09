@@ -30,7 +30,7 @@ const slides = [
   {
     id: "project-vision",
     title: "🚀 Project Vision & Planning (Because We Totally Had a Vision)",
-    bgColor: "var(--gh-bg)",
+    bgColor: "var(--background)",
     content: `
       We made a plan. Then ignored it. Classic.
     `,
@@ -38,7 +38,7 @@ const slides = [
   {
     id: "design-phase",
     title: "🎨 Design & Prototyping (Just Make It Pretty, Please)",
-    bgColor: "var(--gh-highlight)",
+    bgColor: "var(--card)",
     content: `
       Designed for users. Accidentally made it look good, too. Oops.
     `,
@@ -46,7 +46,7 @@ const slides = [
   {
     id: "development-phase",
     title: "👨‍💻 Agile Development (Breaking Code, Not Hearts)",
-    bgColor: "var(--gh-bg)",
+    bgColor: "var(--background)",
     content: `
       Wrote code. Broke things. Googled solutions. Repeat.
     `,
@@ -54,7 +54,7 @@ const slides = [
   {
     id: "launch-iterate",
     title: "🎉 Launch & Iterate (Spoiler Alert: We're Never 'Done')",
-    bgColor: "var(--gh-primary)",
+    bgColor: "var(--primary)",
     content: `
       We launched. Immediately started fixing what we launched.
     `,

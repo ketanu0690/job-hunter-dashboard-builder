@@ -40,7 +40,7 @@ const Step = ({
         initial={{ scale: 0.8, opacity: 0 }}
         animate={inView ? { scale: 1, opacity: 1 } : { scale: 0.8, opacity: 0 }}
         transition={{ duration: 0.5, delay: index * 0.2 }}
-        className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r from-primary to-accent dark:from-accent dark:to-primary text-white font-bold text-lg shadow-lg shrink-0 z-10"
+        className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r from-accent to-background text-foreground font-bold text-lg shadow-lg shrink-0 z-10 border-2 border-accent"
       >
         {number}
       </motion.div>
@@ -204,8 +204,8 @@ const HowItWorksSection = () => {
                 x2="0"
                 y2="1"
               >
-                <stop offset="0%" stopColor="hsl(var(--primary))" />
-                <stop offset="100%" stopColor="hsl(var(--accent))" />
+                <stop offset="0%" stopColor="hsl(var(--accent))" />
+                <stop offset="100%" stopColor="hsl(var(--background))" />
               </linearGradient>
               <marker
                 id="arrowhead"

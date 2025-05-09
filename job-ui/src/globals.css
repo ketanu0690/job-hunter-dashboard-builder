@@ -1,0 +1,169 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 0%; /* black */
+    --foreground: 0 0% 100%; /* white */
+
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 0 0% 0%;
+    --popover-foreground: 0 0% 100%;
+
+    /* Hello Yellow as primary color */
+    --primary: 53 100% 50%; /* Hello Yellow - #FFD700 */
+    --primary-foreground: 0 0% 0%; /* black text on yellow */
+
+    --secondary: 0 0% 20%; /* dark gray for secondary */
+    --secondary-foreground: 0 0% 100%; /* white */
+
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 80%;
+
+    /* Hello Yellow variants */
+    --accent: 53 100% 50%; /* Hello Yellow - #FFD700 */
+    --accent-foreground: 0 0% 0%; /* black text on yellow */
+    --accent-secondary: 53 100% 65%; /* lighter Hello Yellow - #FFDF4D */
+    --accent-tertiary: 53 95% 40%; /* darker Hello Yellow - #CCAC00 */
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 53 100% 50%; /* Hello Yellow ring */
+
+    --radius: 0.5rem;
+    --sidebar-foreground: #ffd700; /* Hello Yellow */
+    --gh-bg: #000000;
+    --gh-primary: #ffd700; /* Hello Yellow */
+    --gh-muted: #6a737d;
+    --gh-highlight: #1a1a1a;
+    --gh-white: #ffffff;
+    --link: 53 100% 45%; /* darker Hello Yellow for links */
+    --alert-success: 87 100% 85%; /* #E6FFB0 for light mode */
+    --alert-error: 0 100% 85%; /* #FFB0B0 for light mode */
+    
+    /* Additional Hello Yellow accent colors */
+    --yellow-highlight: 53 100% 90%; /* very light Hello Yellow for highlights */
+    --yellow-shadow: 53 80% 30%; /* darker yellow for shadows/depth */
+  }
+
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 0 0% 0%;
+    --popover-foreground: 0 0% 100%;
+
+    /* Hello Yellow as primary color */
+    --primary: 53 100% 50%; /* Hello Yellow - #FFD700 */
+    --primary-foreground: 0 0% 0%; /* black text on yellow */
+
+    --secondary: 0 0% 20%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 80%;
+
+    /* Hello Yellow variants */
+    --accent: 53 100% 50%; /* Hello Yellow - #FFD700 */
+    --accent-foreground: 0 0% 0%; /* black text on yellow */
+    --accent-secondary: 53 100% 65%; /* lighter Hello Yellow - #FFDF4D */
+    --accent-tertiary: 53 95% 40%; /* darker Hello Yellow - #CCAC00 */
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 53 100% 50%; /* Hello Yellow */
+    --sidebar-foreground: #ffd700; /* Hello Yellow */
+    --link: 53 100% 70%; /* lighter Hello Yellow for dark mode links */
+    --alert-success: 90 100% 85%; /* #CFFFAC for dark mode */
+    --alert-error: 0 100% 72%; /* #FF7F7F for dark mode */
+    
+    /* Additional Hello Yellow accent colors */
+    --yellow-highlight: 53 100% 85%; /* slightly adjusted for dark mode */
+    --yellow-shadow: 53 80% 25%; /* darker yellow for shadows/depth in dark mode */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Updated glow animation with Hello Yellow */
+  .animate-glow {
+    animation: glow 1.5s infinite alternate;
+  }
+  @keyframes glow {
+    0% {
+      box-shadow: 0 0 0 hsl(var(--accent));
+    }
+    100% {
+      box-shadow: 0 0 24px 8px hsl(var(--accent));
+    }
+  }
+
+  /* Enhanced snake animation with Hello Yellow gradient */
+  .animate-snake {
+    position: relative;
+    overflow: hidden;
+  }
+  .animate-snake::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      hsl(var(--primary)) 40%,
+      hsl(var(--accent-secondary)) 60%,
+      transparent 100%
+    );
+    animation: snake-move 1.5s linear forwards;
+    z-index: 1;
+    pointer-events: none;
+  }
+  @keyframes snake-move {
+    0% {
+      top: -100%;
+    }
+    100% {
+      top: 0;
+    }
+  }
+
+  /* New utility classes for Hello Yellow theme */
+  .yellow-border {
+    @apply border-2 border-primary;
+  }
+  
+  .yellow-focus {
+    @apply focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
+  }
+  
+  .yellow-hover {
+    @apply hover:bg-primary/10 transition-colors duration-200;
+  }
+  
+  .yellow-glow {
+    filter: drop-shadow(0 0 8px hsl(var(--primary)));
+  }
+}

@@ -71,11 +71,7 @@ const ContactSection = () => {
   ];
 
   return (
-    <section
-      ref={sectionRef}
-      id="contact"
-      className="py-24 bg-futuristic-darker"
-    >
+    <section ref={sectionRef} id="contact" className="py-24 bg-background">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -100,12 +96,12 @@ const ContactSection = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="md:col-span-1"
             >
-              <div className="bg-futuristic-card border border-white/10 rounded-xl p-8 h-full">
+              <div className="bg-card border border-accent rounded-xl p-8 h-full">
                 <h3 className="text-xl font-bold mb-6">Contact Information</h3>
 
                 <div className="space-y-6">
                   <div className="flex items-start gap-4">
-                    <div className="rounded-full bg-futuristic-accent/20 p-2">
+                    <div className="rounded-full bg-accent/20 p-2">
                       <Mail size={20} className="text-accent" />
                     </div>
                     <div>
@@ -115,7 +111,7 @@ const ContactSection = () => {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="rounded-full bg-futuristic-accent/20 p-2">
+                    <div className="rounded-full bg-accent/20 p-2">
                       <Phone size={20} className="text-accent" />
                     </div>
                     <div>
@@ -135,7 +131,7 @@ const ContactSection = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="md:col-span-2"
             >
-              <div className="bg-futuristic-card border border-white/10 rounded-xl p-8">
+              <div className="bg-card border border-accent rounded-xl p-8">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {formControls.map((control, index) => (
@@ -209,7 +205,7 @@ const ContactSection = () => {
                   >
                     <Button
                       type="submit"
-                      className="w-full"
+                      className="w-full bg-primary text-primary-foreground yellow-border yellow-hover yellow-focus yellow-glow"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? "Sending..." : "Send Message"}

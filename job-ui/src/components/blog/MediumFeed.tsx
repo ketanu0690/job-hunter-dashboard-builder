@@ -139,7 +139,7 @@ const MediumFeed: React.FC<MediumFeedProps> = ({
               href={post.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 font-medium hover:underline mt-auto"
+              className="text-link font-medium hover:underline mt-auto"
             >
               Read More →
             </a>

@@ -32,9 +32,9 @@ const ServiceCard = ({
       transition={{ duration: 0.5, delay: delay }}
       whileHover={{ y: -10, transition: { duration: 0.3 } }}
     >
-      <Card className="border border-futuristicBorder bg-futuristic-card backdrop-blur-lg h-full">
+      <Card className="border border-accent bg-card backdrop-blur-lg h-full">
         <CardHeader>
-          <div className="mb-4 text-primary dark:text-accent">{icon}</div>
+          <div className="mb-4 text-primary">{icon}</div>
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
@@ -145,7 +145,7 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section ref={sectionRef} className="py-24 bg-futuristic-dark">
+    <section ref={sectionRef} className="py-24 bg-background">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

@@ -58,7 +58,7 @@ const BlogList: React.FC<BlogListProps> = ({ status, onEditBlog }) => {
         );
       case "draft":
         return (
-          <span className="bg-yellow-500/20 text-yellow-500 text-xs px-2 py-1 rounded-full">
+          <span className="bg-accent/20 text-accent text-xs px-2 py-1 rounded-full">
             Draft
           </span>
         );

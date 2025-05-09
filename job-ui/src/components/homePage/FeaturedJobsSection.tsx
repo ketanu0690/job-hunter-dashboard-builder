@@ -22,16 +22,16 @@ const JobCard = ({ job, index }: { job: Job; index: number }) => {
       animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
       whileHover={{ y: -5, boxShadow: "0 10px 30px -15px rgba(0, 0, 0, 0.3)" }}
-      className="bg-futuristic-card border border-white/10 rounded-xl p-6 backdrop-blur-sm flex flex-col h-full shadow-lg"
+      className="bg-card border border-accent rounded-xl p-6 backdrop-blur-sm flex flex-col h-full shadow-lg"
     >
       <div className="flex justify-between items-start mb-4">
-        <div className="w-12 h-12 bg-futuristic-darker rounded-lg flex items-center justify-center">
-          <div className="w-8 h-8 bg-futuristic-accent rounded-md flex items-center justify-center text-white font-bold">
+        <div className="w-12 h-12 bg-background rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-accent rounded-md flex items-center justify-center text-accent-foreground font-bold">
             {job.company.charAt(0)}
           </div>
         </div>
         {job.isNew && (
-          <span className="text-xs bg-accent text-white px-2 py-1 rounded-full ml-2">
+          <span className="text-xs bg-accent text-accent-foreground px-2 py-1 rounded-full ml-2">
             New
           </span>
         )}
@@ -39,8 +39,8 @@ const JobCard = ({ job, index }: { job: Job; index: number }) => {
 
       <h3 className="text-xl font-bold mb-2">{job.title}</h3>
       <p className="text-muted-foreground mb-2">{job.company}</p>
-      <p className="text-sm mb-4">{job.location}</p>
-      <p className="text-xs text-gray-400 mb-2">Posted: {job.date}</p>
+      <p className="text-sm mb-4 text-foreground">{job.location}</p>
+      <p className="text-xs text-muted-foreground mb-2">Posted: {job.date}</p>
       {job.salary && (
         <p className="text-neon-green text-sm mb-4">{job.salary}</p>
       )}
@@ -48,7 +48,7 @@ const JobCard = ({ job, index }: { job: Job; index: number }) => {
         {job.skills.slice(0, 3).map((skill, i) => (
           <span
             key={i}
-            className="bg-futuristic-darker text-xs px-2 py-1 rounded-full"
+            className="bg-background text-xs px-2 py-1 rounded-full border border-accent text-foreground"
           >
             {skill}
           </span>
@@ -127,7 +127,7 @@ const FeaturedJobsSection = ({
   return (
     <section
       ref={sectionRef}
-      className="py-24 bg-gradient-to-b from-futuristic-dark to-futuristic-darker"
+      className="py-24 bg-gradient-to-b from-background to-card"
     >
       <div className="container mx-auto px-6">
         <motion.div
@@ -169,10 +169,10 @@ const FeaturedJobsSection = ({
 
         <div className="flex justify-center mt-12">
           <Button
-            className="px-8"
+            className="px-8 bg-primary text-primary-foreground yellow-border yellow-hover yellow-focus yellow-glow"
             onClick={() => onViewAllJobs && onViewAllJobs(jobs)}
           >
-            View All Jobs <ArrowRight size={16} className="ml-2" />
+            View All Jobs <ArrowRight size={16} className="ml-2 text-accent" />
           </Button>
         </div>
       </div>
