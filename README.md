@@ -131,3 +131,10 @@ To set up the project completely, make sure to:
 - Configure environment variables for your hosted Supabase instance
 - Review `README.md` or `/docs` for architectural and API details
 - Explore Firebase and Supabase configurations as applicable
+
+---
+
+## Firebase Deployment Details
+
+- Project Console: https://console.firebase.google.com/project/job-tracker-c0657/overview
+- Hosting URL: https://job-tracker-c0657.web.app
