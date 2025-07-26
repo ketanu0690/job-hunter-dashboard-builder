@@ -5,7 +5,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../components/ui/dialog";
-import { Job } from "../components/types";
 import Footer from "../../src/components/homePage/Footer";
 import FloatingActionButton from "../../src/components/dashboard/FloatingActionButton";
 import ContactSection from "../../src/components/homePage/ContactSection";
@@ -17,6 +16,7 @@ import OpenSourceBanner from "../../src/components/homePage/OpenSourceBanner";
 import ServicesSection from "../../src/components/homePage/ServicesSection";
 import TestimonialsSection from "../../src/components/homePage/TestimonialsSection";
 import OurDevelopment from "../../src/components/homePage/Ourdevelopment";
+import { Job } from "@/types";
 
 const Index = () => {
   const [allJobsModalOpen, setAllJobsModalOpen] = useState(false);

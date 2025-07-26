@@ -142,7 +142,7 @@ const HeroSection = () => {
         className="absolute inset-0 w-full h-full z-0"
         style={{
           backgroundImage: bgUrl
-            ? `linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(255,214,0,0.5) 60%, rgba(255,255,255,0.1) 100%), url('${bgUrl}')`
+            ? `linear-gradient(to bottom, hsl(var(--accent)) 0%, hsl(var(--accent) / 0.5) 50%, hsl(var(--pure-white) / 0.1) 100%), url('${bgUrl}')`
             : `linear-gradient(
                 to bottom,
                 hsl(var(--background)) 0%,

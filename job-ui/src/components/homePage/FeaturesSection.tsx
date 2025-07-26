@@ -67,7 +67,7 @@ const FeaturesSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="py-24 bg-gradient-to-b from-background to-card"
+      className="bg-gradient-to-b from-background to-card"
     >
       <div className="container mx-auto px-6">
         <motion.div
