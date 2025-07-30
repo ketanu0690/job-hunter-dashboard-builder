@@ -1,14 +1,22 @@
 import AuthForm from "../components/forms/AuthForm";
+import Image from "../../public/assests/Singup-signIn_bg_1.jpg";
+import { motion } from "framer-motion";
 
 const Login = () => (
-  <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900">
-    <div className="max-w-lg w-full p-8 bg-background dark:bg-gray-800 rounded shadow text-center">
-      <h1 className="text-3xl font-bold mb-4">Welcome to TechJobTracker</h1>
-      <p className="mb-6 text-gray-600 dark:text-gray-300">
-        Sign in or sign up to access your dashboard.
-      </p>
+  <div
+    className="w-full bg-cover bg-center flex items-start justify-start "
+    style={{
+      backgroundImage: `url(${Image})`,
+    }}
+  >
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className=" backdrop-blur-lg p-3 md:p-8 rounded-xl shadow-xl   overflow-hidden"
+    >
       <AuthForm redirectToHome />
-    </div>
+    </motion.div>
   </div>
 );
 

@@ -3,25 +3,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, Search, Briefcase, User, X, Sun, Moon } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../forms/AuthForm";
-import { supabase } from "../../integrations/supabase/client";
-import ThemeToggle from "../ui/theme-toggle";
 import useTheme from "../ui/use-theme";
+import { useAuth } from "@/providers/AuthProvider";
+import { Link } from "@tanstack/react-router";
+import UserDropdown from "./UserDropdown";
 
-const AnimatedHeader = () => {
+const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { session, setSession } = useAuth();
+  const { session } = useAuth();
   const [theme, setTheme] = useTheme();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setSession(null);
-    navigate("/login");
-  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -76,10 +67,11 @@ const AnimatedHeader = () => {
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ",
+          "fixed top-0  left-0 right-0 z-50 backdrop-blur transition-all duration-300 ease-in-out",
+          "transition-[padding,background-color,box-shadow,border-color]",
           scrolled
-            ? "py-2 bg-black/80 shadow-lg border-b border-accent"
-            : "py-6 bg-transparent"
+            ? "py-2 bg-background/80 shadow-md border-b border-border"
+            : "py-4 bg-transparent border-transparent shadow-none"
         )}
       >
         <div className="container mx-auto px-4 flex items-center justify-between gap-8">
@@ -107,7 +99,7 @@ const AnimatedHeader = () => {
           {/* Navigation */}
           <nav className="hidden md:flex items-center gap-6 flex-1 justify-center">
             <Link
-              to="/blogs"
+              to="/"
               className={cn(
                 "font-medium hover:text-primary transition-colors text-accent ",
                 scrolled ? "text-primary dark:text-accent" : "text-accent"
@@ -159,35 +151,9 @@ const AnimatedHeader = () => {
             >
               <Search size={20} />
             </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              className="p-2 text-foreground/80 hover:text-accent transition-colors bg-background/5 rounded-full"
-            >
-              <User size={20} />
-            </motion.button>
-            {!session && (
-              <Link to="/login">
-                <Button className="ml-2 bg-primary text-primary-foreground yellow-border yellow-focus yellow-hover yellow-glow font-semibold px-4 py-2 rounded-lg border-2 border-accent">
-                  Sign In
-                </Button>
-              </Link>
-            )}
-            {!session && (
-              <Link to="/signup">
-                <Button className="ml-2 bg-primary text-primary-foreground yellow-border yellow-focus yellow-hover yellow-glow font-semibold px-4 py-2 rounded-lg">
-                  Sign Up
-                </Button>
-              </Link>
-            )}
-            {session && (
-              <button
-                onClick={handleLogout}
-                className="ml-2 bg-error text-foreground font-semibold px-4 py-2 rounded-lg transition-all yellow-focus yellow-hover"
-              >
-                Logout
-              </button>
-            )}
+
+            <UserDropdown />
+
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -307,14 +273,14 @@ const AnimatedHeader = () => {
                       </Link>
                     )}
                     {!session && (
-                      <Link to="/signup">
+                      <Link to="/">
                         <Button className="w-full bg-accent hover:bg-accent/80 text-accent-foreground font-medium">
                           Sign Up
                         </Button>
                       </Link>
                     )}
                     {session && (
-                      <Link to="/admin" className="w-full">
+                      <Link to="/" className="w-full">
                         <Button className="w-full bg-accent hover:bg-accent/80 text-accent-foreground font-medium">
                           Go to Dashboard
                         </Button>
@@ -331,4 +297,4 @@ const AnimatedHeader = () => {
   );
 };
 
-export default AnimatedHeader;
+export default Header;

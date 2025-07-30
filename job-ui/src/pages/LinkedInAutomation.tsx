@@ -6,7 +6,7 @@ import {
   TabsTrigger,
 } from "../components/ui/tabs";
 import { toast } from "sonner";
-import AuthForm, { AuthProvider, useAuth } from "../components/forms/AuthForm";
+import AuthForm from "../components/forms/AuthForm";
 import {
   LinkedinConfig,
   runLinkedinAutomation,
@@ -17,6 +17,7 @@ import PersonalInfoCard from "../components/linkedin/PersonalInfoCard";
 import AutomationLogs from "../components/linkedin/AutomationLogs";
 import RunAutomationCard from "../components/linkedin/RunAutomationCard";
 import HelpContent from "../components/linkedin/HelpContent";
+import { AuthProvider, useAuth } from "@/providers/AuthProvider";
 
 const LinkedInAutomation = () => {
   const { session } = useAuth();

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+
 import {
   Home,
   Briefcase,
@@ -17,8 +17,6 @@ import { cn } from "../../lib/utils";
 const Sidebar: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
-  const navigate = useNavigate();
-  const location = useLocation();
 
   const navItems = [
     { id: "dashboard", label: "Dashboard", icon: Home, route: "/dashboard" },
@@ -27,9 +25,21 @@ const Sidebar: React.FC = () => {
       label: "LinkedIn",
       icon: LinkedinIcon,
       subItems: [
-        { id: "easy-apply", label: "Easy Apply", route: "/linkedin/easy-apply" },
-        { id: "connections", label: "Smart Connections", route: "/linkedin/connections" },
-        { id: "messages", label: "Message Templates", route: "/linkedin/messages" },
+        {
+          id: "easy-apply",
+          label: "Easy Apply",
+          route: "/linkedin/easy-apply",
+        },
+        {
+          id: "connections",
+          label: "Smart Connections",
+          route: "/linkedin/connections",
+        },
+        {
+          id: "messages",
+          label: "Message Templates",
+          route: "/linkedin/messages",
+        },
       ],
     },
     {
@@ -37,7 +47,11 @@ const Sidebar: React.FC = () => {
       label: "Naukri",
       icon: Briefcase,
       subItems: [
-        { id: "naukri-apply", label: "Quick Apply", route: "/naukri/quick-apply" },
+        {
+          id: "naukri-apply",
+          label: "Quick Apply",
+          route: "/naukri/quick-apply",
+        },
         { id: "resume", label: "Resume Tailoring", route: "/naukri/resume" },
       ],
     },
@@ -50,8 +64,18 @@ const Sidebar: React.FC = () => {
         { id: "jobposts", label: "Job Posts", route: "/admin/job-posts" },
       ],
     },
-    { id: "analytics", label: "Analytics", icon: LineChart, route: "/analytics" },
-    { id: "recommendations", label: "Recommendations", icon: Sparkles, route: "/recommendations" },
+    {
+      id: "analytics",
+      label: "Analytics",
+      icon: LineChart,
+      route: "/analytics",
+    },
+    {
+      id: "recommendations",
+      label: "Recommendations",
+      icon: Sparkles,
+      route: "/recommendations",
+    },
     {
       id: "community",
       label: "Community",
@@ -72,7 +96,7 @@ const Sidebar: React.FC = () => {
   // Click only navigates for sub-items; main items solely toggle
   const handleClick = (id: string, route?: string, isSub: boolean = false) => {
     if (isSub && route) {
-      navigate(route);
+      // navigate(route);
     } else if (!isSub && !route) {
       toggleMenu(id);
     }
@@ -165,7 +189,9 @@ const Sidebar: React.FC = () => {
                       {item.subItems.map((subItem) => (
                         <li key={subItem.id}>
                           <button
-                            onClick={() => handleClick(subItem.id, subItem.route, true)}
+                            onClick={() =>
+                              handleClick(subItem.id, subItem.route, true)
+                            }
                             className={cn(
                               "flex items-center w-full p-2 rounded-lg transition-all duration-200",
                               isActive(subItem.route, subItem.id)

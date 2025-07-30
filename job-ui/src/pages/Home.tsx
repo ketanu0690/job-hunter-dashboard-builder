@@ -18,7 +18,7 @@ import TestimonialsSection from "../../src/components/homePage/TestimonialsSecti
 import OurDevelopment from "../../src/components/homePage/Ourdevelopment";
 import { Job } from "@/types";
 
-const Index = () => {
+const Home = () => {
   const [allJobsModalOpen, setAllJobsModalOpen] = useState(false);
   const [allJobs, setAllJobs] = useState<Job[]>([]);
 
@@ -75,4 +75,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Home;
