@@ -1,15 +1,10 @@
 import React from "react";
-import DashboardLayout from "../layouts/DashboardLayout";
-import BlogList from "../components/blog/BlogList";
-import BlogEditor from "../components/blog/BlogEditor";
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-} from "../components/ui/tabs";
+import DashboardLayout from "../shared/layouts/DashboardLayout";
+import BlogList from "../features/Kblog/components/blog/BlogList";
+import BlogEditor from "../features/Kblog/components/blog/BlogEditor";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../shared/ui/tabs";
 import { PlusCircle } from "lucide-react";
-import { Button } from "../components/ui/button";
+import { Button } from "../shared/ui/button";
 import { useBlogStore } from "../hooks/useBlogStore";
 
 const BlogManagement: React.FC = () => {

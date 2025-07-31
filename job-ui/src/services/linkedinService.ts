@@ -1,4 +1,4 @@
-import { APIHelper } from "../utils/axios";
+import { APIHelper } from "../shared/utils/axios";
 
 export interface LinkedinConfig {
   platform?: string;

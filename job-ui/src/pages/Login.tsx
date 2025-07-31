@@ -1,4 +1,4 @@
-import AuthForm from "../components/forms/AuthForm";
+import AuthForm from "../features/KAuth/components/AuthForm";
 import Image from "../../public/assests/Singup-signIn_bg_1.jpg";
 import { motion } from "framer-motion";
 

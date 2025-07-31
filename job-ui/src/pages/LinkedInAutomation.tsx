@@ -1,12 +1,7 @@
 import { useState } from "react";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../shared/ui/tabs";
 import { toast } from "sonner";
-import AuthForm from "../components/forms/AuthForm";
+import AuthForm from "../features/KAuth/components/AuthForm";
 import {
   LinkedinConfig,
   runLinkedinAutomation,

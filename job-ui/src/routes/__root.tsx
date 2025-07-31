@@ -1,5 +1,5 @@
 import { Outlet, createRootRoute } from "@tanstack/react-router";
-import MainLayout from "@/layouts/MainLayout";
+import MainLayout from "@/shared/layouts/MainLayout";
 import { AuthProvider } from "@/providers/AuthProvider";
 
 function RootComponent() {

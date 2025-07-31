@@ -6,7 +6,7 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import { Blog } from "../types";
+import { Blog } from "../shared/types";
 import {
   getBlogs,
   createBlog,

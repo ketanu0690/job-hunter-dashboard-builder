@@ -4,19 +4,19 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "../components/ui/dialog";
-import Footer from "../../src/components/homePage/Footer";
+} from "../shared/ui/dialog";
+import Footer from "../features/KMentor/components/homePage/Footer";
 import FloatingActionButton from "../../src/components/dashboard/FloatingActionButton";
-import ContactSection from "../../src/components/homePage/ContactSection";
-import FeaturedJobsSection from "../../src/components/homePage/FeaturedJobsSection";
-import FeaturesSection from "../../src/components/homePage/FeaturesSection";
-import HeroSection from "../../src/components/homePage/HeroSection";
-import HowItWorksSection from "../../src/components/homePage/HowItWorksSection";
-import OpenSourceBanner from "../../src/components/homePage/OpenSourceBanner";
-import ServicesSection from "../../src/components/homePage/ServicesSection";
-import TestimonialsSection from "../../src/components/homePage/TestimonialsSection";
-import OurDevelopment from "../../src/components/homePage/Ourdevelopment";
-import { Job } from "@/types";
+import ContactSection from "../features/KMentor/components/homePage/ContactSection";
+import FeaturedJobsSection from "../features/KMentor/components/homePage/FeaturedJobsSection";
+import FeaturesSection from "../features/KMentor/components/homePage/FeaturesSection";
+import HeroSection from "../features/KMentor/components/homePage/HeroSection";
+import HowItWorksSection from "../features/KMentor/components/homePage/HowItWorksSection";
+import OpenSourceBanner from "../features/KMentor/components/homePage/OpenSourceBanner";
+import ServicesSection from "../features/KMentor/components/homePage/ServicesSection";
+import TestimonialsSection from "../features/KMentor/components/homePage/TestimonialsSection";
+import OurDevelopment from "../features/KMentor/components/homePage/Ourdevelopment";
+import { Job } from "@/shared/types";
 
 const Home = () => {
   const [allJobsModalOpen, setAllJobsModalOpen] = useState(false);

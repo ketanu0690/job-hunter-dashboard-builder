@@ -1,4 +1,4 @@
-import { GameDialog } from "@/components/games/GameDialog";
+import { GameDialog } from "@/features/KGames/games/GameDialog";
 import { createFileRoute } from "@tanstack/react-router";
 export default function NotFound() {
   return (

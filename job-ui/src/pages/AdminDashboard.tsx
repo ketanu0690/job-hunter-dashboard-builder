@@ -7,7 +7,7 @@ import {
   LinkedinIcon,
   BookOpen,
 } from "lucide-react";
-import DashboardLayout from "../layouts/DashboardLayout";
+import DashboardLayout from "../shared/layouts/DashboardLayout";
 import MetricsCard from "../components/dashboard/MetricsCard";
 import ChartCard from "../components/dashboard/ChartCard";
 import AutomationCard from "../components/dashboard/AutomationCard";

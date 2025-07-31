@@ -1,9 +1,14 @@
-
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/shared/ui/card";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
+import { Checkbox } from "@/shared/ui/checkbox";
 
 interface JobSearchCardProps {
   remote: boolean;
@@ -16,14 +21,14 @@ const JobSearchCard: React.FC<JobSearchCardProps> = ({
   remote,
   onPositionChange,
   onLocationChange,
-  onRemoteChange
+  onRemoteChange,
 }) => {
   const handlePositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onPositionChange(e.target.value.split(',').map(item => item.trim()));
+    onPositionChange(e.target.value.split(",").map((item) => item.trim()));
   };
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onLocationChange(e.target.value.split(',').map(item => item.trim()));
+    onLocationChange(e.target.value.split(",").map((item) => item.trim()));
   };
 
   return (
@@ -35,28 +40,28 @@ const JobSearchCard: React.FC<JobSearchCardProps> = ({
       <CardContent className="space-y-4">
         <div>
           <Label htmlFor="positions">Job Positions (comma separated)</Label>
-          <Input 
-            id="positions" 
-            placeholder="Software Engineer, Developer, Product Manager" 
+          <Input
+            id="positions"
+            placeholder="Software Engineer, Developer, Product Manager"
             onChange={handlePositionChange}
           />
         </div>
         <div>
           <Label htmlFor="locations">Locations (comma separated)</Label>
-          <Input 
-            id="locations" 
-            placeholder="New York, Remote, San Francisco" 
+          <Input
+            id="locations"
+            placeholder="New York, Remote, San Francisco"
             onChange={handleLocationChange}
           />
         </div>
         <div className="flex items-center space-x-2">
-          <Checkbox 
-            id="remote" 
+          <Checkbox
+            id="remote"
             checked={remote}
             onCheckedChange={onRemoteChange}
           />
-          <label 
-            htmlFor="remote" 
+          <label
+            htmlFor="remote"
             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
             Include remote jobs

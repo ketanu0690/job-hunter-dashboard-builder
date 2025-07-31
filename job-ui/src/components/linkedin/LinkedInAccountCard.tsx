@@ -1,8 +1,13 @@
-
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/shared/ui/card";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
 
 interface LinkedInAccountCardProps {
   email: string;
@@ -15,7 +20,7 @@ const LinkedInAccountCard: React.FC<LinkedInAccountCardProps> = ({
   email,
   password,
   onEmailChange,
-  onPasswordChange
+  onPasswordChange,
 }) => {
   return (
     <Card>
@@ -26,19 +31,19 @@ const LinkedInAccountCard: React.FC<LinkedInAccountCardProps> = ({
       <CardContent className="space-y-4">
         <div>
           <Label htmlFor="email">Email</Label>
-          <Input 
-            id="email" 
-            type="email" 
-            value={email} 
+          <Input
+            id="email"
+            type="email"
+            value={email}
             onChange={(e) => onEmailChange(e.target.value)}
           />
         </div>
         <div>
           <Label htmlFor="password">Password</Label>
-          <Input 
-            id="password" 
-            type="password" 
-            value={password} 
+          <Input
+            id="password"
+            type="password"
+            value={password}
             onChange={(e) => onPasswordChange(e.target.value)}
           />
         </div>

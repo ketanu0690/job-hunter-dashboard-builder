@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { APIHelper } from "../../utils/axios";
+import { APIHelper } from "../../shared/utils/axios";
 import yaml from "js-yaml";
 import { toast } from "sonner";
 import { saveAs } from "file-saver";
-import { Button } from "../ui/button";
+import { Button } from "../../shared/ui/button";
 import {
   runLinkedinAutomation,
   LinkedinConfig,
