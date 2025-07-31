@@ -6,6 +6,7 @@ interface AuthContextType {
   session: any;
   token: string | null;
   setSession: (session: any) => void;
+  clearAuthStorage: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -78,8 +79,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, [session]);
 
+  const clearAuthStorage = () => {
+    const keysToRemove = ["unsplash_image", "token", "supabase.auth.token"];
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
+    sessionStorage.clear();
+    document.cookie = "";
+  };
+
   return loadingSession ? null : (
-    <AuthContext.Provider value={{ session, token, setSession }}>
+    <AuthContext.Provider
+      value={{ session, token, setSession, clearAuthStorage }}
+    >
       {children}
     </AuthContext.Provider>
   );

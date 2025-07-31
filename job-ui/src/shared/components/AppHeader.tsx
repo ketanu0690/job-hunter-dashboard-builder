@@ -18,10 +18,10 @@ import { useNavigate } from "@tanstack/react-router";
 import { useToast } from "@/hooks/use-toast";
 
 const Header = () => {
-  const { session, setSession } = useAuth();
+  const { session, setSession, clearAuthStorage } = useAuth();
   const [theme, setTheme] = useTheme();
   const { toast } = useToast();
-  console.log(theme);
+
   const navigate = useNavigate();
 
   const [scrolled, setScrolled] = useState(false);
@@ -40,6 +40,8 @@ const Header = () => {
 
   const handleLogout = () => {
     setSession(null);
+    clearAuthStorage();
+    navigate({ to: "/" });
     toast({
       title: "Success",
       description: "Logged out successfully!",

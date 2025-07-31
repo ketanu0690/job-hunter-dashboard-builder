@@ -20,7 +20,6 @@ import {
 } from "lucide-react";
 import { useTheme } from "@/shared/utils/use-theme";
 
-
 const AppShell = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [theme] = useTheme();
@@ -162,7 +161,7 @@ const AppShell = () => {
       icon: PenIcon,
       color: "from-gray-600 to-gray-800",
       category: "utilities",
-      url: "https://calculator.net",
+      url: "/blog",
       rating: 4.3,
       features: ["Scientific", "Graphing", "History"],
     },
