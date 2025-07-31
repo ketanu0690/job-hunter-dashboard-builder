@@ -23,34 +23,34 @@ const BlogSection: React.FC<BlogSectionProps> = ({
   onView,
 }) => {
   return (
-    <div className="mb-16">
+    <section className="mb-24">
       <AnimatedSectionHeader color={color} icon={icon} title={title} />
+
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-12">
-          {/* <Loader2 className="h-12 w-12 text-primary animate-spin loading-pulse" /> */}
-          <span className="mt-4 text-muted-foreground text-lg">
+        <div className="flex flex-col items-center justify-center py-16">
+          <div className="text-muted-foreground text-lg font-medium">
             Loading {title.toLowerCase()}...
-          </span>
-        </div>
-      ) : error ? (
-        <div className="p-6 bg-destructive/10 text-destructive rounded-lg border border-destructive/20 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-lg font-medium">{error}</p>
-            <Button
-              variant="outline"
-              className="mt-4 border-destructive/30 text-destructive hover:bg-destructive/10"
-              onClick={() => window.location.reload()}
-            >
-              Try Again
-            </Button>
           </div>
         </div>
+      ) : error ? (
+        <div className="bg-destructive/10 text-destructive border border-destructive/20 rounded-2xl py-12 px-6 text-center">
+          <p className="text-base sm:text-lg font-semibold">{error}</p>
+          <Button
+            variant="outline"
+            className="mt-4 border-destructive/30 text-destructive hover:bg-destructive/10"
+            onClick={() => window.location.reload()}
+          >
+            Try Again
+          </Button>
+        </div>
       ) : blogs.length === 0 ? (
-        <div className="text-muted-foreground text-center py-12 bg-muted/30 rounded-lg">
-          <p className="text-lg">No {title.toLowerCase()} found.</p>
+        <div className="text-muted-foreground text-center py-16 bg-muted/30 rounded-2xl">
+          <p className="text-base sm:text-lg">
+            No {title.toLowerCase()} found.
+          </p>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10 mt-6">
           {blogs.map((blog, index) => (
             <BlogCard
               key={blog.guid || blog.id}
@@ -62,7 +62,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 };
 

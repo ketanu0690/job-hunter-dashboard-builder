@@ -234,24 +234,24 @@ const AuthForm: React.FC<AuthFormProps> = ({ redirectToHome }) => {
             type="single"
             value={mode}
             onValueChange={(val) => val && setMode(val as "signIn" | "signUp")}
-            // className="flex bg-gray-100 dark:bg-gray-800 rounded-xl p-1 mb-8"
+            className="flex bg-gray-100 dark:bg-gray-800 rounded-xl p-1 mb-8"
           >
             <ToggleGroupItem
               value="signIn"
               className={`flex-1 h-12 rounded-lg text-sm font-medium transition-colors duration-200 ${
                 mode === "signIn"
-                  ? "bg-balck dark:bg-gray-900 text-blue-600 shadow"
-                  : "bg-transparent text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700"
+                  ? "bg-balck dark:bg-gray-100 text-blue-600 shadow"
+                  : "bg-transparent text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 shadow"
               }`}
             >
               Sign In
             </ToggleGroupItem>
             <ToggleGroupItem
               value="signUp"
-              className={`flex-1 h-12 rounded-lg text-sm font-medium transition-colors duration-200 ${
+              className={`flex-1 h-12 rounded-lg text-sm font-medium t duration-200 ${
                 mode === "signUp"
                   ? "bg-black dark:bg-gray-900 text-blue-600 shadow"
-                  : "bg-transparent text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700"
+                  : "bg-transparent text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 shadow"
               }`}
             >
               Sign Up
@@ -343,6 +343,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ redirectToHome }) => {
             {/* Submit */}
             <Button
               type="submit"
+              variant={"secondary"}
               disabled={loading}
               className="w-full h-14 text-lg font-semibold"
             >

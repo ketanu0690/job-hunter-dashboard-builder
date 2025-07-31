@@ -30,7 +30,10 @@ const Header = () => {
 
   const handleMenuItemClick = (item) => {
     console.log(`Navigating to: ${item.to}`);
-    alert(`Opening ${item.label} page`);
+    toast({
+      title: "info",
+      description: `Opening ${item.label} page`,
+    });
     setMobileMenuOpen(false);
   };
 
@@ -103,6 +106,7 @@ const Header = () => {
               }`}
               onClick={() => {
                 navigate({ to: "/" });
+                setMobileMenuOpen(false);
               }}
             >
               Ketan

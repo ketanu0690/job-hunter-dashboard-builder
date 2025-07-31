@@ -2,7 +2,7 @@ import BlogManagement from "@/pages/BlogManagement";
 import { BlogProvider } from "@/providers/BlogProvider";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_auth/blog")({
+export const Route = createFileRoute("/_auth/__dashboard/manageBlog")({
   component: RouteComponent,
 });
 

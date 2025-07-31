@@ -1,58 +1,81 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useTheme } from "@/shared/utils/use-theme";
+import { useNavigate } from "@tanstack/react-router";
+import {
+  PenLine,
+  ShieldCheck,
+  CalendarDays,
+  LayoutDashboard,
+} from "lucide-react";
 
-const ParallaxHeader = ({ title }: { title: string }) => {
-  const [offset, setOffset] = useState(0);
-  const headerRef = useRef<HTMLDivElement>(null);
+interface ParallaxHeaderProps {
+  title: string;
+  isBlogAdmin?: boolean;
+}
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (headerRef.current) {
-        const scrollPosition = window.scrollY;
-        setOffset(scrollPosition * 0.4);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+const ParallaxHeader: React.FC<ParallaxHeaderProps> = ({
+  title,
+  isBlogAdmin,
+}) => {
+  const [theme] = useTheme();
+  const navigate = useNavigate();
+
+  const benefits = [
+    {
+      icon: <PenLine className="text-purple-500" size={16} />,
+      label: "Thought Leadership",
+    },
+    {
+      icon: <ShieldCheck className="text-blue-500" size={16} />,
+      label: "Developer Trusted",
+    },
+    {
+      icon: <CalendarDays className="text-teal-500" size={16} />,
+      label: "Always Fresh",
+    },
+  ];
 
   return (
-    <div
-      ref={headerRef}
-      className="relative h-64 md:h-80 overflow-hidden mb-12 rounded-xl"
-    >
-      <div
-        className="absolute inset-0 bg-gradient-to-r from-[#FFD500] to-[#FFF3B0]"
-        style={{ transform: `translateY(${offset * 0.5}px)` }}
+    <header className="text-center mb-16">
+      <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+        {title}
+      </h1>
+      <p
+        className={`text-lg max-w-3xl mx-auto leading-relaxed mb-6 ${
+          theme === "dark" ? "text-gray-300" : "text-gray-600"
+        }`}
       >
-        <div className="absolute inset-0 bg-[url('/api/placeholder/1200/400')] opacity-20 mix-blend-overlay"></div>
-        <div className="absolute inset-0">
-          {Array.from({ length: 20 }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full bg-white/10"
-              style={{
-                width: `${Math.random() * 100 + 50}px`,
-                height: `${Math.random() * 100 + 50}px`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                transform: `translateY(${
-                  offset * (0.2 + Math.random() * 0.3)
-                }px)`,
-                opacity: 0.1 + Math.random() * 0.2,
-              }}
-            ></div>
-          ))}
+        Dive into insightful articles, engineering deep-dives, and best
+        practices—curated for modern developers who love building the future.
+      </p>
+
+      <div className="flex flex-wrap justify-center gap-4 mt-4 mb-6">
+        {benefits.map(({ icon, label }, i) => (
+          <div
+            key={i}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium shadow-sm ${
+              theme === "dark"
+                ? "bg-gray-800 text-gray-100"
+                : "bg-white text-gray-800"
+            }`}
+          >
+            {icon}
+            <span>{label}</span>
+          </div>
+        ))}
+      </div>
+
+      {isBlogAdmin && (
+        <div className="flex justify-center gap-4">
+          <button
+            onClick={() => navigate({ to: "/manageBlog" })}
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-full hover:bg-primary/90 transition"
+          >
+            <LayoutDashboard size={18} />
+            Manage
+          </button>
         </div>
-      </div>
-      <div
-        className="absolute inset-0 flex items-center justify-center text-foreground z-10"
-        style={{ transform: `translateY(${offset * 0.2}px)` }}
-      >
-        <h1 className="text-4xl md:text-5xl font-bold text-center px-4">
-          {title}
-        </h1>
-      </div>
-    </div>
+      )}
+    </header>
   );
 };
 

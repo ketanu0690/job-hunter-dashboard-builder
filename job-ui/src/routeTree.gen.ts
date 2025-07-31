@@ -12,7 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as NotFoundRouteImport } from './routes/$notFound'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
-import { Route as AuthBlogRouteImport } from './routes/_auth/blog'
+import { Route as AuthBlogsRouteImport } from './routes/_auth/blogs'
+import { Route as Auth_dashboardManageBlogRouteImport } from './routes/_auth/__dashboard/manageBlog'
 import { Route as Auth_dashboardAdminRouteImport } from './routes/_auth/__dashboard/admin'
 
 const NotFoundRoute = NotFoundRouteImport.update({
@@ -30,11 +31,17 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthBlogRoute = AuthBlogRouteImport.update({
-  id: '/_auth/blog',
-  path: '/blog',
+const AuthBlogsRoute = AuthBlogsRouteImport.update({
+  id: '/_auth/blogs',
+  path: '/blogs',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Auth_dashboardManageBlogRoute =
+  Auth_dashboardManageBlogRouteImport.update({
+    id: '/_auth/__dashboard/manageBlog',
+    path: '/manageBlog',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const Auth_dashboardAdminRoute = Auth_dashboardAdminRouteImport.update({
   id: '/_auth/__dashboard/admin',
   path: '/admin',
@@ -44,45 +51,50 @@ const Auth_dashboardAdminRoute = Auth_dashboardAdminRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$notFound': typeof NotFoundRoute
-  '/blog': typeof AuthBlogRoute
+  '/blogs': typeof AuthBlogsRoute
   '/login': typeof AuthLoginRoute
   '/admin': typeof Auth_dashboardAdminRoute
+  '/manageBlog': typeof Auth_dashboardManageBlogRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$notFound': typeof NotFoundRoute
-  '/blog': typeof AuthBlogRoute
+  '/blogs': typeof AuthBlogsRoute
   '/login': typeof AuthLoginRoute
   '/admin': typeof Auth_dashboardAdminRoute
+  '/manageBlog': typeof Auth_dashboardManageBlogRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$notFound': typeof NotFoundRoute
-  '/_auth/blog': typeof AuthBlogRoute
+  '/_auth/blogs': typeof AuthBlogsRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/__dashboard/admin': typeof Auth_dashboardAdminRoute
+  '/_auth/__dashboard/manageBlog': typeof Auth_dashboardManageBlogRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$notFound' | '/blog' | '/login' | '/admin'
+  fullPaths: '/' | '/$notFound' | '/blogs' | '/login' | '/admin' | '/manageBlog'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$notFound' | '/blog' | '/login' | '/admin'
+  to: '/' | '/$notFound' | '/blogs' | '/login' | '/admin' | '/manageBlog'
   id:
     | '__root__'
     | '/'
     | '/$notFound'
-    | '/_auth/blog'
+    | '/_auth/blogs'
     | '/_auth/login'
     | '/_auth/__dashboard/admin'
+    | '/_auth/__dashboard/manageBlog'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   NotFoundRoute: typeof NotFoundRoute
-  AuthBlogRoute: typeof AuthBlogRoute
+  AuthBlogsRoute: typeof AuthBlogsRoute
   AuthLoginRoute: typeof AuthLoginRoute
   Auth_dashboardAdminRoute: typeof Auth_dashboardAdminRoute
+  Auth_dashboardManageBlogRoute: typeof Auth_dashboardManageBlogRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -108,11 +120,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_auth/blog': {
-      id: '/_auth/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof AuthBlogRouteImport
+    '/_auth/blogs': {
+      id: '/_auth/blogs'
+      path: '/blogs'
+      fullPath: '/blogs'
+      preLoaderRoute: typeof AuthBlogsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth/__dashboard/manageBlog': {
+      id: '/_auth/__dashboard/manageBlog'
+      path: '/manageBlog'
+      fullPath: '/manageBlog'
+      preLoaderRoute: typeof Auth_dashboardManageBlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth/__dashboard/admin': {
@@ -128,9 +147,10 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   NotFoundRoute: NotFoundRoute,
-  AuthBlogRoute: AuthBlogRoute,
+  AuthBlogsRoute: AuthBlogsRoute,
   AuthLoginRoute: AuthLoginRoute,
   Auth_dashboardAdminRoute: Auth_dashboardAdminRoute,
+  Auth_dashboardManageBlogRoute: Auth_dashboardManageBlogRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -6,7 +6,8 @@ import ScrollToTopButton from "./ScrollToTopButton";
 import { APIHelper } from "../../../../shared/utils/axios";
 import { getBlogs } from "../../../../services/blogService";
 import type { Blog } from "../../../../shared/types";
-
+import deafultBlogImage from "../../../../../public/assests/Hero_section_bg_1.jpg";
+import { useAuth } from "@/providers/AuthProvider";
 // Types for Medium
 interface MediumFeedItem {
   title: string;
@@ -32,6 +33,7 @@ interface MediumFeedResponse {
 }
 
 export default function BlogShowcase() {
+  const { session } = useAuth();
   const [openModal, setOpenModal] = useState<null | {
     source: string;
     blog: any;
@@ -68,19 +70,35 @@ export default function BlogShowcase() {
         const username = "ketanupadhyay40";
         const rssUrl = `https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@${username}`;
         const data: MediumFeedResponse = await APIHelper.get(rssUrl);
-        const articles = data.items
-          .filter((item) => item.categories.length > 0)
-          .map((item) => {
-            let imageUrl =
-              item.thumbnail?.trim() ||
-              item.enclosure?.link?.trim() ||
-              (item.content.match(/<img[^>]+src=\"([^">]+)\"/)?.[1] ?? null);
-            return {
-              ...item,
-              imageUrl:
-                imageUrl || "https://via.placeholder.com/300x200?text=No+Image",
-            };
-          });
+        const articles = data.items.map((item) => {
+          const fromThumbnail = item.thumbnail?.trim();
+          const fromEnclosure = item.enclosure?.link?.trim();
+          const fromContent = item.content.match(
+            /<img[^>]+src=["']([^"'>]+)["']/
+          )?.[1];
+
+          // Validate image URL function
+          const isValidImage = (url: string | undefined | null): boolean => {
+            return (
+              !!url &&
+              url.startsWith("http") &&
+              /\.(jpg|jpeg|png|webp|gif)$/i.test(url)
+            );
+          };
+
+          const imageUrl = isValidImage(fromThumbnail)
+            ? fromThumbnail
+            : isValidImage(fromEnclosure)
+              ? fromEnclosure
+              : isValidImage(fromContent)
+                ? fromContent
+                : "/assests/Hero_section_bg_1.jpg"; // fallback from public folder
+
+          return {
+            ...item,
+            imageUrl,
+          };
+        });
         setMediumBlogs(articles);
       } catch (err) {
         setMediumError("Failed to fetch Medium blogs.");
@@ -105,8 +123,11 @@ export default function BlogShowcase() {
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 pb-16 bg-background">
-      <ParallaxHeader title="Featured Blog Articles" />
+    <div className="max-w-6xl mx-auto px-4 pb-16 ">
+      <ParallaxHeader
+        title="Featured Blog Articles"
+        isBlogAdmin={session ? true : false}
+      />
       <div ref={mediumSectionRef}>
         <BlogSection
           title="Medium Articles"

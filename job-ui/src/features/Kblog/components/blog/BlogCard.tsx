@@ -8,7 +8,7 @@ import {
   CardFooter,
 } from "../../../../shared/ui/card";
 import { Button } from "../../../../shared/ui/button";
-import { BookOpen, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { stripHtml, formatDate } from "../../../../shared/utils/blog";
 
 interface BlogCardProps {
@@ -20,17 +20,19 @@ interface BlogCardProps {
 
 const BlogCard: React.FC<BlogCardProps> = ({ blog, source, onView, index }) => {
   const cardRef = useRef<HTMLDivElement>(null);
+
   const excerpt =
     blog.excerpt || stripHtml(blog.description)?.slice(0, 150) + "...";
   const date = blog.pubDate || blog.created_at;
   const formattedDate = date ? formatDate(date) : "";
+
   const badgeColor =
     source === "Medium"
-      ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-200"
-      : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200";
+      ? "bg-indigo-600/10 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-200"
+      : "bg-emerald-600/10 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200";
 
   useEffect(() => {
-    const observer = new window.IntersectionObserver(
+    const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           entry.target.classList.add("animate-in");
@@ -47,64 +49,62 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog, source, onView, index }) => {
   return (
     <div
       ref={cardRef}
-      className={`opacity-0 translate-y-8 transition-all duration-700 delay-${
-        index % 5
-      }00`}
+      className={`opacity-0 translate-y-6 transition-all duration-700`}
       style={{ transitionDelay: `${(index % 5) * 100}ms` }}
     >
-      <Card className="flex flex-col h-full border bg-card text-card-foreground shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group">
+      <Card className="flex flex-col h-full rounded-3xl border border-muted bg-white dark:bg-zinc-900 shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden group">
         {blog.imageUrl && (
-          <div className="w-full h-48 overflow-hidden bg-muted relative">
+          <div className="w-full h-52 overflow-hidden relative">
             <img
               src={blog.imageUrl}
               alt={blog.title}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              className="w-full h-full object-cover scale-100 group-hover:scale-105 transition-transform duration-500"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
           </div>
         )}
-        <CardHeader className="flex-1 pb-2">
-          <div className="flex justify-between items-start mb-1">
-            <CardTitle className="text-lg font-bold text-foreground line-clamp-2 group-hover:text-primary transition-colors duration-300">
-              {blog.title}
-            </CardTitle>
-            <span className={`text-xs px-2 py-1 rounded-full ${badgeColor}`}>
+
+        <CardHeader className="flex-1 p-5 pb-3">
+          <div className="mb-1 flex items-center justify-between">
+            <span
+              className={`text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide ${badgeColor}`}
+            >
               {source}
             </span>
           </div>
+          <CardTitle className="text-lg sm:text-xl font-bold tracking-tight leading-snug text-foreground line-clamp-2">
+            {blog.title}
+          </CardTitle>
           {formattedDate && (
-            <p className="text-xs text-muted-foreground mb-1">
+            <p className="text-sm text-muted-foreground mt-1 font-medium">
               {formattedDate}
             </p>
           )}
         </CardHeader>
-        <CardContent className="flex-1 pb-0">
-          <CardDescription className="text-muted-foreground text-sm line-clamp-3">
+
+        <CardContent className="p-5 pt-1">
+          <CardDescription className="text-sm text-muted-foreground line-clamp-3">
             {excerpt}
           </CardDescription>
         </CardContent>
-        <CardFooter className="flex justify-between pt-2 pb-4 gap-2">
+
+        <CardFooter className="px-5 pb-5 pt-2 flex items-center justify-between gap-2">
           <Button
             onClick={onView}
-            className={`bg-primary text-primary-foreground hover:bg-primary/90 w-full relative overflow-hidden group`}
+            variant="ghost"
+            className="text-sm text-primary hover:underline px-2"
           >
-            <span className="relative z-10 flex items-center">
-              <BookOpen className="mr-2 h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
-              Read Article
-            </span>
-            <span className="absolute inset-0 w-0 bg-white/20 transition-all duration-300 group-hover:w-full"></span>
+            Read Article
           </Button>
+
           {blog.link && (
             <Button
               variant="outline"
               onClick={() => window.open(blog.link, "_blank")}
-              className="border-border relative overflow-hidden group"
+              className="text-sm border-muted hover:border-primary hover:text-primary transition"
             >
-              <span className="relative z-10 flex items-center">
-                <ExternalLink className="mr-2 h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
-                View
-              </span>
-              <span className="absolute inset-0 w-0 bg-primary/10 transition-all duration-300 group-hover:w-full"></span>
+              <ExternalLink className="mr-2 h-4 w-4" />
+              View
             </Button>
           )}
         </CardFooter>

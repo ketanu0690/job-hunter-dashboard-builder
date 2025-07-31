@@ -161,7 +161,7 @@ const AppShell = () => {
       icon: PenIcon,
       color: "from-gray-600 to-gray-800",
       category: "utilities",
-      url: "/blog",
+      url: "/blogs",
       rating: 4.3,
       features: ["Scientific", "Graphing", "History"],
     },
