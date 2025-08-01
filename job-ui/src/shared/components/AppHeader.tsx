@@ -3,7 +3,6 @@ import {
   Menu,
   Search,
   Briefcase,
-  User,
   X,
   Sun,
   Moon,
@@ -11,6 +10,8 @@ import {
   BookOpen,
   Info,
   Phone,
+  LogOut,
+  LogIn,
 } from "lucide-react";
 import { useTheme } from "../utils/use-theme";
 import { useAuth } from "@/providers/AuthProvider";
@@ -18,8 +19,8 @@ import { useNavigate } from "@tanstack/react-router";
 import { useToast } from "@/hooks/use-toast";
 
 const Header = () => {
-  const { session, setSession, clearAuthStorage } = useAuth();
-  const [theme, setTheme] = useTheme();
+  const { isAuthenticated, logout, user } = useAuth();
+  const {theme, setTheme} = useTheme();
   const { toast } = useToast();
 
   const navigate = useNavigate();
@@ -38,13 +39,12 @@ const Header = () => {
   };
 
   const handleLogin = () => {
-    navigate({ to: "/login" });
+    navigate({ to: "/login", search: { redirect: "/dashboard" } });
   };
 
   const handleLogout = () => {
-    setSession(null);
-    clearAuthStorage();
-    navigate({ to: "/" });
+    logout();
+    navigate({ to: "/", search: {} });
     toast({
       title: "Success",
       description: "Logged out successfully!",
@@ -153,23 +153,25 @@ const Header = () => {
 
             {/* User Dropdown */}
             <div className="relative">
-              {session ? (
+              {isAuthenticated ? (
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-2 p-2 rounded-full bg-orange-500 hover:bg-orange-600 text-white transition-all hover:scale-105"
+                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500 hover:bg-orange-600 text-white shadow-md transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-300"
                 >
-                  <User size={20} />
-                  <span className="hidden sm:inline text-sm font-medium">
-                    {/* {Correct this we will add then user name to display} */}
-                    {"User Name"}
+                  <span className="hidden sm:inline text-sm font-semibold truncate max-w-[120px]">
+                    {user?.username || "User"}
                   </span>
+                  <LogOut size={18} />
                 </button>
               ) : (
                 <button
                   onClick={handleLogin}
-                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all hover:scale-110"
+                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white shadow-md transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/30"
                 >
-                  <User size={20} />
+                  <span className="hidden sm:inline text-sm font-semibold">
+                    Sign In
+                  </span>
+                  <LogIn size={18} />
                 </button>
               )}
             </div>
@@ -259,7 +261,7 @@ const Header = () => {
 
                 {/* Action Buttons */}
                 <div className="flex flex-col gap-4 mt-8">
-                  {!session ? (
+                  {!isAuthenticated ? (
                     <>
                       <button
                         onClick={handleLogin}
@@ -277,7 +279,7 @@ const Header = () => {
                   ) : (
                     <button
                       onClick={() => {
-                        alert("Opening Dashboard...");
+                        navigate({ to: "/dashboard" });
                         setMobileMenuOpen(false);
                       }}
                       className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-full font-medium transition-colors"

@@ -16,7 +16,7 @@ const ParallaxHeader: React.FC<ParallaxHeaderProps> = ({
   title,
   isBlogAdmin,
 }) => {
-  const [theme] = useTheme();
+  const { theme } = useTheme();
   const navigate = useNavigate();
 
   const benefits = [
@@ -35,8 +35,12 @@ const ParallaxHeader: React.FC<ParallaxHeaderProps> = ({
   ];
 
   return (
-    <header className="text-center mb-16">
-      <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+    <header className="text-center m-16">
+      <h1
+        className={`text-4xl md:text-5xl font-bold mb-4 leading-tight ${
+          theme === "dark" ? " text-gray-800" : " text-gray-400"
+        }`}
+      >
         {title}
       </h1>
       <p

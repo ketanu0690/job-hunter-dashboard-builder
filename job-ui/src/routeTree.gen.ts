@@ -9,13 +9,23 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as NotFoundRouteImport } from './routes/$notFound'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthLoginRouteImport } from './routes/_auth/login'
-import { Route as AuthBlogsRouteImport } from './routes/_auth/blogs'
-import { Route as Auth_dashboardManageBlogRouteImport } from './routes/_auth/__dashboard/manageBlog'
-import { Route as Auth_dashboardAdminRouteImport } from './routes/_auth/__dashboard/admin'
+import { Route as AuthenticatedManageBlogRouteImport } from './routes/_authenticated/manageBlog'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedBlogsRouteImport } from './routes/_authenticated/blogs'
 
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NotFoundRoute = NotFoundRouteImport.update({
   id: '/$notFound',
   path: '/$notFound',
@@ -26,79 +36,93 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: '/_auth/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
+const AuthenticatedManageBlogRoute = AuthenticatedManageBlogRouteImport.update({
+  id: '/manageBlog',
+  path: '/manageBlog',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
-const AuthBlogsRoute = AuthBlogsRouteImport.update({
-  id: '/_auth/blogs',
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedBlogsRoute = AuthenticatedBlogsRouteImport.update({
+  id: '/blogs',
   path: '/blogs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Auth_dashboardManageBlogRoute =
-  Auth_dashboardManageBlogRouteImport.update({
-    id: '/_auth/__dashboard/manageBlog',
-    path: '/manageBlog',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const Auth_dashboardAdminRoute = Auth_dashboardAdminRouteImport.update({
-  id: '/_auth/__dashboard/admin',
-  path: '/admin',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$notFound': typeof NotFoundRoute
-  '/blogs': typeof AuthBlogsRoute
-  '/login': typeof AuthLoginRoute
-  '/admin': typeof Auth_dashboardAdminRoute
-  '/manageBlog': typeof Auth_dashboardManageBlogRoute
+  '/login': typeof LoginRoute
+  '/blogs': typeof AuthenticatedBlogsRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/manageBlog': typeof AuthenticatedManageBlogRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$notFound': typeof NotFoundRoute
-  '/blogs': typeof AuthBlogsRoute
-  '/login': typeof AuthLoginRoute
-  '/admin': typeof Auth_dashboardAdminRoute
-  '/manageBlog': typeof Auth_dashboardManageBlogRoute
+  '/login': typeof LoginRoute
+  '/blogs': typeof AuthenticatedBlogsRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/manageBlog': typeof AuthenticatedManageBlogRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$notFound': typeof NotFoundRoute
-  '/_auth/blogs': typeof AuthBlogsRoute
-  '/_auth/login': typeof AuthLoginRoute
-  '/_auth/__dashboard/admin': typeof Auth_dashboardAdminRoute
-  '/_auth/__dashboard/manageBlog': typeof Auth_dashboardManageBlogRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/login': typeof LoginRoute
+  '/_authenticated/blogs': typeof AuthenticatedBlogsRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/manageBlog': typeof AuthenticatedManageBlogRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$notFound' | '/blogs' | '/login' | '/admin' | '/manageBlog'
+  fullPaths:
+    | '/'
+    | '/$notFound'
+    | '/login'
+    | '/blogs'
+    | '/dashboard'
+    | '/manageBlog'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$notFound' | '/blogs' | '/login' | '/admin' | '/manageBlog'
+  to: '/' | '/$notFound' | '/login' | '/blogs' | '/dashboard' | '/manageBlog'
   id:
     | '__root__'
     | '/'
     | '/$notFound'
-    | '/_auth/blogs'
-    | '/_auth/login'
-    | '/_auth/__dashboard/admin'
-    | '/_auth/__dashboard/manageBlog'
+    | '/_authenticated'
+    | '/login'
+    | '/_authenticated/blogs'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/manageBlog'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   NotFoundRoute: typeof NotFoundRoute
-  AuthBlogsRoute: typeof AuthBlogsRoute
-  AuthLoginRoute: typeof AuthLoginRoute
-  Auth_dashboardAdminRoute: typeof Auth_dashboardAdminRoute
-  Auth_dashboardManageBlogRoute: typeof Auth_dashboardManageBlogRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$notFound': {
       id: '/$notFound'
       path: '/$notFound'
@@ -113,44 +137,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_auth/login': {
-      id: '/_auth/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_auth/blogs': {
-      id: '/_auth/blogs'
-      path: '/blogs'
-      fullPath: '/blogs'
-      preLoaderRoute: typeof AuthBlogsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_auth/__dashboard/manageBlog': {
-      id: '/_auth/__dashboard/manageBlog'
+    '/_authenticated/manageBlog': {
+      id: '/_authenticated/manageBlog'
       path: '/manageBlog'
       fullPath: '/manageBlog'
-      preLoaderRoute: typeof Auth_dashboardManageBlogRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedManageBlogRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
-    '/_auth/__dashboard/admin': {
-      id: '/_auth/__dashboard/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof Auth_dashboardAdminRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/blogs': {
+      id: '/_authenticated/blogs'
+      path: '/blogs'
+      fullPath: '/blogs'
+      preLoaderRoute: typeof AuthenticatedBlogsRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
   }
 }
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedBlogsRoute: typeof AuthenticatedBlogsRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedManageBlogRoute: typeof AuthenticatedManageBlogRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedBlogsRoute: AuthenticatedBlogsRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedManageBlogRoute: AuthenticatedManageBlogRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   NotFoundRoute: NotFoundRoute,
-  AuthBlogsRoute: AuthBlogsRoute,
-  AuthLoginRoute: AuthLoginRoute,
-  Auth_dashboardAdminRoute: Auth_dashboardAdminRoute,
-  Auth_dashboardManageBlogRoute: Auth_dashboardManageBlogRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

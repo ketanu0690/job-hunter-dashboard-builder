@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { Input } from "../../../shared/ui/input";
-import { Button } from "../../../shared/ui/button";
 import { supabase } from "../../../integrations/supabase/client";
 import { toast } from "../../../hooks/use-toast";
 
@@ -8,34 +6,17 @@ import {
   Eye,
   EyeOff,
   Mail,
-  Lock,
   User,
-  Github,
-  Linkedin,
-  Info,
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle,
 } from "lucide-react";
-import { ToggleGroup, ToggleGroupItem } from "../../../shared/ui/toggle-group";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../../../shared/ui/tooltip";
 
-import { cn } from "@/lib/utils";
 import { useAuth } from "@/providers/AuthProvider";
 import { useNavigate } from "@tanstack/react-router";
 
-interface AuthFormProps {
-  redirectToHome?: boolean;
-}
-
-interface AuthFormProps {
-  redirectToHome?: boolean;
-}
-
-const AuthForm: React.FC<AuthFormProps> = ({ redirectToHome }) => {
-  const [mode, setMode] = useState<"signIn" | "signUp">("signIn");
+const AuthForm = () => {
+  const [step, setStep] = useState("initial");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -43,97 +24,65 @@ const AuthForm: React.FC<AuthFormProps> = ({ redirectToHome }) => {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
   );
-  const [oAuthLoading, setOAuthLoading] = useState<{
-    google?: boolean;
-    github?: boolean;
-    linkedin?: boolean;
-  }>({});
+  const [isSignUp, setIsSignUp] = useState(false);
 
-  const { setSession } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   // Validation functions
   const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    console.log(email);
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!email) return "Email is required";
-    if (!emailRegex.test(email)) return "Please enter a valid email address";
+    if (emailRegex.test(email)) return "Please enter a valid email address";
     return "";
   };
 
   const validatePassword = (password: string) => {
     if (!password) return "Password is required";
-    if (mode === "signUp" && password.length < 6)
-      return "Password must be at least 6 characters";
     return "";
   };
 
-  const handleInputChange = (field: "email" | "password", value: string) => {
-    if (field === "email") {
-      setEmail(value);
-      if (errors.email) {
-        setErrors((prev) => ({ ...prev, email: validateEmail(value) }));
-      }
-    } else {
-      setPassword(value);
-      if (errors.password) {
-        setErrors((prev) => ({ ...prev, password: validatePassword(value) }));
-      }
-    }
+  const handleGoogleAuth = async () => {
+    setLoading(true);
+    // Simulate OAuth flow
+    setTimeout(() => {
+      setLoading(false);
+      setStep("success");
+    }, 2000);
   };
 
-  const handleAuth = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleEmailSubmit = () => {
+    if (!validateEmail(email)) {
+      setErrors({ email: "Please enter a valid email address" });
+      return;
+    }
+    setErrors({});
+    setStep("password");
+  };
 
-    // Validate inputs
-    const emailError = validateEmail(email);
+  const handlePasswordSubmit = async () => {
+    console.log("came here");
+    if (!password) {
+      setErrors({ password: "Password must be at least 6 characters" });
+      return;
+    }
     const passwordError = validatePassword(password);
-
-    if (emailError || passwordError) {
-      setErrors({ email: emailError, password: passwordError });
+    console.log(passwordError);
+    if (passwordError) {
+      setErrors({ email: "", password: passwordError });
       return;
     }
 
-    setErrors({});
-    setLoading(true);
-
+    console.log("came here 2");
     try {
-      if (mode === "signIn") {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
-        setSession(data.session);
-        toast({
-          title: "Welcome back!",
-          description: "You have successfully signed in.",
-        });
-        // Redirect after login
-        if (redirectToHome) {
-          navigate({ to: "/" });
-        } else {
-          const role = data.session?.user?.user_metadata?.role;
-          if (role === "admin") {
-            navigate({ to: "/admin" }); // admin
-          } else {
-            navigate({ to: "/" });
-          }
-        }
-      } else {
-        const { data, error } = await supabase.auth.signUp({ email, password });
-        if (error) throw error;
-        setSession(data.session);
-        toast({
-          title: "Account created!",
-          description: "Please check your email to verify your account.",
-        });
-        // After sign up, redirect
-        if (redirectToHome) {
-          navigate({ to: "/" });
-        } else {
-          navigate({ to: "/" });
-        }
-      }
+      setErrors({});
+      setLoading(true);
+      await login(email, password);
+      toast({
+        title: "Welcome back!",
+        description: "You have successfully signed in.",
+      });
     } catch (error) {
       toast({
         title: "Authentication error",
@@ -142,298 +91,340 @@ const AuthForm: React.FC<AuthFormProps> = ({ redirectToHome }) => {
       });
     } finally {
       setLoading(false);
+      setStep("success");
     }
+  };
+  const resetFlow = () => {
+    setStep("initial");
+    setEmail("");
+    setPassword("");
+    setErrors({});
+    setIsSignUp(false);
+    navigate({ to: "/dashboard" });
   };
 
-  const handleOAuthSignIn = async (
-    provider: "google" | "github" | "linkedin"
-  ) => {
-    setOAuthLoading((prev) => ({ ...prev, [provider]: true }));
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: provider as any,
-      });
-      if (error) throw error;
-      toast({
-        title: `${
-          provider.charAt(0).toUpperCase() + provider.slice(1)
-        } Login Success`,
-        description: "You have been signed in successfully.",
-      });
-    } catch (error) {
-      toast({
-        title: `${
-          provider.charAt(0).toUpperCase() + provider.slice(1)
-        } Login Error`,
-        description: (error as Error).message,
-        variant: "destructive",
-      });
-    } finally {
-      setOAuthLoading((prev) => ({ ...prev, [provider]: false }));
-    }
-  };
+  const GoogleIcon = () => (
+    <svg className="w-5 h-5" viewBox="0 0 24 24">
+      <path
+        fill="#4285F4"
+        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+      />
+    </svg>
+  );
 
-  const getOAuthIcon = (provider: string) => {
-    switch (provider) {
-      case "google":
-        return (
-          <svg className="h-5 w-5" viewBox="0 0 48 48">
-            <g>
-              <path
-                fill="#4285F4"
-                d="M44.5 20H24v8.5h11.7C34.7 33.1 29.9 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c2.7 0 5.2.9 7.2 2.4l6.4-6.4C33.5 5.1 28.1 3 24 3 12.9 3 4 11.9 4 23s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.1-2.7-.2-4z"
-              />
-              <path
-                fill="#34A853"
-                d="M6.3 14.7l7 5.1C15.1 17.1 19.2 14 24 14c2.7 0 5.2.9 7.2 2.4l6.4-6.4C33.5 5.1 28.1 3 24 3c-7.2 0-13.2 4.1-16.7 10.1z"
-              />
-              <path
-                fill="#FBBC05"
-                d="M24 44c5.9 0 10.7-1.9 14.2-5.1l-6.6-5.4C29.7 35.1 27 36 24 36c-5.8 0-10.7-3.9-12.5-9.2l-7 5.4C7.1 40.1 14.1 44 24 44z"
-              />
-              <path
-                fill="#EA4335"
-                d="M44.5 20H24v8.5h11.7c-1.1 3.1-4.2 5.5-7.7 5.5-4.6 0-8.4-3.8-8.4-8.5s3.8-8.5 8.4-8.5c2.6 0 4.9 1 6.5 2.6l6.4-6.4C37.5 7.1 31.2 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.1-2.7-.2-4z"
-              />
-            </g>
-          </svg>
-        );
-      case "github":
-        return <Github className="h-5 w-5" />;
-      case "linkedin":
-        return <Linkedin className="h-5 w-5" />;
-      default:
-        return null;
-    }
-  };
+  const ColorfulDots = () => (
+    <div className="relative w-32 h-32 mx-auto mb-8">
+      <div className="absolute inset-0">
+        {[...Array(40)].map((_, i) => {
+          const angle = (i / 40) * 2 * Math.PI;
+          const radius = 45 + Math.sin(i * 0.5) * 10;
+          const x = Math.cos(angle) * radius + 64;
+          const y = Math.sin(angle) * radius + 64;
+          const hue = (i / 40) * 360;
+
+          return (
+            <div
+              key={i}
+              className="absolute w-2 h-2 rounded-full animate-pulse"
+              style={{
+                left: `${x}px`,
+                top: `${y}px`,
+                backgroundColor: `hsl(${hue}, 70%, 60%)`,
+                animationDelay: `${i * 0.1}s`,
+                transform: "translate(-50%, -50%)",
+              }}
+            />
+          );
+        })}
+      </div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center shadow-lg">
+          <span className="text-2xl font-bold text-gray-800 dark:text-white">
+            CF
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (step === "success") {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="text-center animate-fadeIn">
+            <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle className="w-10 h-10 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              Welcome to Career Flow!
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 mb-8">
+              You've successfully signed in to your account.
+            </p>
+            <button
+              onClick={resetFlow}
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Continue to Dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
-      <div className=" flex  bg-white dark:bg-gray-900  ">
-        <div className="flex-1 flex flex-col justify-center p-8">
-          <div className="text-center mb-10 animate-fadeIn">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg hover:scale-105 transition-transform">
-              <User className="w-8 h-8 text-white" />
-            </div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-2">
-              {mode === "signIn"
-                ? "Sign In to Career Flow"
-                : "Create Your Career Flow Account"}
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400 text-md sm:text-lg">
-              {mode === "signIn"
-                ? "Continue your journey with us."
-                : "Join now and start building your future."}
-            </p>
-          </div>
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 backdrop-blur-lg border border-gray-200 dark:border-gray-700">
+            {step === "initial" && (
+              <div className="text-center animate-fadeIn">
+                <ColorfulDots />
 
-        <div className="flex-1 p-8 lg:p-12">
-          {/* Mode Toggle with Radix */}
-          <ToggleGroup
-            type="single"
-            value={mode}
-            onValueChange={(val) => val && setMode(val as "signIn" | "signUp")}
-            className="flex bg-gray-100 dark:bg-gray-800 rounded-xl p-1 mb-8"
-          >
-            <ToggleGroupItem
-              value="signIn"
-              className={`flex-1 h-12 rounded-lg text-sm font-medium transition-colors duration-200 ${
-                mode === "signIn"
-                  ? "bg-balck dark:bg-gray-100 text-blue-600 shadow"
-                  : "bg-transparent text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 shadow"
-              }`}
-            >
-              Sign In
-            </ToggleGroupItem>
-            <ToggleGroupItem
-              value="signUp"
-              className={`flex-1 h-12 rounded-lg text-sm font-medium t duration-200 ${
-                mode === "signUp"
-                  ? "bg-black dark:bg-gray-900 text-blue-600 shadow"
-                  : "bg-transparent text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 shadow"
-              }`}
-            >
-              Sign Up
-            </ToggleGroupItem>
-          </ToggleGroup>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                  Sign in to Career Flow
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400 mb-8">
+                  Use your email or another service to continue with Career Flow
+                  (it's free!)
+                </p>
 
-          {/* Form */}
-          <form
-            onSubmit={handleAuth}
-            className="space-y-6 px-6 py-8 bg-white dark:bg-gray-900 rounded-xl shadow-md w-full max-w-md mx-auto"
-          >
-            {/* Email */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Email Address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => handleInputChange("email", e.target.value)}
-                  className={cn(
-                    "pl-12",
-                    errors.email && "border-red-500 focus:ring-red-500"
-                  )}
-                  required
-                />
-              </div>
-              {errors.email && (
-                <p className="text-red-500 text-sm">{errors.email}</p>
-              )}
-            </div>
+                <div className="space-y-4">
+                  <button
+                    onClick={handleGoogleAuth}
+                    disabled={loading}
+                    className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors text-gray-700 dark:text-gray-200 font-medium"
+                  >
+                    {loading ? (
+                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-gray-400 border-t-transparent" />
+                    ) : (
+                      <GoogleIcon />
+                    )}
+                    Continue with Google
+                  </button>
 
-            {/* Password with Tooltip */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Password
-                </label>
-                <TooltipProvider delayDuration={300}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Info className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-pointer" />
-                    </TooltipTrigger>
-                    <TooltipContent
-                      side="top"
-                      align="end"
-                      className="bg-gray-800 text-white text-sm px-3 py-2 rounded shadow"
-                    >
-                      Use at least 8 characters, including a number.
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) =>
-                    handleInputChange("password", e.target.value)
-                  }
-                  className={cn(
-                    "pl-12 pr-12",
-                    errors.password && "border-red-500 focus:ring-red-500"
-                  )}
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
-                    <Eye className="h-5 w-5" />
-                  )}
-                </button>
-              </div>
-              {errors.password && (
-                <p className="text-red-500 text-sm">{errors.password}</p>
-              )}
-            </div>
-
-            {/* Submit */}
-            <Button
-              type="submit"
-              variant={"secondary"}
-              disabled={loading}
-              className="w-full h-14 text-lg font-semibold"
-            >
-              {loading ? (
-                <div className="flex items-center gap-3">
-                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
-                  {mode === "signIn" ? "Signing In..." : "Creating Account..."}
+                  <button
+                    onClick={() => setStep("email")}
+                    className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors text-gray-700 dark:text-gray-200 font-medium"
+                  >
+                    <Mail className="w-5 h-5" />
+                    Continue with email
+                  </button>
                 </div>
-              ) : mode === "signIn" ? (
-                "Sign In"
-              ) : (
-                "Create Account"
-              )}
-            </Button>
-          </form>
 
-          {/* Divider */}
-          <div className="flex items-center my-8">
-            <div className="flex-grow border-t border-gray-300 dark:border-gray-600" />
-            <span className="mx-4 text-gray-500 text-sm font-medium">
-              or continue with
-            </span>
-            <div className="flex-grow border-t border-gray-300 dark:border-gray-600" />
+                <div className="mt-6 text-center">
+                  <button
+                    onClick={() => setIsSignUp(!isSignUp)}
+                    className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                  >
+                    {isSignUp
+                      ? "Already have an account? Sign in"
+                      : "Don't have an account? Sign up"}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {step === "email" && (
+              <div className="animate-slideIn">
+                <button
+                  onClick={() => setStep("initial")}
+                  className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 mb-6 transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Back
+                </button>
+
+                <div className="text-center mb-8">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Mail className="w-8 h-8 text-white" />
+                  </div>
+                  <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                    {isSignUp ? "Create your account" : "Sign in with email"}
+                  </h1>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    Enter your email address to continue
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <input
+                      type="email"
+                      placeholder="Enter your email address"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className={`w-full px-4 py-4 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors text-gray-900 dark:text-white bg-white dark:bg-gray-700 ${
+                        errors.email
+                          ? "border-red-500"
+                          : "border-gray-300 dark:border-gray-600"
+                      }`}
+                      onKeyPress={(e) =>
+                        e.key === "Enter" && handleEmailSubmit()
+                      }
+                    />
+                    {errors.email && (
+                      <p className="text-red-500 text-sm mt-2">
+                        {errors.email}
+                      </p>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={handleEmailSubmit}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium"
+                  >
+                    Continue
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {step === "password" && (
+              <div className="animate-slideIn">
+                <button
+                  onClick={() => setStep("email")}
+                  className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 mb-6 transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Back
+                </button>
+
+                <div className="text-center mb-8">
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <span className="text-white font-bold text-lg">
+                      {email.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                    Enter your password
+                  </h1>
+                  <p className="text-gray-600 dark:text-gray-400">{email}</p>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder={
+                        isSignUp
+                          ? "Create a password (min. 6 characters)"
+                          : "Enter your password"
+                      }
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className={`w-full px-4 py-4 pr-12 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors text-gray-900 dark:text-white bg-white dark:bg-gray-700 ${
+                        errors.password
+                          ? "border-red-500"
+                          : "border-gray-300 dark:border-gray-600"
+                      }`}
+                      onKeyPress={(e) =>
+                        e.key === "Enter" && handlePasswordSubmit()
+                      }
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
+                    </button>
+                  </div>
+                  {errors.password && (
+                    <p className="text-red-500 text-sm">{errors.password}</p>
+                  )}
+
+                  <button
+                    onClick={handlePasswordSubmit}
+                    disabled={loading}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
+                        {isSignUp ? "Creating account..." : "Signing in..."}
+                      </>
+                    ) : (
+                      <>
+                        {isSignUp ? "Create account" : "Sign in"}
+                        <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+
+                  {!isSignUp && (
+                    <div className="text-center">
+                      <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                        Forgot password?
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div className="mt-8 text-center text-xs text-gray-500 dark:text-gray-400">
+              By continuing, you agree to Career Flow's{" "}
+              <button className="text-blue-600 hover:text-blue-700">
+                Terms of Use
+              </button>{" "}
+              &{" "}
+              <button className="text-blue-600 hover:text-blue-700">
+                Privacy Policy
+              </button>
+            </div>
           </div>
-
-          {/* OAuth Buttons with example Dialog fallback */}
-          <div className="space-y-3 flex flex-col">
-            {/* Google Button */}
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full h-12 justify-center gap-3 text-base"
-              disabled={oAuthLoading.google}
-              onClick={() => handleOAuthSignIn("google")}
-            >
-              {oAuthLoading.google ? (
-                <div className="animate-spin rounded-full h-5 w-5 border-2 border-muted border-t-transparent" />
-              ) : (
-                getOAuthIcon("google")
-              )}
-              <span className="truncate">Continue with Google</span>
-            </Button>
-
-            {/* GitHub Button */}
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full h-12 justify-center gap-2 text-base"
-              disabled={oAuthLoading.github}
-              onClick={() => handleOAuthSignIn("github")}
-            >
-              {oAuthLoading.github ? (
-                <div className="animate-spin rounded-full h-4 w-4 border-2 border-muted border-t-transparent" />
-              ) : (
-                getOAuthIcon("github")
-              )}
-              <span className="truncate">GitHub</span>
-            </Button>
-
-            {/* LinkedIn Button */}
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full h-12 justify-center gap-2 text-base"
-              disabled={oAuthLoading.linkedin}
-              onClick={() => handleOAuthSignIn("linkedin")}
-            >
-              {oAuthLoading.linkedin ? (
-                <div className="animate-spin rounded-full h-4 w-4 border-2 border-muted border-t-transparent" />
-              ) : (
-                getOAuthIcon("linkedin")
-              )}
-              <span className="truncate">LinkedIn</span>
-            </Button>
-          </div>
-
-          {/* Footer */}
-          <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-8">
-            {mode === "signIn"
-              ? "Don't have an account? "
-              : "Already have an account? "}
-            <button
-              type="button"
-              onClick={() => setMode(mode === "signIn" ? "signUp" : "signIn")}
-              className="text-blue-600 hover:text-blue-700 font-medium"
-            >
-              {mode === "signIn" ? "Sign up here" : "Sign in here"}
-            </button>
-          </p>
         </div>
+
+        <style>{`
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          @keyframes slideIn {
+            from {
+              opacity: 0;
+              transform: translateX(20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateX(0);
+            }
+          }
+
+          .animate-fadeIn {
+            animation: fadeIn 0.5s ease-out;
+          }
+
+          .animate-slideIn {
+            animation: slideIn 0.3s ease-out;
+          }
+        `}</style>
       </div>
     </>
   );

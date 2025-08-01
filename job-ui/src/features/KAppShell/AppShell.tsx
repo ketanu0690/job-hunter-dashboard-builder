@@ -22,7 +22,7 @@ import { useTheme } from "@/shared/utils/use-theme";
 
 const AppShell = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [theme] = useTheme();
+  const { theme } = useTheme();
 
   // Mock apps data with enhanced functionality
   const apps = [

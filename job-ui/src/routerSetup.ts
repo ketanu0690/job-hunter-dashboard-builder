@@ -17,7 +17,7 @@ export const queryClient = new QueryClient({
 // Create a new router instance
 export const router = createRouter({
   routeTree,
-  context: { queryClient },
+  context: { auth: undefined! },
 });
 
 // Register the router instance for type safety

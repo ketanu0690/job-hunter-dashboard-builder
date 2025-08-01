@@ -13,8 +13,10 @@ import {
   LinkedinIcon,
 } from "lucide-react";
 import { cn } from "../../lib/utils";
+import { useNavigate } from "@tanstack/react-router";
 
 const Sidebar: React.FC = () => {
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
 
@@ -60,7 +62,7 @@ const Sidebar: React.FC = () => {
       label: "Content",
       icon: PenTool,
       subItems: [
-        { id: "blogs", label: "Blogs", route: "/admin/blogs" },
+        { id: "blogs", label: "Blogs", route: "/blogs" },
         { id: "jobposts", label: "Job Posts", route: "/admin/job-posts" },
       ],
     },
@@ -94,7 +96,7 @@ const Sidebar: React.FC = () => {
   };
 
   // Click only navigates for sub-items; main items solely toggle
-  const handleClick = (id: string, route?: string, isSub: boolean = false) => {
+  const handleClick = (id: string, route: string, isSub: boolean = false) => {
     if (isSub && route) {
       // navigate(route);
     } else if (!isSub && !route) {
@@ -143,7 +145,7 @@ const Sidebar: React.FC = () => {
             <React.Fragment key={item.id}>
               <li>
                 <button
-                  onClick={() => handleClick(item.id, item.route, false)}
+                  onClick={() => handleClick(item.id, item.route ?? "", false)}
                   className={cn(
                     "flex items-center w-full p-2 rounded-lg transition-all duration-200",
                     isActive(item.route, item.id)
@@ -189,9 +191,12 @@ const Sidebar: React.FC = () => {
                       {item.subItems.map((subItem) => (
                         <li key={subItem.id}>
                           <button
-                            onClick={() =>
-                              handleClick(subItem.id, subItem.route, true)
-                            }
+                            onClick={() => {
+                              if (subItem.route) {
+                                navigate({ to: subItem.route });
+                              }
+                              handleClick(subItem.id, subItem.route, true);
+                            }}
                             className={cn(
                               "flex items-center w-full p-2 rounded-lg transition-all duration-200",
                               isActive(subItem.route, subItem.id)

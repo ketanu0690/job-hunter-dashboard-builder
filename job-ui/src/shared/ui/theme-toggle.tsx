@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "./button";
-import useTheme from "../utils/use-theme";
+import { useTheme } from "../utils/use-theme";
+
 
 const ThemeToggle: React.FC = () => {
-  const [theme, setTheme] = useTheme();
+  const {theme, setTheme} = useTheme();
 
   return (
     <Button

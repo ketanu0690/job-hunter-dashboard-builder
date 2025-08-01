@@ -1,102 +1,108 @@
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "@tanstack/react-router";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-interface AuthContextType {
-  session: any;
-  token: string | null;
-  setSession: (session: any) => void;
-  clearAuthStorage: () => void;
+interface User {
+  id: string;
+  username: string;
+  email: string;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export interface AuthState {
+  isAuthenticated: boolean;
+  user: User | null;
+  login: (username: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+}
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const [session, setSession] = useState<any>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [loadingSession, setLoadingSession] = useState(true);
-  const inactivityTimeout = useRef<NodeJS.Timeout | null>(null);
-  const navigate = useNavigate();
+const AuthContext = createContext<AuthState | undefined>(undefined);
 
-  // 🔄 On mount: restore session and listen for auth state changes
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-        setToken(session?.access_token || null);
+    const validateSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
+
+      if (error || !data.session?.user) {
+        setIsAuthenticated(false);
+        setUser(null);
+        localStorage.removeItem("auth-token");
+      } else {
+        const supaUser = data.session.user;
+
+        setUser({
+          id: supaUser.id,
+          email: supaUser.email ?? "",
+          username:
+            supaUser.user_metadata?.full_name ?? supaUser.email ?? "User",
+        });
+
+        setIsAuthenticated(true);
+        localStorage.setItem("auth-token", data.session.access_token);
       }
-    );
 
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setToken(data.session?.access_token || null);
-      setLoadingSession(false);
-    });
-
-    return () => {
-      listener.subscription.unsubscribe();
+      setIsLoading(false);
     };
+
+    validateSession();
   }, []);
 
-  // ⛔ Redirect to login if session is missing
-  useEffect(() => {
-    if (!session && !loadingSession) {
-      localStorage.removeItem("unsplash_image");
-      // navigate({ to: "/login" }); // or "/login" if that's your intended redirect
+  const login = async (username: string, password: string) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: username,
+      password,
+    });
+
+    if (error) throw new Error(error.message);
+
+    const supaUser = data.user;
+    if (supaUser && data.session) {
+      setUser({
+        id: supaUser.id,
+        email: supaUser.email ?? "",
+        username: supaUser.user_metadata?.full_name ?? supaUser.email ?? "User",
+      });
+      setIsAuthenticated(true);
+      localStorage.setItem("auth-token", data.session.access_token);
+    } else {
+      throw new Error("Login failed: Session or user not returned.");
     }
-  }, [session, loadingSession]);
-
-  // ⏳ Auto-logout after 15 minutes of inactivity
-  useEffect(() => {
-    const logout = async () => {
-      await supabase.auth.signOut();
-      setSession(null);
-      setToken(null);
-      navigate({ to: "/login" });
-    };
-
-    const resetTimer = () => {
-      if (inactivityTimeout.current) clearTimeout(inactivityTimeout.current);
-      inactivityTimeout.current = setTimeout(logout, 15 * 60 * 1000); // 15 min
-    };
-
-    if (session) {
-      window.addEventListener("mousemove", resetTimer);
-      window.addEventListener("keydown", resetTimer);
-      window.addEventListener("mousedown", resetTimer);
-      window.addEventListener("touchstart", resetTimer);
-      resetTimer();
-    }
-
-    return () => {
-      if (inactivityTimeout.current) clearTimeout(inactivityTimeout.current);
-      window.removeEventListener("mousemove", resetTimer);
-      window.removeEventListener("keydown", resetTimer);
-      window.removeEventListener("mousedown", resetTimer);
-      window.removeEventListener("touchstart", resetTimer);
-    };
-  }, [session]);
-
-  const clearAuthStorage = () => {
-    const keysToRemove = ["unsplash_image", "token", "supabase.auth.token"];
-    keysToRemove.forEach((key) => localStorage.removeItem(key));
-    sessionStorage.clear();
-    document.cookie = "";
   };
 
-  return loadingSession ? null : (
-    <AuthContext.Provider
-      value={{ session, token, setSession, clearAuthStorage }}
-    >
+  const logout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) console.error("Logout error:", error.message);
+
+    setIsAuthenticated(false);
+    setUser(null);
+    localStorage.removeItem("auth-token");
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen text-gray-700">
+        {/* Spinner Animation */}
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-4"></div>
+
+        {/* Label below spinner */}
+        <div className="text-xl font-semibold animate-pulse">K Loder..</div>
+      </div>
+    );
+  }
+
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
-export const useAuth = () => {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
-  return ctx;
-};
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+}

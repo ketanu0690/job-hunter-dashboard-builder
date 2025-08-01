@@ -72,18 +72,18 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog, source, onView, index }) => {
               {source}
             </span>
           </div>
-          <CardTitle className="text-lg sm:text-xl font-bold tracking-tight leading-snug text-foreground line-clamp-2">
+          <CardTitle className="text-lg sm:text-xl font-bold tracking-tight leading-snug text-orange-950 line-clamp-2">
             {blog.title}
           </CardTitle>
           {formattedDate && (
-            <p className="text-sm text-muted-foreground mt-1 font-medium">
+            <p className="text-sm text-gray-800 mt-1 font-medium">
               {formattedDate}
             </p>
           )}
         </CardHeader>
 
         <CardContent className="p-5 pt-1">
-          <CardDescription className="text-sm text-muted-foreground line-clamp-3">
+          <CardDescription className="text-sm text-gray-900 line-clamp-3">
             {excerpt}
           </CardDescription>
         </CardContent>

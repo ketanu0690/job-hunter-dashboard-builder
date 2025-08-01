@@ -1,7 +1,7 @@
 import { useTheme } from "../utils/use-theme";
 
 const AppFooter = () => {
-  const [theme] = useTheme();
+  const {theme} = useTheme();
   return (
     <footer
       className={`mt-20 py-12 ${theme === "dark" ? "bg-gray-900" : "bg-slate-900"} text-white`}

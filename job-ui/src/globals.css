@@ -5,20 +5,14 @@
 @layer base {
   :root {
     /* Core colors - Warm Cinema Theme */
-    --background: 30 25% 8%; /* Rich dark brown */
-    --foreground: 45 15% 92%; /* Warm off-white */
+    --background: 45 15% 92%; /* Rich dark brown */
+    --foreground: 4 1% 92%; /* Warm off-white */
 
     --card: 25 20% 12%;
     --card-foreground: var(--foreground);
 
     --popover: var(--card);
     --popover-foreground: var(--foreground);
-
-    --primary: 15 85% 60%; /* Warm copper/bronze */
-    --primary-foreground: 30 25% 8%;
-
-    --secondary: 25 15% 18%;
-    --secondary-foreground: var(--foreground);
 
     --muted: 25 12% 22%;
     --muted-foreground: 30 8% 65%;
@@ -40,29 +34,6 @@
     --surface-hover: 25 18% 20%;
 
     --radius: 0.75rem;
-
-    /* Movie-specific palette */
-    --vintage-gold: 45 85% 65%; /* Classic movie gold */
-    --film-orange: 25 90% 58%; /* Warm film lighting */
-    --theater-red: 355 75% 52%; /* Classic theater red */
-    --silver-metal: 210 8% 75%; /* Metallic silver */
-    --deep-shadow: 25 30% 6%; /* Deep cinema shadow */
-    --warm-highlight: 50 100% 88%; /* Warm spotlight */
-
-    /* Status colors */
-    --alert-success: 145 65% 48%;
-    --alert-error: 5 75% 55%;
-    --alert-warning: 40 95% 62%;
-    --alert-info: 220 80% 68%;
-
-    /* Utility colors */
-    --pure-white: 0 0% 100%;
-    --pure-black: 0 0% 0%;
-    --off-white: 45 20% 95%;
-    --charcoal: 25 25% 12%;
-
-    --sidebar-foreground: hsl(var(--foreground));
-    --link: 220 85% 72%;
   }
 
   * {
