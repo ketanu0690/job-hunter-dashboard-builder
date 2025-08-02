@@ -17,6 +17,7 @@ import {
   TrendingUp,
   Briefcase,
   PenIcon,
+  HelpingHand,
 } from "lucide-react";
 import { useTheme } from "@/shared/utils/use-theme";
 
@@ -156,12 +157,24 @@ const AppShell = () => {
     {
       id: "kBlog",
       name: "K Blog",
-      description: "Read Blogs by ketan",
+      description: "Read Latest Articales On Intreasting Topics ",
       price: "Free",
       icon: PenIcon,
       color: "from-gray-600 to-gray-800",
       category: "utilities",
       url: "/blogs",
+      rating: 4.3,
+      features: ["Scientific", "Graphing", "History"],
+    },
+    {
+      id: "kMentor",
+      name: "K Mentor",
+      description: "Get Guidence From Mentors Around the World",
+      price: "Free",
+      icon: HelpingHand,
+      color: "from-gray-600 to-green-800",
+      category: "utilities",
+      url: "/kmentor",
       rating: 4.3,
       features: ["Scientific", "Graphing", "History"],
     },
@@ -199,13 +212,7 @@ const AppShell = () => {
   const featuredApps = filteredApps.slice(0, 2);
 
   return (
-    <div
-      className={`min-h-screen transition-colors duration-300 ${
-        theme === "dark"
-          ? "bg-black text-white"
-          : "bg-gradient-to-br from-gray-50 to-blue-50 text-gray-900"
-      }`}
-    >
+    <div>
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 pt-24 pb-8">
         {/* Hero Section */}

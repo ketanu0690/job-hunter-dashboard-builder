@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from "../shared/ui/dialog";
 import Footer from "../features/KMentor/components/homePage/Footer";
-import FloatingActionButton from "../../src/components/dashboard/FloatingActionButton";
+import FloatingActionButton from "../components/dashboard/FloatingActionButton";
 import ContactSection from "../features/KMentor/components/homePage/ContactSection";
 import FeaturedJobsSection from "../features/KMentor/components/homePage/FeaturedJobsSection";
 import FeaturesSection from "../features/KMentor/components/homePage/FeaturesSection";
@@ -18,7 +18,7 @@ import TestimonialsSection from "../features/KMentor/components/homePage/Testimo
 import OurDevelopment from "../features/KMentor/components/homePage/Ourdevelopment";
 import { Job } from "@/shared/types";
 
-const Home = () => {
+const KMentor = () => {
   const [allJobsModalOpen, setAllJobsModalOpen] = useState(false);
   const [allJobs, setAllJobs] = useState<Job[]>([]);
 
@@ -28,16 +28,18 @@ const Home = () => {
   };
 
   return (
-    <div className="bg-background text-foreground">
+    <>
       <HeroSection />
       <FeaturesSection />
       <ServicesSection />
-      <OurDevelopment />
       <HowItWorksSection />
       <TestimonialsSection />
-      <FeaturedJobsSection onViewAllJobs={handleViewAllJobs} />
+      {/* <FeaturedJobsSection onViewAllJobs={handleViewAllJobs} /> */}
+      <OurDevelopment />
       <OpenSourceBanner />
       <ContactSection />
+      <Footer />
+      <FloatingActionButton />
 
       <Dialog open={allJobsModalOpen} onOpenChange={setAllJobsModalOpen}>
         <DialogContent className="max-w-2xl w-full">
@@ -68,11 +70,8 @@ const Home = () => {
           </div>
         </DialogContent>
       </Dialog>
-
-      <Footer />
-      <FloatingActionButton />
-    </div>
+    </>
   );
 };
 
-export default Home;
+export default KMentor;

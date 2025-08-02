@@ -23,27 +23,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const validateSession = async () => {
-      const { data, error } = await supabase.auth.getSession();
+      try {
+        console.log("came here");
+        const { data, error } = await supabase.auth.getSession();
 
-      if (error || !data.session?.user) {
-        setIsAuthenticated(false);
-        setUser(null);
-        localStorage.removeItem("auth-token");
-      } else {
-        const supaUser = data.session.user;
+        if (error || !data.session?.user) {
+          setIsAuthenticated(false);
+          setUser(null);
+          localStorage.removeItem("auth-token");
+        } else {
+          const supaUser = data.session.user;
 
-        setUser({
-          id: supaUser.id,
-          email: supaUser.email ?? "",
-          username:
-            supaUser.user_metadata?.full_name ?? supaUser.email ?? "User",
-        });
+          setUser({
+            id: supaUser.id,
+            email: supaUser.email ?? "",
+            username:
+              supaUser.user_metadata?.full_name ?? supaUser.email ?? "User",
+          });
 
-        setIsAuthenticated(true);
-        localStorage.setItem("auth-token", data.session.access_token);
+          setIsAuthenticated(true);
+          localStorage.setItem("auth-token", data.session.access_token);
+        }
+      } catch (error) {
+        console.error("Error Occured While Validating: ");
+      } finally {
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
     };
 
     validateSession();
@@ -80,17 +85,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem("auth-token");
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-gray-700">
-        {/* Spinner Animation */}
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-4"></div>
+  // if (isLoading) {
+  //   return (
+  //     <div className="flex flex-col items-center justify-center min-h-screen text-gray-700">
+  //       {/* Spinner Animation */}
+  //       <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-4"></div>
 
-        {/* Label below spinner */}
-        <div className="text-xl font-semibold animate-pulse">K Loder..</div>
-      </div>
-    );
-  }
+  //       {/* Label below spinner */}
+  //       <div className="text-xl font-semibold animate-pulse">K Loder..</div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>

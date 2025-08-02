@@ -3,7 +3,7 @@ import { ArrowDown, Github } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "../../../../shared/ui/button";
 import ChatBot from "./ChatBot";
-import Image from "../../../public/assests/Hero_section_bg_2.jpg";
+import Image from "../../../../../public/assests/Hero_Section_bg_2.jpg";
 import AnimatedBriefCase from "./AnimatedBriefCase";
 
 declare global {
@@ -17,7 +17,6 @@ const HeroSection = () => {
 
   // Enhanced scroll control
   const { scrollY } = useScroll();
-  const backgroundY = useTransform(scrollY, [0, 500], [0, 100]);
   const headlineY = useTransform(scrollY, [0, 500], [0, -50]);
 
   useEffect(() => {
@@ -53,7 +52,7 @@ const HeroSection = () => {
         initial={{ opacity: 0 }}
         style={{
           backgroundImage: Image
-            ? `linear-gradient(to bottom, hsl(var(--accent)) 0%, hsl(var(--accent) / 0.5) 50%, hsl(var(--pure-white) / 0.1) 100%), url('${Image}')`
+            ? `url('${Image}')`
             : `linear-gradient(to bottom, hsl(var(--background)), hsl(var(--primary)), hsl(var(--accent)))`,
           backgroundSize: "cover",
           backgroundPosition: "center",

@@ -65,11 +65,8 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <section
-      ref={sectionRef}
-      className="bg-gradient-to-b from-background to-card"
-    >
-      <div className="container mx-auto px-6">
+    <section ref={sectionRef} className="">
+      <div className="container mx-auto p-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={sectionInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}

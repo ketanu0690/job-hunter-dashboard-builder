@@ -31,10 +31,10 @@ const AnimatedBriefCase = ({
           ? window.innerHeight / 2
           : window.innerHeight / 2 - 100,
       }}
-      transition={{
-        duration: 2,
-        ease: "easeInOut",
-      }}
+      // transition={{
+      //   duration: 2,
+      //   ease: "easeInOut",
+      // }}
       onClick={handleOnClick}
     >
       {/* Thread line */}

@@ -132,16 +132,13 @@ const HowItWorksSection = () => {
   ];
 
   return (
-    <section
-      ref={sectionRef}
-      className="mb-24 md:mb-32 lg:mb-40 hidden sm:block"
-    >
+    <section ref={sectionRef} className="m-24 md:mb-32 lg:mb-40  min-h-dvh">
       <div>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={sectionInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center m-16"
         >
           <h2 className="text-4xl font-bold mb-4">How It Works</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -159,7 +156,7 @@ const HowItWorksSection = () => {
         >
           {/* SVG for workflow edges */}
           <svg
-            className="absolute left-0 top-0 z-0"
+            className=""
             width={CONTAINER_WIDTH}
             height={(steps.length - 1) * VERTICAL_GAP + STEP_RADIUS * 2}
             style={{ pointerEvents: "none", width: CONTAINER_WIDTH }}
