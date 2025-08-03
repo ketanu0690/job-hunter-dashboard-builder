@@ -42,7 +42,6 @@
 
   body {
     overflow-x: hidden;
-    @apply bg-background text-foreground;
     font-family:
       "Inter",
       -apple-system,
@@ -138,5 +137,31 @@
 
   .btn-outline {
     @apply border-2 border-[hsl(var(--primary))] text-[hsl(var(--primary))] bg-transparent hover:bg-[hsl(var(--primary)/0.15)] hover:shadow-lg transition-all duration-300 px-8 py-4 rounded-xl font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--primary))] focus-visible:ring-offset-4 focus-visible:ring-offset-background;
+  }
+  .spiral-icon:hover {
+    animation-play-state: paused !important;
+  }
+  .spiral-animate {
+    animation-play-state: running;
+  }
+  .pause-spiral .spiral-animate {
+    animation-play-state: paused !important;
+  }
+
+  .tooltip::after {
+    content: attr(data-tooltip);
+    /* position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 0.7rem;
+    padding: 1px 2px;
+    border-radius: 4px;
+    opacity: 1;
+    pointer-events: none;
+    z-index: 10; */
   }
 }

@@ -8,11 +8,16 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   return (
-    <div className="flex h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 overflow-hidden">
+    <div className="flex min-h-screen ">
+      {/* Sidebar */}
       <Sidebar />
-      <div className="flex-1 overflow-auto">
-        <main className="p-6 md:p-8">{children}</main>
+
+      {/* Main Content Area */}
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <main className="flex-1 overflow-y-auto p-6 md:p-8">{children}</main>
       </div>
+
+      {/* Floating Action Button (fixed to bottom-right) */}
       <FloatingActionButton />
     </div>
   );

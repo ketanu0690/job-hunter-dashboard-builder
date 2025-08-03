@@ -44,18 +44,18 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     setTheme(theme === "light" ? "dark" : "light");
   };
 
-  // // React to cross-tab theme changes
-  // useEffect(() => {
-  //   const syncTheme = () => setThemeState(getStoredTheme());
-  //   window.addEventListener("theme-change", syncTheme);
-  //   return () => window.removeEventListener("theme-change", syncTheme);
-  // }, []);
+  // React to cross-tab theme changes
+  useEffect(() => {
+    const syncTheme = () => setThemeState(getStoredTheme());
+    window.addEventListener("theme-change", syncTheme);
+    return () => window.removeEventListener("theme-change", syncTheme);
+  }, []);
 
-  // // Apply theme to <html> class (for Tailwind dark mode)
-  // useEffect(() => {
-  //   const html = document.documentElement;
-  //   html.classList.toggle("dark", theme === "dark");
-  // }, [theme]);
+  // Apply theme to <html> class (for Tailwind dark mode)
+  useEffect(() => {
+    const html = document.documentElement;
+    html.classList.toggle("dark", theme === "dark");
+  }, [theme]);
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
@@ -63,5 +63,3 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     </ThemeContext.Provider>
   );
 };
-
-// Hook for usage

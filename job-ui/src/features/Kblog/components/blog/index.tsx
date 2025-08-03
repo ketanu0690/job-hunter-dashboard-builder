@@ -6,7 +6,6 @@ import ScrollToTopButton from "./ScrollToTopButton";
 import { APIHelper } from "../../../../shared/utils/axios";
 import { getBlogs } from "../../../../services/blogService";
 import type { Blog } from "../../../../shared/types";
-import deafultBlogImage from "../../../../../public/assests/Hero_section_bg_1.jpg";
 import { useAuth } from "@/providers/AuthProvider";
 // Types for Medium
 interface MediumFeedItem {
@@ -33,7 +32,7 @@ interface MediumFeedResponse {
 }
 
 export default function BlogShowcase() {
-  const { session } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [openModal, setOpenModal] = useState<null | {
     source: string;
     blog: any;
@@ -126,7 +125,7 @@ export default function BlogShowcase() {
     <div className="max-w-6xl mx-auto px-4 pb-16 ">
       <ParallaxHeader
         title="Featured Blog Articles"
-        isBlogAdmin={session ? true : false}
+        isBlogAdmin={isAuthenticated ? true : false}
       />
       <div ref={mediumSectionRef}>
         <BlogSection

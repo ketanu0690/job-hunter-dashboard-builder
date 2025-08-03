@@ -62,7 +62,7 @@ const Sidebar: React.FC = () => {
       label: "Content",
       icon: PenTool,
       subItems: [
-        { id: "blogs", label: "Blogs", route: "/blogs" },
+        { id: "blogs", label: "Blogs", route: "/manageBlog" },
         { id: "jobposts", label: "Job Posts", route: "/admin/job-posts" },
       ],
     },
@@ -101,6 +101,8 @@ const Sidebar: React.FC = () => {
       // navigate(route);
     } else if (!isSub && !route) {
       toggleMenu(id);
+    } else {
+      navigate({ to: route });
     }
   };
 

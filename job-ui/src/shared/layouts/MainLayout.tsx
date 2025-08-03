@@ -13,9 +13,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <div className=" text-foreground min-h-screen">
       <Header />
-      <div className="h-20" />
       <main
-        className={`min-h-screen transition-colors duration-300 ${
+        className={`min-h-screen transition-colors duration-300  px-4 pt-24 pb-8 ${
           theme === "dark"
             ? "bg-black text-white"
             : "bg-gradient-to-br from-gray-50 to-blue-50 text-gray-900"

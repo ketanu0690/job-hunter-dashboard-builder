@@ -35,19 +35,11 @@ const ParallaxHeader: React.FC<ParallaxHeaderProps> = ({
   ];
 
   return (
-    <header className="text-center m-16">
-      <h1
-        className={`text-4xl md:text-5xl font-bold mb-4 leading-tight ${
-          theme === "dark" ? " text-gray-800" : " text-gray-400"
-        }`}
-      >
+    <header className="text-center mt-10">
+      <h1 className={`text-4xl md:text-5xl font-bold mb-4 leading-tight `}>
         {title}
       </h1>
-      <p
-        className={`text-lg max-w-3xl mx-auto leading-relaxed mb-6 ${
-          theme === "dark" ? "text-gray-300" : "text-gray-600"
-        }`}
-      >
+      <p className={`text-lg max-w-3xl mx-auto leading-relaxed mb-6 `}>
         Dive into insightful articles, engineering deep-dives, and best
         practices—curated for modern developers who love building the future.
       </p>
@@ -72,7 +64,11 @@ const ParallaxHeader: React.FC<ParallaxHeaderProps> = ({
         <div className="flex justify-center gap-4">
           <button
             onClick={() => navigate({ to: "/manageBlog" })}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-full hover:bg-primary/90 transition"
+            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full transition hover:bg-primary/90 ${
+              theme === "dark"
+                ? "bg-gray-800 text-gray-100"
+                : "bg-pure-black text-black"
+            }`}
           >
             <LayoutDashboard size={18} />
             Manage

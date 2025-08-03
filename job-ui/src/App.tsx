@@ -12,7 +12,7 @@ const ReactQueryDevtools = lazy(() =>
 
 function InnerApp() {
   const auth = useAuth();
-  return <RouterProvider router={router} context={{ auth }} />;
+  return <RouterProvider router={router} context={{ auth: auth }} />;
 }
 
 function App() {

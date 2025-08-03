@@ -10,6 +10,7 @@ interface User {
 export interface AuthState {
   isAuthenticated: boolean;
   user: User | null;
+  checkAuth: () => Promise<boolean>;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -85,20 +86,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem("auth-token");
   };
 
-  // if (isLoading) {
-  //   return (
-  //     <div className="flex flex-col items-center justify-center min-h-screen text-gray-700">
-  //       {/* Spinner Animation */}
-  //       <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-4"></div>
+  const checkAuth = async (): Promise<boolean> => {
+    const { data, error } = await supabase.auth.getSession();
+    return Boolean(data?.session?.user && !error);
+  };
 
-  //       {/* Label below spinner */}
-  //       <div className="text-xl font-semibold animate-pulse">K Loder..</div>
-  //     </div>
-  //   );
-  // }
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen text-gray-700">
+        {/* Spinner Animation */}
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-4"></div>
+
+        {/* Label below spinner */}
+        <div className="text-xl font-semibold animate-pulse">K Loder..</div>
+      </div>
+    );
+  }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, user, login, logout, checkAuth }}
+    >
       {children}
     </AuthContext.Provider>
   );
