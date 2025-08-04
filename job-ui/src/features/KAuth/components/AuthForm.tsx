@@ -62,19 +62,17 @@ const AuthForm = () => {
   };
 
   const handlePasswordSubmit = async () => {
-    console.log("came here");
     if (!password) {
       setErrors({ password: "Password must be at least 6 characters" });
       return;
     }
     const passwordError = validatePassword(password);
-    console.log(passwordError);
+
     if (passwordError) {
       setErrors({ email: "", password: passwordError });
       return;
     }
 
-    console.log("came here 2");
     try {
       setErrors({});
       setLoading(true);
@@ -83,6 +81,8 @@ const AuthForm = () => {
         title: "Welcome back!",
         description: "You have successfully signed in.",
       });
+
+      setStep("success");
     } catch (error) {
       toast({
         title: "Authentication error",
@@ -91,7 +91,6 @@ const AuthForm = () => {
       });
     } finally {
       setLoading(false);
-      setStep("success");
     }
   };
   const resetFlow = () => {

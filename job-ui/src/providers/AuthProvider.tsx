@@ -25,7 +25,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const validateSession = async () => {
       try {
-        console.log("came here");
         const { data, error } = await supabase.auth.getSession();
 
         if (error || !data.session?.user) {
