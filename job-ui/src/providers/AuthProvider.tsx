@@ -12,6 +12,9 @@ export interface AuthState {
   user: User | null;
   checkAuth: () => Promise<boolean>;
   login: (username: string, password: string) => Promise<void>;
+  loginWithProvider: (
+    providerName: "google" | "github" | "gitlab"
+  ) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -61,19 +64,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     if (error) throw new Error(error.message);
-
-    const supaUser = data.user;
-    if (supaUser && data.session) {
-      setUser({
-        id: supaUser.id,
-        email: supaUser.email ?? "",
-        username: supaUser.user_metadata?.full_name ?? supaUser.email ?? "User",
-      });
-      setIsAuthenticated(true);
-      localStorage.setItem("auth-token", data.session.access_token);
-    } else {
-      throw new Error("Login failed: Session or user not returned.");
-    }
   };
 
   const logout = async () => {
@@ -83,6 +73,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsAuthenticated(false);
     setUser(null);
     localStorage.removeItem("auth-token");
+  };
+
+  const loginWithProvider = async (
+    providerName: "google" | "github" | "gitlab"
+  ) => {
+    const { error, data } = await supabase.auth.signInWithOAuth({
+      provider: providerName,
+    });
+
+    console.log("code break", data);
+    if (error) {
+      console.error("OAuth login error:", error.message);
+      throw new Error("OAuth Login Failed");
+    }
   };
 
   const checkAuth = async (): Promise<boolean> => {
@@ -104,7 +108,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, user, login, logout, checkAuth }}
+      value={{
+        isAuthenticated,
+        user,
+        login,
+        logout,
+        checkAuth,
+        loginWithProvider,
+      }}
     >
       {children}
     </AuthContext.Provider>

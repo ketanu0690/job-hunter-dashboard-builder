@@ -26,7 +26,7 @@ const AuthForm = () => {
   );
   const [isSignUp, setIsSignUp] = useState(false);
 
-  const { login } = useAuth();
+  const { login, loginWithProvider } = useAuth();
   const navigate = useNavigate();
 
   // Validation functions
@@ -45,11 +45,7 @@ const AuthForm = () => {
 
   const handleGoogleAuth = async () => {
     setLoading(true);
-    // Simulate OAuth flow
-    setTimeout(() => {
-      setLoading(false);
-      setStep("success");
-    }, 2000);
+    await loginWithProvider("google");
   };
 
   const handleEmailSubmit = () => {

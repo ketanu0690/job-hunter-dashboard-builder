@@ -216,11 +216,7 @@ const OurDevelopment = () => {
       >
         <div className="relative w-16 h-16 text-5xl">
           {/* 🚀 */}
-          <Rocket
-            className="w-12 h-12 text-white drop-shadow-xl"
-            strokeWidth={2}
-          />
-
+          🚀
           <div
             className="absolute top-full left-1/2 w-2 h-10 rounded-full bg-gradient-to-b from-yellow-300 via-orange-500 to-transparent -translate-x-1/2 blur-sm"
             style={{ animation: "fire-flicker 0.3s ease-in-out infinite" }}
