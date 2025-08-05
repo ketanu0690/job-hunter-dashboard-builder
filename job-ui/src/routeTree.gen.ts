@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as NotFoundRouteImport } from './routes/$notFound'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedManageBlogRouteImport } from './routes/_authenticated/manageBlog'
+import { Route as AuthenticatedKnichRouteImport } from './routes/_authenticated/knich'
 import { Route as AuthenticatedKmentorRouteImport } from './routes/_authenticated/kmentor'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedBlogsRouteImport } from './routes/_authenticated/blogs'
@@ -42,6 +43,11 @@ const AuthenticatedManageBlogRoute = AuthenticatedManageBlogRouteImport.update({
   path: '/manageBlog',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedKnichRoute = AuthenticatedKnichRouteImport.update({
+  id: '/knich',
+  path: '/knich',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedKmentorRoute = AuthenticatedKmentorRouteImport.update({
   id: '/kmentor',
   path: '/kmentor',
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/blogs': typeof AuthenticatedBlogsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/kmentor': typeof AuthenticatedKmentorRoute
+  '/knich': typeof AuthenticatedKnichRoute
   '/manageBlog': typeof AuthenticatedManageBlogRoute
 }
 export interface FileRoutesByTo {
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/blogs': typeof AuthenticatedBlogsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/kmentor': typeof AuthenticatedKmentorRoute
+  '/knich': typeof AuthenticatedKnichRoute
   '/manageBlog': typeof AuthenticatedManageBlogRoute
 }
 export interface FileRoutesById {
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/_authenticated/blogs': typeof AuthenticatedBlogsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/kmentor': typeof AuthenticatedKmentorRoute
+  '/_authenticated/knich': typeof AuthenticatedKnichRoute
   '/_authenticated/manageBlog': typeof AuthenticatedManageBlogRoute
 }
 export interface FileRouteTypes {
@@ -96,6 +105,7 @@ export interface FileRouteTypes {
     | '/blogs'
     | '/dashboard'
     | '/kmentor'
+    | '/knich'
     | '/manageBlog'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -105,6 +115,7 @@ export interface FileRouteTypes {
     | '/blogs'
     | '/dashboard'
     | '/kmentor'
+    | '/knich'
     | '/manageBlog'
   id:
     | '__root__'
@@ -115,6 +126,7 @@ export interface FileRouteTypes {
     | '/_authenticated/blogs'
     | '/_authenticated/dashboard'
     | '/_authenticated/kmentor'
+    | '/_authenticated/knich'
     | '/_authenticated/manageBlog'
   fileRoutesById: FileRoutesById
 }
@@ -162,6 +174,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedManageBlogRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/knich': {
+      id: '/_authenticated/knich'
+      path: '/knich'
+      fullPath: '/knich'
+      preLoaderRoute: typeof AuthenticatedKnichRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/kmentor': {
       id: '/_authenticated/kmentor'
       path: '/kmentor'
@@ -190,6 +209,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedBlogsRoute: typeof AuthenticatedBlogsRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedKmentorRoute: typeof AuthenticatedKmentorRoute
+  AuthenticatedKnichRoute: typeof AuthenticatedKnichRoute
   AuthenticatedManageBlogRoute: typeof AuthenticatedManageBlogRoute
 }
 
@@ -197,6 +217,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedBlogsRoute: AuthenticatedBlogsRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedKmentorRoute: AuthenticatedKmentorRoute,
+  AuthenticatedKnichRoute: AuthenticatedKnichRoute,
   AuthenticatedManageBlogRoute: AuthenticatedManageBlogRoute,
 }
 

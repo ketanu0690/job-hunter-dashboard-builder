@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\IdeaAnalysis\" />
     <Folder Include="Services\" />
   </ItemGroup>
 

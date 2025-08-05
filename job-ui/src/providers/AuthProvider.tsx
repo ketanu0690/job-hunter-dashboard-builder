@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import AppLoader from "@/shared/components/Loader";
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface User {
@@ -95,15 +96,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-gray-700">
-        {/* Spinner Animation */}
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-4"></div>
-
-        {/* Label below spinner */}
-        <div className="text-xl font-semibold animate-pulse">K Loder..</div>
-      </div>
-    );
+    return <AppLoader />;
   }
 
   return (
