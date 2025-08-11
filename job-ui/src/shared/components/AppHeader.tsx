@@ -12,12 +12,14 @@ import {
   Phone,
   LogOut,
   LogIn,
+  User,
 } from "lucide-react";
 import { useTheme } from "../utils/use-theme";
 import { useAuth } from "@/providers/AuthProvider";
 import { useNavigate } from "@tanstack/react-router";
 import { useToast } from "@/hooks/use-toast";
-
+import BrandLogo from "../../../public/assests/Brand_logo.png";
+import UniversalSearch from "./UniversalSearch";
 const Header = () => {
   const { isAuthenticated, logout, user } = useAuth();
   const { theme, setTheme } = useTheme();
@@ -28,6 +30,22 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        !target.closest("#user-menu-button") &&
+        !target.closest("#user-menu-dropdown")
+      ) {
+        setUserMenuOpen(false);
+      }
+    };
+    window.addEventListener("click", handleClickOutside);
+    return () => window.removeEventListener("click", handleClickOutside);
+  }, []);
 
   const handleMenuItemClick = (item) => {
     console.log(`Navigating to: ${item.to}`);
@@ -92,10 +110,13 @@ const Header = () => {
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between gap-8">
           {/* Logo */}
           <div className="flex items-center cursor-pointer group">
-            {/* <Briefcase
-              className="text-orange-500 mr-2 group-hover:scale-110 transition-transform"
-              size={24}
-            /> */}
+            <img
+              src={BrandLogo}
+              alt="Brand logo"
+              className={`${theme === "dark" ? "invert" : ""}`}
+              width={40}
+              height={40}
+            />
             <span
               className={`font-bold text-xl ${
                 scrolled
@@ -113,7 +134,7 @@ const Header = () => {
               <span
                 className={`${scrolled ? `${theme === "dark" ? "text-white" : "text-black"}` : `${theme === "dark" ? "text-white" : "text-black"}`}`}
               >
-                Upadhyay
+                One
               </span>
             </span>
           </div>
@@ -126,8 +147,14 @@ const Header = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="flex-1 px-4 py-3 bg-transparent focus:outline-none"
+              onFocus={() => setSearchOpen(true)}
+              readOnly
             />
-            <button className="bg-orange-500 hover:bg-orange-600 px-6 py-3 transition-colors">
+            <button
+              onClick={() => setSearchOpen(true)}
+              type="button"
+              className="bg-orange-500 hover:bg-orange-600 px-6 py-3 transition-colors"
+            >
               <Search size={20} className="text-white" />
             </button>
           </div>
@@ -153,26 +180,80 @@ const Header = () => {
 
             {/* User Dropdown */}
             <div className="relative">
-              {isAuthenticated ? (
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500 hover:bg-orange-600 shadow-md transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-300"
-                >
-                  <span className="hidden sm:inline text-sm font-semibold truncate max-w-[120px]">
-                    {user?.username || "User"}
+              <button
+                id="user-menu-button"
+                onClick={() => setUserMenuOpen((open) => !open)}
+                className={`p-2 rounded-full transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 ${
+                  theme === "dark"
+                    ? "bg-gray-800 text-orange-400"
+                    : "bg-gray-100 text-orange-600"
+                }`}
+                aria-haspopup="true"
+                aria-expanded={userMenuOpen}
+                aria-label="User menu"
+                type="button"
+              >
+                {user?.username ? (
+                  <span className="inline-block w-6 h-6 rounded-full bg-orange-500 text-white flex items-center justify-center font-semibold">
+                    {user.username.charAt(0).toUpperCase()}
                   </span>
-                  <LogOut size={18} />
-                </button>
-              ) : (
-                <button
-                  onClick={handleLogin}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full  hover:bg-white/20  shadow-md transition-all duration-200 hover:scale-105 focus:outline-none "
+                ) : (
+                  <User size={20} />
+                )}
+              </button>
+
+              {userMenuOpen && (
+                <div
+                  id="user-menu-dropdown"
+                  className={`absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50`}
+                  role="menu"
+                  aria-orientation="vertical"
+                  aria-labelledby="user-menu-button"
                 >
-                  <span className="hidden sm:inline text-sm font-semibold">
-                    Sign In
-                  </span>
-                  <LogIn size={18} />
-                </button>
+                  {isAuthenticated ? (
+                    <>
+                      <button
+                        onClick={() => {
+                          navigate({ to: "/dashboard" });
+                          setUserMenuOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-orange-500 hover:text-white"
+                        role="menuitem"
+                        type="button"
+                      >
+                        Dashboard
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          setUserMenuOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-orange-500 hover:text-white"
+                        role="menuitem"
+                        type="button"
+                      >
+                        Logout
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => {
+                          navigate({
+                            to: "/login",
+                            search: { redirect: "/dashboard" },
+                          });
+                          setUserMenuOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-orange-500 hover:text-white"
+                        role="menuitem"
+                        type="button"
+                      >
+                        Continue On KOne
+                      </button>
+                    </>
+                  )}
+                </div>
               )}
             </div>
 
@@ -293,6 +374,12 @@ const Header = () => {
           </div>
         </div>
       )}
+
+      {/* Univarsal Search  */}
+      <UniversalSearch
+        isOpen={searchOpen}
+        onClose={() => setSearchOpen(false)}
+      />
     </>
   );
 };

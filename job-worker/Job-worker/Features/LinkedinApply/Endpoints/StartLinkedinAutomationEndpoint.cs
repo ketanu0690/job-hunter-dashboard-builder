@@ -1,6 +1,6 @@
 ﻿using FastEndpoints;
 using Job_worker.Features.LinkedinApply.Automation;
-using Job_worker.Models;
+using Job_worker.Shared.Models;
 
 namespace Job_worker.Features.LinkedinApply.Endpoints
 {
@@ -31,7 +31,7 @@ namespace Job_worker.Features.LinkedinApply.Endpoints
 
                 await _automationService.StartAutomationAsync(req);
 
-                await SendAsync(new
+                await Send.OkAsync(new
                 {
                     success = true,
                     message = "Automation started successfully."
@@ -41,12 +41,12 @@ namespace Job_worker.Features.LinkedinApply.Endpoints
             {
                 _logger.LogError(ex, "Error occurred while starting LinkedIn automation.");
 
-                await SendAsync(new
+                await Send.OkAsync(new
                 {
                     success = false,
                     message = "An error occurred while starting the automation.",
                     errorDetails = ex.Message
-                }, statusCode: 500);
+                });
             }
         }
     }

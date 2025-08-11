@@ -4,6 +4,8 @@ import { NicheData } from "./types/NicheData";
 import KNichDashboard from "./dashboard";
 import AppLoader from "@/shared/components/Loader";
 import { z } from "zod";
+import { BrainStormIdea } from "./Knich";
+import { supabase } from "@/integrations/supabase/client";
 
 const GEMINI_API_KEY = "AIzaSyC3kbeRnjbsxZEqDA9uqRUeIs87e5Bv0SA";
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
@@ -20,107 +22,59 @@ export const FindNicheApp: React.FC = () => {
     setCurrentPage("landing");
   };
 
+  async function getNichesByTopic(topic: string): Promise<NicheData> {
+    // 1. Get current Supabase session
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
+
+    if (sessionError)
+      throw new Error(`Error getting session: ${sessionError.message}`);
+    if (!session) throw new Error("No active session. User must be logged in.");
+
+    const token = session.access_token;
+
+    // 2. Call your backend API
+    const response = await fetch(
+      `${"https://localhost:7296"}/idea-analysis/niches`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // attach Supabase JWT
+        },
+        body: JSON.stringify({ topic }),
+      }
+    );
+
+    if (!response.ok) {
+      const errMsg = await response.text();
+      throw new Error(`Backend error: ${response.status} ${errMsg}`);
+    }
+
+    // 3. Parse backend response as NicheData
+    const data = await response.json();
+    return data as NicheData;
+  }
+
   const handleBrainstorm = async () => {
     if (!input.trim()) return;
     setLoading(true);
-    const prompt = `You're an AI assistant helping to discover niche market ideas for building businesses.
-
-I want you to return structured data in the following JSON format ONLY:
-
-{
-  "nodes": [
-    {
-      "id": "<GUID>",
-      "label": "<title>",
-      "type": "idea" | "niche" | "subniche" | "micro",
-      "metadata": {
-        "description": "<short description>",
-        "tags": ["tag1", "tag2"],
-        "createdAt": "<ISO Date>",
-        "updatedAt": "<ISO Date>",
-        "isNew": true,
-        "isDeleted": false
-      },
-      "snapshotVersion": 1,
-      "parentId": "<GUID | null>"
-    }
-  ],
-  "edges": [
-    {
-      "id": "<GUID>",
-      "source": "<GUID of parent node>",
-      "target": "<GUID of child node>",
-      "metadata": {
-        "createdAt": "<ISO Date>",
-        "updatedAt": "<ISO Date>",
-        "isNew": true,
-        "isDeleted": false
-      },
-      "snapshotVersion": 1
-    }
-  ]
-}
-
-Use crypto.randomUUID()-like strings for ids or mock GUIDs. Build the hierarchy: idea → niche → subniche → micro-niche. Do not explain anything. Just return JSON.
-
-User Idea: "${input}"`;
-
     try {
-      const result = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-      });
-      const text = result.text ?? "";
+      const result = await getNichesByTopic(input);
+      const NicheDataSchema: NicheData = {
+        nodes: result.nodes,
+        edges: result.edges,
+      };
 
-      if (!text) throw new Error("No response from Gemini");
-
-      const jsonStart = text.indexOf("{");
-      const jsonEnd = text.lastIndexOf("}") + 1;
-      const rawJson = text.slice(jsonStart, jsonEnd);
-
-      const parsed: NicheData = JSON.parse(rawJson);
-      const NodeSchema = z.object({
-        id: z.string(),
-        label: z.string(),
-        type: z.enum(["idea", "niche", "subniche", "micro"]),
-        metadata: z.object({
-          description: z.string(),
-          tags: z.array(z.string()),
-          createdAt: z.string().refine(Date.parse),
-          updatedAt: z.string().refine(Date.parse),
-          isNew: z.boolean(),
-          isDeleted: z.boolean(),
-        }),
-        snapshotVersion: z.number(),
-        parentId: z.string().nullable(),
-      });
-
-      const EdgeSchema = z.object({
-        id: z.string(),
-        source: z.string(),
-        target: z.string(),
-        metadata: z.object({
-          createdAt: z.string().refine(Date.parse),
-          updatedAt: z.string().refine(Date.parse),
-          isNew: z.boolean(),
-          isDeleted: z.boolean(),
-        }),
-        snapshotVersion: z.number(),
-      });
-
-      const NicheDataSchema = z.object({
-        nodes: z.array(NodeSchema),
-        edges: z.array(EdgeSchema),
-      });
-
-      const validated = NicheDataSchema.parse(parsed);
-      setNicheData(validated);
+      setNicheData(NicheDataSchema);
       setCurrentPage("dashboard");
     } catch (err) {
       console.error("AI Error:", err);
-      alert("Failed to generate niche data.");
+      // alert("Failed to generate niche data.");
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 

@@ -1,5 +1,5 @@
 ﻿using System.Threading.Channels;
-using Job_worker.Models;
+using Job_worker.Shared.Models;
 
 namespace Job_worker.Features.LinkedinApply.Automation
 {

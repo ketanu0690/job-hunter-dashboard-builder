@@ -8,8 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FastEndpoints" Version="6.0.0" />
+    <PackageReference Include="FastEndpoints" Version="7.0.1" />
+    <PackageReference Include="FastEndpoints.Security" Version="7.0.1" />
     <PackageReference Include="FastEndpoints.Swagger" Version="6.0.0" />
+    <PackageReference Include="Google_GenerativeAI" Version="3.0.0" />
+    <PackageReference Include="Google_GenerativeAI.Web" Version="3.0.0" />
+    <PackageReference Include="Mscc.GenerativeAI.Google" Version="2.6.9" />
     <PackageReference Include="Selenium.WebDriver" Version="4.31.0" />
     <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="135.0.7049.8400" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
@@ -19,7 +23,7 @@
 
   <ItemGroup>
     <Folder Include="Features\IdeaAnalysis\" />
-    <Folder Include="Services\" />
+    <Folder Include="Shared\Services\" />
   </ItemGroup>
 
 </Project>

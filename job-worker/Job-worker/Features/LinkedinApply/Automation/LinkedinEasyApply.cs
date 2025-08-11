@@ -1,5 +1,5 @@
-﻿using Job_worker.Models;
-using Job_worker.Shared.Helper;
+﻿using Job_worker.Shared.Helper;
+using Job_worker.Shared.Models;
 using Microsoft.AspNetCore.WebUtilities;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;

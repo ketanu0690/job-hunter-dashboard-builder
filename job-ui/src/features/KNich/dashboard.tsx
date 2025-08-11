@@ -29,10 +29,10 @@ interface Props {
   onBack: () => void;
 }
 const nodeColorMap = {
-  idea: "#A7F3D0",
-  niche: "#BFDBFE",
-  subniche: "#DDD6FE",
-  micro: "#FDE68A",
+  idea: "rgba(16, 185, 129, 0.2)", // emerald tint
+  niche: "rgba(59, 130, 246, 0.2)", // blue tint
+  subniche: "rgba(139, 92, 246, 0.2)", // violet tint
+  micro: "rgba(251, 191, 36, 0.2)", // amber tint
 };
 const SPACING_X = 250;
 const SPACING_Y = 150;
@@ -44,7 +44,7 @@ const nodeWidth = 200;
 const nodeHeight = 80;
 
 function getLayoutedElements(nodes: any[], edges: any[], direction = "TB") {
-  dagreGraph.setGraph({ rankdir: direction });
+  dagreGraph.setGraph({ rankdir: direction, nodesep: 80, ranksep: 120 });
 
   nodes.forEach((node) => {
     dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
@@ -82,10 +82,14 @@ const KNichDashboard: React.FC<Props> = ({ initialData, onBack }) => {
       id: n.id,
       data: { label: n.label },
       style: {
-        background: nodeColorMap[n.type] ?? "#e5e7eb",
-        borderRadius: 6,
-        padding: 10,
-        border: "2px solid #ccc",
+        background: nodeColorMap[n.type] ?? "#f3f4f6",
+        borderRadius: 12,
+        padding: "12px 16px",
+        border: "1px solid rgba(0,0,0,0.05)",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
+        fontSize: "14px",
+        fontWeight: 500,
+        color: "#111827",
       },
       position: { x: 0, y: 0 }, // dagre will override
     }));
@@ -94,6 +98,7 @@ const KNichDashboard: React.FC<Props> = ({ initialData, onBack }) => {
       id: e.id,
       source: e.source,
       target: e.target,
+      style: { stroke: "#94a3b8", strokeWidth: 2 },
       animated: true,
     }));
 
@@ -239,8 +244,20 @@ const KNichDashboard: React.FC<Props> = ({ initialData, onBack }) => {
             fitView
             className="bg-gray-50"
           >
-            <Controls />
-            <MiniMap />
+            <Controls
+              style={{
+                background: "white",
+                borderRadius: 8,
+                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+              }}
+            />
+
+            <MiniMap
+              nodeStrokeColor={(n) => nodeColorMap[n.type ?? ""] || "#94a3b8"}
+              nodeColor={(n) => nodeColorMap[n.type ?? ""] || "#e5e7eb"}
+              maskColor="rgba(0,0,0,0.05)"
+            />
+
             <Background variant="dots" gap={12} size={1} />
           </ReactFlow>
         </div>

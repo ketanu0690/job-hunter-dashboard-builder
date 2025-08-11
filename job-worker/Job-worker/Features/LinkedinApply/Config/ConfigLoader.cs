@@ -1,4 +1,4 @@
-﻿using Job_worker.Models;
+﻿using Job_worker.Shared.Models;
 using YamlDotNet.Serialization;
 
 namespace Job_worker.Features.LinkedinApply.Config

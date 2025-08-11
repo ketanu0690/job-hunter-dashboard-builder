@@ -1,6 +1,6 @@
 ﻿using YamlDotNet.Serialization;
 
-namespace Job_worker.Models
+namespace Job_worker.Shared.Models
 {
     public class LinkedinConfig
     {
