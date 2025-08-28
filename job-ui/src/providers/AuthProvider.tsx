@@ -6,6 +6,7 @@ interface User {
   id: string;
   username: string;
   email: string;
+  metaData?: any;
 }
 
 export interface AuthState {
@@ -26,6 +27,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const ensureProfile = async (supaUser: any) => {
+    const { data: existingProfile } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", supaUser.id)
+      .single();
+
+    if (!existingProfile) {
+      const { error } = await supabase.from("profiles").insert({
+        id: supaUser.id,
+        username: supaUser.user_metadata?.full_name ?? supaUser.email,
+        email: supaUser.email,
+        user_metadata: {}, // start with empty JSON
+      });
+
+      if (error) {
+        console.error("Error inserting profile:", error.message);
+      }
+    }
+  };
+
   useEffect(() => {
     const validateSession = async () => {
       try {
@@ -43,6 +65,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             email: supaUser.email ?? "",
             username:
               supaUser.user_metadata?.full_name ?? supaUser.email ?? "User",
+            metaData: supaUser.user_metadata,
           });
 
           setIsAuthenticated(true);

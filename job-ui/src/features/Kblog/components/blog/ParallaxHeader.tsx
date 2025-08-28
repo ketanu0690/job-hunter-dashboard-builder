@@ -63,7 +63,7 @@ const ParallaxHeader: React.FC<ParallaxHeaderProps> = ({
       {isBlogAdmin && (
         <div className="flex justify-center gap-4">
           <button
-            onClick={() => navigate({ to: "/manageBlog" })}
+            onClick={() => navigate({ to: "/manage-blogs" })}
             className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full transition hover:bg-primary/90 ${
               theme === "dark"
                 ? "bg-gray-800 text-gray-100"

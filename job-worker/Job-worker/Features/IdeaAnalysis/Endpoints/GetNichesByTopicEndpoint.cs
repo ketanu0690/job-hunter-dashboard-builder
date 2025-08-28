@@ -6,15 +6,8 @@ using static Job_worker.Features.IdeaAnalysis.Models.Dtos.Niches;
 
 namespace Job_worker.Features.IdeaAnalysis.Endpoints
 {
-    public class GetNichesByTopicEndpoint : Endpoint<GetNichesByTopicRequest, NicheData>
+    public class GetNichesByTopicEndpoint(IGeminiService geminiService) : Endpoint<GetNichesByTopicRequest, NicheData>
     {
-        private readonly IGeminiService _geminiService;
-
-        public GetNichesByTopicEndpoint(IGeminiService geminiService)
-        {
-            _geminiService = geminiService;
-        }
-
         public override void Configure()
         {
             Post("/idea-analysis/niches");
@@ -24,6 +17,7 @@ namespace Job_worker.Features.IdeaAnalysis.Endpoints
                 s.Summary = "Get niche suggestions for a given topic using Gemini AI.";
                 s.Description = "Calls Gemini AI to analyze a topic and return structured niche data.";
             });
+            AllowAnonymous();
         }
 
         public override async Task HandleAsync(GetNichesByTopicRequest req, CancellationToken ct)
@@ -34,9 +28,9 @@ namespace Job_worker.Features.IdeaAnalysis.Endpoints
                 return;
             }
 
-            var prompt = $@"Task:Given topic '{req.Topic}', identify niche→subniche→micro levels and output ONLY valid JSON for:record NodeMetadata(string Description,List<string> Tags,DateTime CreatedAt,DateTime UpdatedAt,bool IsNew,bool IsDeleted);record EdgeMetadata(DateTime CreatedAt,DateTime UpdatedAt,bool IsNew,bool IsDeleted);record Node(string Id,string Label,string Type,NodeMetadata Metadata,int SnapshotVersion,string? ParentId);record Edge(string Id,string Source,string Target,EdgeMetadata Metadata,int SnapshotVersion);record NicheData(List<Node> Nodes,List<Edge> Edges);Persona:Expert niche strategist;Rules:Be specific, relevant, ordered by importance, use ISO 8601 UTC dates, no extra text.";
+            var prompt = $@"Task:Given topic '{req.Topic}', identify niche→subniche→micro levels and output ONLY valid JSON for:record NodeMetadata(string Description,List<string> Tags,DateTime CreatedAt,DateTime UpdatedAt,bool IsNew,bool IsDeleted);record EdgeMetadata(DateTime CreatedAt,DateTime UpdatedAt,bool IsNew,bool IsDeleted);record Node(string Id,string Label,string Type,NodeMetadata Metadata,int SnapshotVersion,string? ParentId);record Edge(string Id,string Source,string Target,EdgeMetadata Metadata,int SnapshotVersion);record NicheData(List<Node> Nodes,List<Edge> Edges);Persona:Expert niche strategist;Rules:Be specific, relevant, ordered by importance, use ISO 8601 UTC dates, no extra text. Rules: Return ONLY JSON in the shape of NicheData (Nodes[], Edges[]), do not wrap it inside another object.";
 
-            var geminiRaw = await _geminiService.GenerateContentWithSdkAsync(prompt, ct);
+            var geminiRaw = await geminiService.GenerateContentAsync(prompt, ct);
 
             var extractedData = ExtractJsonFromGemini<NicheData>(geminiRaw);
 

@@ -29,15 +29,18 @@ const AppShell = () => {
   return (
     <>
       <section className="text-center mb-16">
-        <h2 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-          An all-in-one suite of apps designed to make your daily life easier.
-        </h2>
-        <p className={`text-xl max-w-4xl mx-auto leading-relaxed mb-8 `}>
-          Whether it’s productivity, entertainment, or everyday tasks, this
-          open-source platform brings together powerful tools to help you solve
-          real-life challenges — and you’re welcome to contribute and be part of
-          its growth.
-        </p>
+        <section className="container mx-auto text-center mt-24">
+          <h2 className="text-5xl md:text-6xl font-bold mb-6 leading-tight typing-animation">
+            One Place. Endless Possibilities.
+          </h2>
+          <p className="text-xl max-w-4xl mx-auto leading-relaxed mb-8 fade-in">
+            This app brings together multiple platforms into one simple space.
+            Read from different sources in one feed. Get AI-powered summaries so
+            you save time. Share your thoughts in your own words—no copy-paste
+            fluff. Connect with mentors, communities, and people who matter.
+            It’s not just another app—it’s your hub to learn, share, and grow.
+          </p>
+        </section>
 
         <SpiralApps apps={filteredApps} />
 

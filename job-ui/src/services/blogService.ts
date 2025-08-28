@@ -1,4 +1,5 @@
 // src/services/blogService.ts
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../integrations/supabase/client";
 import type { Blog } from "../shared/types";
 import type {
@@ -71,6 +72,14 @@ export const getBlogs = async (): Promise<Blog[]> => {
   return data!.map(dbRowToBlog);
 };
 
+export const useSupabaseBlogs = () => {
+  return useQuery<Blog[], Error>({
+    queryKey: ["supabaseBlogs"],
+    queryFn: getBlogs,
+    staleTime: 1000 * 60 * 5, // cache for 5 mins
+    refetchOnWindowFocus: false,
+  });
+};
 // Update
 export const updateBlog = async (blog: Blog): Promise<Blog | null> => {
   const { authorId, id, ...content } = blog;

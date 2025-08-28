@@ -150,18 +150,48 @@
 
   .tooltip::after {
     content: attr(data-tooltip);
-    /* position: absolute;
-    bottom: 125%;
-    left: 50%;
-    transform: translateX(-50%);
+  }
+
+  .typing-animation {
+    display: inline-block;
     white-space: nowrap;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    font-size: 0.7rem;
-    padding: 1px 2px;
-    border-radius: 4px;
-    opacity: 1;
-    pointer-events: none;
-    z-index: 10; */
+    overflow: hidden;
+    border-right: 3px solid orange;
+    width: 0;
+    animation:
+      typing 2.5s steps(40, end) forwards,
+      blink 0.7s step-end infinite;
+    background: linear-gradient(to right, #f8b195, #f67280, #c06c84);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  @keyframes typing {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  @keyframes blink {
+    50% {
+      border-color: transparent;
+    }
+  }
+
+  /* Fade-in for Paragraph */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 1s ease 2.8s forwards;
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }

@@ -1,23 +1,31 @@
-import React from "react";
-import Sidebar from "../../components/dashboard/Sidebar";
+// DashboardLayout.tsx
+import React, { useState } from "react";
+
 import FloatingActionButton from "../../components/dashboard/FloatingActionButton";
+import Sidebar from "@/components/dashboard/Sidebar";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
-    <div className="flex min-h-screen ">
+    <div className="flex min-h-screen">
       {/* Sidebar */}
-      <Sidebar />
+      <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
       {/* Main Content Area */}
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div
+        className={`
+          flex flex-1 flex-col overflow-hidden transition-all duration-300
+          ${collapsed ? "ml-16" : "ml-56"}
+        `}
+      >
         <main className="flex-1 overflow-y-auto p-6 md:p-8">{children}</main>
       </div>
 
-      {/* Floating Action Button (fixed to bottom-right) */}
       <FloatingActionButton />
     </div>
   );

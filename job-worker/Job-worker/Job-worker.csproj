@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Job_worker</RootNamespace>
+    <UserSecretsId>aca44e27-1990-4f35-8292-cb81c803fc9c</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,18 +13,13 @@
     <PackageReference Include="FastEndpoints.Security" Version="7.0.1" />
     <PackageReference Include="FastEndpoints.Swagger" Version="6.0.0" />
     <PackageReference Include="Google_GenerativeAI" Version="3.0.0" />
+    <PackageReference Include="Google_GenerativeAI.Microsoft" Version="3.0.0" />
     <PackageReference Include="Google_GenerativeAI.Web" Version="3.0.0" />
-    <PackageReference Include="Mscc.GenerativeAI.Google" Version="2.6.9" />
     <PackageReference Include="Selenium.WebDriver" Version="4.31.0" />
     <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="135.0.7049.8400" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     <PackageReference Include="WebDriverManager" Version="2.17.5" />
     <PackageReference Include="YamlDotNet" Version="16.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Features\IdeaAnalysis\" />
-    <Folder Include="Shared\Services\" />
   </ItemGroup>
 
 </Project>

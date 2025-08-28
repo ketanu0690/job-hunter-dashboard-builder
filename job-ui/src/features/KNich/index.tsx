@@ -3,12 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 import { NicheData } from "./types/NicheData";
 import KNichDashboard from "./dashboard";
 import AppLoader from "@/shared/components/Loader";
-import { z } from "zod";
-import { BrainStormIdea } from "./Knich";
 import { supabase } from "@/integrations/supabase/client";
-
-const GEMINI_API_KEY = "AIzaSyC3kbeRnjbsxZEqDA9uqRUeIs87e5Bv0SA";
-const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 export const FindNicheApp: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<"landing" | "dashboard">(
@@ -61,27 +56,21 @@ export const FindNicheApp: React.FC = () => {
   const handleBrainstorm = async () => {
     if (!input.trim()) return;
     setLoading(true);
-    try {
-      const result = await getNichesByTopic(input);
-      const NicheDataSchema: NicheData = {
-        nodes: result.nodes,
-        edges: result.edges,
-      };
 
-      setNicheData(NicheDataSchema);
+    try {
+      const res = await getNichesByTopic(input);
+      setNicheData(res);
       setCurrentPage("dashboard");
     } catch (err) {
-      console.error("AI Error:", err);
-      // alert("Failed to generate niche data.");
-    } finally {
-      // setLoading(false);
+      console.error("Streaming error:", err);
+      setLoading(false);
     }
   };
 
   return (
-    <div>
+    <>
       {currentPage === "landing" ? (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
+        <>
           <div className="flex-1 flex flex-col items-center justify-center px-6">
             <div className="text-center max-w-4xl mx-auto">
               <h1 className="text-6xl font-bold mb-6">
@@ -112,9 +101,12 @@ export const FindNicheApp: React.FC = () => {
                   Brainstorm ✨
                 </button>
               </div>
-
-              {loading && <AppLoader />}
-
+              {/* {loading && (
+                <div className="mt-6">
+                  <AppLoader />
+                  <p className="mt-2 text-gray-500">Finding your niche...</p>
+                </div>
+              )} */}
               <div className="mt-16 text-sm text-gray-500">
                 <p>
                   ✨ AI-powered niche discovery • 🌳 Visual tree mapping • 📊
@@ -123,7 +115,7 @@ export const FindNicheApp: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
+        </>
       ) : (
         <>
           {nicheData ? (
@@ -136,6 +128,6 @@ export const FindNicheApp: React.FC = () => {
           )}
         </>
       )}
-    </div>
+    </>
   );
 };

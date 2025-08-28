@@ -86,7 +86,7 @@ const BlogList: React.FC<BlogListProps> = ({ status, onEditBlog }) => {
         filteredBlogs.map((blog) => (
           <Card
             key={blog.id}
-            className="glass-card overflow-hidden hover:shadow-lg transition-all duration-300 group"
+            className="glass-card overflow-hidden hover:shadow-lg transition-all duration-300 group h-80"
           >
             <CardContent className="p-0">
               <div className="flex flex-col md:flex-row">

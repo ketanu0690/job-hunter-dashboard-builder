@@ -21,7 +21,7 @@ const mockResults = {
   ],
   pages: [
     { title: "Dashboard", path: "/dashboard" },
-    { title: "Manage Blogs", path: "/manageBlog" },
+    { title: "Manage Blogs", path: "/manage-blogs" },
     { title: "K-Mentor", path: "/kmentor" },
   ],
 };

@@ -205,7 +205,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ blog, isNew, onBack }) => {
         <Button
           variant="ghost"
           onClick={onBack}
-          className="hover:bg-background/10"
+          className="hover:bg-background/50 hover:text-blue-400"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Blogs
@@ -269,8 +269,8 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ blog, isNew, onBack }) => {
         <TabsContent value="edit" className="animate-fade-in">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
-              <Card className="glass-card">
-                <CardContent className="p-6">
+              <Card className="glass-card h-full">
+                <CardContent className="p-9">
                   <div className="space-y-6">
                     <div className="space-y-2">
                       <Label htmlFor="title">Title</Label>
@@ -280,7 +280,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ blog, isNew, onBack }) => {
                         {...register("title", {
                           required: "Title is required",
                         })}
-                        className="text-xl"
+                        className="text-xl text-black"
                       />
                       {errors.title && (
                         <p className="text-destructive text-sm">
@@ -297,56 +297,13 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ blog, isNew, onBack }) => {
                         rules={{ required: "Content is required" }}
                         render={({ field }) => (
                           <div className="border border-input rounded-md">
-                            {/* <Editor
-                              apiKey="9sc8wlwilkdq6l82gwpuqpbc8lytlbhc4ogdl4k9cbkn9kvs" // You can get a free API key from TinyMCE
-                              onInit={(evt, editor) =>
-                                (editorRef.current = editor)
-                              }
-                              initialValue={field.value}
-                              init={{
-                                height: 400,
-                                menubar: true,
-                                plugins: [
-                                  "advlist",
-                                  "autolink",
-                                  "lists",
-                                  "link",
-                                  "image",
-                                  "charmap",
-                                  "preview",
-                                  "anchor",
-                                  "searchreplace",
-                                  "visualblocks",
-                                  "code",
-                                  "fullscreen",
-                                  "insertdatetime",
-                                  "media",
-                                  "table",
-                                  "code",
-                                  "help",
-                                  "wordcount",
-                                  "codesample",
-                                ],
-                                toolbar:
-                                  "undo redo | blocks | " +
-                                  "bold italic forecolor | alignleft aligncenter " +
-                                  "alignright alignjustify | bullist numlist outdent indent | " +
-                                  "removeformat | link image | codesample | help",
-                                content_style:
-                                  "body { font-family:Inter,Arial,sans-serif; font-size:16px ;  direction: rtl;}",
-                                skin: theme === "dark" ? "oxide-dark" : "oxide",
-                                content_css:
-                                  theme === "dark" ? "dark" : "default",
-                                directionality: "rtl",
-                              }}
-                              onEditorChange={handleEditorChange}
-                            /> */}
                             <Textarea
                               id="content"
                               placeholder="Enter blog content"
                               {...register("content", {
                                 required: "Content is required",
                               })}
+                              className="text-xl text-black"
                             />
                           </div>
                         )}

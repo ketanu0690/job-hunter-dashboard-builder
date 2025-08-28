@@ -3,51 +3,42 @@ import BlogSection from "./BlogSection";
 import BlogModal from "./BlogModal";
 import ParallaxHeader from "./ParallaxHeader";
 import ScrollToTopButton from "./ScrollToTopButton";
-import { APIHelper } from "../../../../shared/utils/axios";
-import { getBlogs } from "../../../../services/blogService";
-import type { Blog } from "../../../../shared/types";
 import { useAuth } from "@/providers/AuthProvider";
-// Types for Medium
-interface MediumFeedItem {
+import { useMediumPosts } from "../../services/mediumServices";
+import { useSupabaseBlogs } from "../../../../services/blogService";
+import { useSubredditPosts } from "../../services/redditService";
+import type { Blog } from "../../../../shared/types";
+
+// Medium feed types
+export interface MediumFeedItem {
   title: string;
   pubDate: string;
   link: string;
   guid: string;
   author: string;
-  thumbnail: string;
-  description: string;
+  thumbnail?: string;
+  description?: string;
   content: string;
   categories: string[];
-  enclosure: {
-    link: string;
-    type: string;
-    length: number;
-  };
+  enclosure: string;
   imageUrl?: string;
 }
 
-interface MediumFeedResponse {
-  status: "ok" | "error";
-  items: MediumFeedItem[];
+interface OpenModalState {
+  source: "Medium" | "Supabase" | "Reddit";
+  blog: Blog | MediumFeedItem | any;
 }
 
 export default function BlogShowcase() {
   const { isAuthenticated } = useAuth();
-  const [openModal, setOpenModal] = useState<null | {
-    source: string;
-    blog: any;
-  }>(null);
-  const [mediumBlogs, setMediumBlogs] = useState<MediumFeedItem[]>([]);
-  const [supabaseBlogs, setSupabaseBlogs] = useState<Blog[]>([]);
-  const [loadingMedium, setLoadingMedium] = useState(true);
-  const [loadingSupabase, setLoadingSupabase] = useState(true);
-  const [mediumError, setMediumError] = useState<string | null>(null);
-  const [supabaseError, setSupabaseError] = useState<string | null>(null);
+  const [openModal, setOpenModal] = useState<OpenModalState | null>(null);
+
   const mediumSectionRef = useRef<HTMLDivElement>(null);
   const supaSectionRef = useRef<HTMLDivElement>(null);
+  const redditSectionRef = useRef<HTMLDivElement>(null);
 
+  // Inject custom CSS for animations
   useEffect(() => {
-    // Add custom CSS for animations
     const style = document.createElement("style");
     style.textContent = `
       .animate-in { opacity: 1 !important; transform: translateY(0) !important; }
@@ -56,105 +47,105 @@ export default function BlogShowcase() {
       .loading-pulse { animation: pulse 2s infinite; }
     `;
     document.head.appendChild(style);
-    return () => {
-      document.head.removeChild(style);
-    };
+    return () => document.head.removeChild(style);
   }, []);
 
-  useEffect(() => {
-    const fetchMedium = async () => {
-      setLoadingMedium(true);
-      setMediumError(null);
-      try {
-        const username = "ketanupadhyay40";
-        const rssUrl = `https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@${username}`;
-        const data: MediumFeedResponse = await APIHelper.get(rssUrl);
-        const articles = data.items.map((item) => {
-          const fromThumbnail = item.thumbnail?.trim();
-          const fromEnclosure = item.enclosure?.link?.trim();
-          const fromContent = item.content.match(
-            /<img[^>]+src=["']([^"'>]+)["']/
-          )?.[1];
+  const username = "ketanupadhyay40";
 
-          // Validate image URL function
-          const isValidImage = (url: string | undefined | null): boolean => {
-            return (
-              !!url &&
-              url.startsWith("http") &&
-              /\.(jpg|jpeg|png|webp|gif)$/i.test(url)
-            );
-          };
+  // Hooks to fetch data
+  const {
+    data: mediumArticles,
+    error: mediumError,
+    isLoading: loadingMedium,
+  } = useMediumPosts(username);
+  const {
+    data: supabaseBlogs,
+    error: supabaseError,
+    isLoading: loadingSupabase,
+  } = useSupabaseBlogs();
 
-          const imageUrl = isValidImage(fromThumbnail)
-            ? fromThumbnail
-            : isValidImage(fromEnclosure)
-              ? fromEnclosure
-              : isValidImage(fromContent)
-                ? fromContent
-                : "/assests/Hero_section_bg_1.jpg"; // fallback from public folder
+  const {
+    data: redditPosts,
+    error: redditError,
+    isLoading: loadingReddit,
+  } = useSubredditPosts("programming");
 
-          return {
-            ...item,
-            imageUrl,
-          };
-        });
-        setMediumBlogs(articles);
-      } catch (err) {
-        setMediumError("Failed to fetch Medium blogs.");
-      } finally {
-        setLoadingMedium(false);
-      }
-    };
-    const fetchSupabase = async () => {
-      setLoadingSupabase(true);
-      setSupabaseError(null);
-      try {
-        const blogs = await getBlogs();
-        setSupabaseBlogs(blogs);
-      } catch (err) {
-        setSupabaseError("Failed to fetch Supabase blogs.");
-      } finally {
-        setLoadingSupabase(false);
-      }
-    };
-    fetchMedium();
-    fetchSupabase();
-  }, []);
+  // Transform Medium articles to include valid image URLs
+  const mediumBlogs =
+    mediumArticles?.map((item) => {
+      const fromThumbnail = item?.thumbnail?.trim();
+      const fromEnclosure = item?.enclosure?.trim();
+      const fromContent = item?.content.match(
+        /<img[^>]+src=["']([^"'>]+)["']/
+      )?.[1];
+
+      const isValidImage = (url?: string) =>
+        !!url &&
+        url.startsWith("http") &&
+        /\.(jpg|jpeg|png|webp|gif)$/i.test(url);
+
+      return {
+        ...item,
+        imageUrl: isValidImage(fromThumbnail)
+          ? fromThumbnail
+          : isValidImage(fromEnclosure)
+            ? fromEnclosure
+            : isValidImage(fromContent)
+              ? fromContent
+              : "/assests/Hero_section_bg_1.jpg",
+      };
+    }) ?? [];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 pb-16 ">
+    <div className="max-w-6xl mx-auto px-4 pb-16">
       <ParallaxHeader
         title="Featured Blog Articles"
-        isBlogAdmin={isAuthenticated ? true : false}
+        isBlogAdmin={!!isAuthenticated}
       />
+
+      <div ref={redditSectionRef}>
+        <BlogSection
+          title="Reddit Articles"
+          color="bg-red-600 text-white hover:bg-opacity-90 hover:shadow-lg transition duration-300 ease-in-out"
+          icon="S"
+          blogs={redditPosts ?? []}
+          loading={loadingReddit}
+          error={""}
+          onView={(blog) => setOpenModal({ source: "Reddit", blog })}
+        />
+      </div>
+
       <div ref={mediumSectionRef}>
         <BlogSection
           title="Medium Articles"
-          color="bg-indigo-500 text-white"
+          color="bg-red-600 text-white hover:bg-opacity-90 hover:shadow-lg transition duration-300 ease-in-out"
           icon="M"
           blogs={mediumBlogs}
           loading={loadingMedium}
-          error={mediumError}
+          error={""}
           onView={(blog) => setOpenModal({ source: "Medium", blog })}
         />
       </div>
+
       <div ref={supaSectionRef}>
         <BlogSection
           title="Supabase Articles"
           color="bg-emerald-500 text-white"
           icon="S"
-          blogs={supabaseBlogs}
+          blogs={supabaseBlogs ?? []}
           loading={loadingSupabase}
-          error={supabaseError}
+          error={""}
           onView={(blog) => setOpenModal({ source: "Supabase", blog })}
         />
       </div>
+
       <ScrollToTopButton />
+
       <BlogModal
         open={!!openModal}
         onClose={() => setOpenModal(null)}
         blog={openModal?.blog}
-        source={openModal?.source || ""}
+        source={openModal?.source ?? ""}
       />
     </div>
   );

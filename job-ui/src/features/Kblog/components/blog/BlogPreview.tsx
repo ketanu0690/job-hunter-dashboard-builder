@@ -8,10 +8,10 @@ interface BlogPreviewProps {
 }
 
 const BlogPreview: React.FC<BlogPreviewProps> = ({ blog }) => {
-  if (!blog) return null;
+  if (!blog) return "Please Enter a blog to preview.";
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl mx-auto text-black dark:text-white">
       <Card className="glass-card overflow-hidden">
         <CardContent className="p-0">
           {blog.coverImage && (
@@ -46,12 +46,12 @@ const BlogPreview: React.FC<BlogPreviewProps> = ({ blog }) => {
             </h1>
 
             {blog.excerpt && (
-              <div className="text-xl text-muted-foreground mb-8 italic">
+              <div className="text-xl mb-8 italic text-black">
                 {blog.excerpt}
               </div>
             )}
 
-            <div className="prose prose-invert max-w-none">
+            <div className="prose prose-invert max-w-none text-black dark:text-white">
               {/* In a real app, you would parse markdown or HTML here */}
               {blog.content.split("\n").map((paragraph, idx) => (
                 <p key={idx} className="mb-4">
