@@ -31,7 +31,6 @@ const AuthForm = () => {
 
   // Validation functions
   const validateEmail = (email: string) => {
-    console.log(email);
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!email) return "Email is required";
     if (emailRegex.test(email)) return "Please enter a valid email address";
